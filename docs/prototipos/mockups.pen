@@ -1,0 +1,3783 @@
+{
+  "version": "2.19",
+  "children": [
+    {
+      "type": "frame",
+      "id": "sJD2T",
+      "x": 880,
+      "y": 120,
+      "name": "01 · Inicio",
+      "clip": true,
+      "width": 390,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "A37Vu",
+          "name": "Barra de estado",
+          "width": "fill_container",
+          "height": 62,
+          "fill": "$surface",
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "G5Gz4t",
+              "name": "Hora",
+              "fill": "$text",
+              "content": "9:41",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "VXtfN",
+              "name": "Indicadores",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "XdFSR",
+                  "name": "Senal",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "signal",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "UhEVx",
+                  "name": "WiFi",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "j4hjh",
+                  "name": "Bateria",
+                  "width": 17,
+                  "height": 17,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GzHwR",
+          "name": "Contenido",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "gPGIU",
+              "name": "Encabezado",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Wa4L4",
+                  "name": "Marca",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "bEUlN",
+                      "name": "Logo",
+                      "width": 36,
+                      "height": 36,
+                      "fill": "$primary",
+                      "cornerRadius": 11,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "vDeFw",
+                          "name": "Pelota",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "sports_soccer",
+                          "library": "Material Symbols Rounded",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "YN1aJ",
+                      "name": "Nombre marca",
+                      "fill": "$primary",
+                      "content": "TurnosCancha",
+                      "fontFamily": "$font",
+                      "fontSize": 19,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iPZPg",
+                  "name": "Acciones",
+                  "gap": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "G3sBMv",
+                      "name": "Notificaciones",
+                      "width": 24,
+                      "height": 24,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "qhMbv",
+                          "x": 0,
+                          "y": 2,
+                          "name": "Campana",
+                          "width": 22,
+                          "height": 22,
+                          "icon": "bell",
+                          "library": "lucide",
+                          "fill": "$text"
+                        },
+                        {
+                          "type": "ellipse",
+                          "id": "QmUGF",
+                          "x": 15,
+                          "y": 0,
+                          "name": "Aviso",
+                          "fill": "$danger",
+                          "width": 9,
+                          "height": 9,
+                          "stroke": "#FFFFFF",
+                          "strokeWidth": 1.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HHKuN",
+                      "name": "Avatar",
+                      "width": 36,
+                      "height": 36,
+                      "fill": "$muted",
+                      "cornerRadius": 18,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "x6utZB",
+                          "name": "Persona",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "user",
+                          "library": "lucide",
+                          "fill": "$text-2"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wAsvg",
+              "name": "Buscador",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 12,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 10,
+              "padding": [
+                14,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "pQlQq",
+                  "name": "Lupa",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$text-2"
+                },
+                {
+                  "type": "text",
+                  "id": "D7Mijk",
+                  "name": "Placeholder",
+                  "fill": "$text-2",
+                  "content": "Buscá canchas cerca tuyo...",
+                  "fontFamily": "$font",
+                  "fontSize": 14
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CPZRf",
+              "name": "Fecha",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SxSlo",
+                  "name": "Titulo fecha",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xu9GU",
+                      "name": "Titulo",
+                      "fill": "$text",
+                      "content": "Elegí la fecha",
+                      "fontFamily": "$font",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R5cKE7",
+                      "name": "Mes",
+                      "gap": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "zpK06",
+                          "name": "Nombre mes",
+                          "fill": "$primary",
+                          "content": "Octubre",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "NaotX",
+                          "name": "Desplegar",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "chevron-down",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "V3cjH",
+                  "name": "Dias",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "BOV3G",
+                      "name": "Dia LUN",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 14,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IC4f6",
+                          "name": "Dia",
+                          "fill": "$text-2",
+                          "content": "LUN",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "rG5Rt",
+                          "name": "Numero",
+                          "fill": "$text",
+                          "content": "14",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KZalf",
+                      "name": "Dia MAR",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Pzvzm",
+                          "name": "Dia",
+                          "fill": "#D1FAE5",
+                          "content": "MAR",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Cyibs",
+                          "name": "Numero",
+                          "fill": "#FFFFFF",
+                          "content": "15",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oNsAU",
+                      "name": "Dia MIÉ",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 14,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "I3BeMZ",
+                          "name": "Dia",
+                          "fill": "$text-2",
+                          "content": "MIÉ",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "f7C8B8",
+                          "name": "Numero",
+                          "fill": "$text",
+                          "content": "16",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QdA23",
+                      "name": "Dia JUE",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 14,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "v8vYu",
+                          "name": "Dia",
+                          "fill": "$text-2",
+                          "content": "JUE",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "EddY2",
+                          "name": "Numero",
+                          "fill": "$text",
+                          "content": "17",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AmDOr",
+                      "name": "Dia VIE",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 14,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "H83jfI",
+                          "name": "Dia",
+                          "fill": "$text-2",
+                          "content": "VIE",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NjHdF",
+                          "name": "Numero",
+                          "fill": "$text",
+                          "content": "18",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jXIcB",
+              "name": "Titulo seccion",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "MbPRs",
+                  "name": "Titulo",
+                  "fill": "$text",
+                  "content": "Canchas disponibles",
+                  "fontFamily": "$font",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "gsOJM",
+                  "name": "Ver todo",
+                  "fill": "$primary",
+                  "content": "Ver todo",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JkmNt",
+              "name": "Cancha · Elite Arena Central",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "E7qrN",
+                  "name": "Foto",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "adiltes",
+                    "link": "https://unsplash.com/@adiltes",
+                    "author": "Adil Sattarov"
+                  },
+                  "width": 96,
+                  "height": 96,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1774798154084-c2b861d8581d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTAyMDYwOTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "cornerRadius": 12
+                },
+                {
+                  "type": "frame",
+                  "id": "Ie53e",
+                  "name": "Info",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 7,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "H6neyk",
+                      "name": "Fila nombre",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "E2zYqL",
+                          "name": "Nombre",
+                          "fill": "$text",
+                          "content": "Elite Arena Central",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jHcWI",
+                          "name": "Badge",
+                          "fill": "$primary-light",
+                          "cornerRadius": 6,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "v0x8zk",
+                              "name": "Tipo",
+                              "fill": "$primary-dark",
+                              "content": "5V5",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oC2lk",
+                      "name": "Distancia",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "NIsHC",
+                          "name": "Pin",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "map-pin",
+                          "library": "lucide",
+                          "fill": "$text-2"
+                        },
+                        {
+                          "type": "text",
+                          "id": "adnXE",
+                          "name": "Km",
+                          "fill": "$text-2",
+                          "content": "1.2 km de vos",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P2aLF",
+                      "name": "Rating",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "d1Z1E9",
+                          "name": "Estrella",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "star",
+                          "library": "lucide",
+                          "fill": "$warning"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yNGD5",
+                          "name": "Puntaje",
+                          "fill": "$text",
+                          "content": "4.8",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Z4m9n",
+                          "name": "Resenas",
+                          "fill": "$text-2",
+                          "content": "(124 reseñas)",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NvV8I",
+                      "name": "Fila precio",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "QqmUm",
+                          "name": "Precio",
+                          "gap": 3,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "VpHF5",
+                              "name": "Monto",
+                              "fill": "$primary",
+                              "content": "$45",
+                              "fontFamily": "$font",
+                              "fontSize": 17,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "cGACG",
+                              "name": "Por hora",
+                              "fill": "$text-2",
+                              "content": "/ hora",
+                              "fontFamily": "$font",
+                              "fontSize": 12
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "rguS3",
+                          "name": "Boton reservar",
+                          "fill": "$primary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            8,
+                            16
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "h7WVY",
+                              "name": "Label",
+                              "fill": "#FFFFFF",
+                              "content": "Reservar",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZwHTT",
+              "name": "Cancha · Skyline Sports Hub",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mEUUx",
+                  "name": "Foto",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "chrishahn",
+                    "link": "https://unsplash.com/@chrishahn",
+                    "author": "Chris Hahn"
+                  },
+                  "width": 96,
+                  "height": 96,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1708009716452-b15136aa2fc7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTAyMDYwOTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "cornerRadius": 12
+                },
+                {
+                  "type": "frame",
+                  "id": "YsjYQ",
+                  "name": "Info",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 7,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "gTi75",
+                      "name": "Fila nombre",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "KCj0V",
+                          "name": "Nombre",
+                          "fill": "$text",
+                          "content": "Skyline Sports Hub",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "J9zCk",
+                          "name": "Badge",
+                          "fill": "$primary-light",
+                          "cornerRadius": 6,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "PnM9D",
+                              "name": "Tipo",
+                              "fill": "$primary-dark",
+                              "content": "7V7",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lVOTQ",
+                      "name": "Distancia",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "eRuYd",
+                          "name": "Pin",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "map-pin",
+                          "library": "lucide",
+                          "fill": "$text-2"
+                        },
+                        {
+                          "type": "text",
+                          "id": "fYDMB",
+                          "name": "Km",
+                          "fill": "$text-2",
+                          "content": "2.8 km de vos",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LUksn",
+                      "name": "Rating",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "s0hGI",
+                          "name": "Estrella",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "star",
+                          "library": "lucide",
+                          "fill": "$warning"
+                        },
+                        {
+                          "type": "text",
+                          "id": "D9D4U",
+                          "name": "Puntaje",
+                          "fill": "$text",
+                          "content": "4.6",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "UHXs7",
+                          "name": "Resenas",
+                          "fill": "$text-2",
+                          "content": "(89 reseñas)",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "umq4O",
+                      "name": "Fila precio",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "P84ZiJ",
+                          "name": "Precio",
+                          "gap": 3,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "NeeJl",
+                              "name": "Monto",
+                              "fill": "$primary",
+                              "content": "$60",
+                              "fontFamily": "$font",
+                              "fontSize": 17,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "p177A",
+                              "name": "Por hora",
+                              "fill": "$text-2",
+                              "content": "/ hora",
+                              "fontFamily": "$font",
+                              "fontSize": 12
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "D1k9p",
+                          "name": "Boton reservar",
+                          "fill": "$primary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            8,
+                            16
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "dJCfa",
+                              "name": "Label",
+                              "fill": "#FFFFFF",
+                              "content": "Reservar",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "m0Eg0",
+              "name": "Cancha · Cancha Municipal",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 12,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hYPRH",
+                  "name": "Foto",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "leonardvonbibra",
+                    "link": "https://unsplash.com/@leonardvonbibra",
+                    "author": "Leonard von Bibra"
+                  },
+                  "width": 96,
+                  "height": 96,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1554992489-bf8679d57ac1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTAyMDYwOTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "cornerRadius": 12
+                },
+                {
+                  "type": "frame",
+                  "id": "wa0x0",
+                  "name": "Info",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 7,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "KD1dX",
+                      "name": "Fila nombre",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "P7VdE",
+                          "name": "Nombre",
+                          "fill": "$text",
+                          "content": "Cancha Municipal",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "T4raY",
+                          "name": "Badge",
+                          "fill": "$primary-light",
+                          "cornerRadius": 6,
+                          "padding": [
+                            3,
+                            8
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "TVMxW",
+                              "name": "Tipo",
+                              "fill": "$primary-dark",
+                              "content": "5V5",
+                              "fontFamily": "$font",
+                              "fontSize": 10,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "h9ptwx",
+                      "name": "Distancia",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "B9mEl6",
+                          "name": "Pin",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "map-pin",
+                          "library": "lucide",
+                          "fill": "$text-2"
+                        },
+                        {
+                          "type": "text",
+                          "id": "aOpGT",
+                          "name": "Km",
+                          "fill": "$text-2",
+                          "content": "3.5 km de vos",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ucyIa",
+                      "name": "Rating",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "RiX30",
+                          "name": "Estrella",
+                          "width": 13,
+                          "height": 13,
+                          "icon": "star",
+                          "library": "lucide",
+                          "fill": "$warning"
+                        },
+                        {
+                          "type": "text",
+                          "id": "sePtg",
+                          "name": "Puntaje",
+                          "fill": "$text",
+                          "content": "4.9",
+                          "fontFamily": "$font",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "c2qw01",
+                          "name": "Resenas",
+                          "fill": "$text-2",
+                          "content": "(210 reseñas)",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PHyY3",
+                      "name": "Fila precio",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "G8A8J",
+                          "name": "Precio",
+                          "gap": 3,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "YLONP",
+                              "name": "Monto",
+                              "fill": "$primary",
+                              "content": "$40",
+                              "fontFamily": "$font",
+                              "fontSize": 17,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "rYvdC",
+                              "name": "Por hora",
+                              "fill": "$text-2",
+                              "content": "/ hora",
+                              "fontFamily": "$font",
+                              "fontSize": 12
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zvmQz",
+                          "name": "Boton reservar",
+                          "fill": "$primary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            8,
+                            16
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "r3KVUU",
+                              "name": "Label",
+                              "fill": "#FFFFFF",
+                              "content": "Reservar",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kVzpx",
+              "name": "Categorias",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "aqeSG",
+                  "name": "Titulo",
+                  "fill": "$text",
+                  "content": "Categorías",
+                  "fontFamily": "$font",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "o3pkEY",
+                  "name": "Fila categorias",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "A2CAK",
+                      "name": "Categoria Fútbol 5",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 16,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 10,
+                      "padding": [
+                        18,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "TKC8A",
+                          "name": "Icono",
+                          "width": 44,
+                          "height": 44,
+                          "fill": "$primary-light",
+                          "cornerRadius": 22,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "cLfSA",
+                              "name": "Fútbol 5",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "users",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "Gu9vG",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "Fútbol 5",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "afVOU",
+                      "name": "Categoria Fútbol 7",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 16,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 10,
+                      "padding": [
+                        18,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Sv1Kd",
+                          "name": "Icono",
+                          "width": 44,
+                          "height": 44,
+                          "fill": "$warning-light",
+                          "cornerRadius": 22,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "CHUZ4",
+                              "name": "Fútbol 7",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "layout-grid",
+                              "library": "lucide",
+                              "fill": "$warning"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "LyMS7",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "Fútbol 7",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mfIPC",
+          "name": "Tab bar",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "mwoKT",
+              "name": "Barra",
+              "width": "fill_container",
+              "height": 56,
+              "fill": "#FFFFFFE6",
+              "cornerRadius": 28,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0F172A1A",
+                "offset": {
+                  "x": 0,
+                  "y": 6
+                },
+                "blur": 20
+              },
+              "padding": 6,
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "s18GJ",
+                  "name": "Item Inicio",
+                  "fill": "$primary-light",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Vjhq8",
+                      "name": "Inicio",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "house",
+                      "library": "lucide",
+                      "fill": "$primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "k1VWUB",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Inicio",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qEywA",
+                  "name": "Item Mis reservas",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "CyiSp",
+                      "name": "Mis reservas",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "calendar-check",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "KazGl",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Mis reservas",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BS65T",
+                  "name": "Item Favoritos",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "oNJWx",
+                      "name": "Favoritos",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "heart",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "b6jX17",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Favoritos",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Xch2C",
+                  "name": "Item Perfil",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "IA3XD",
+                      "name": "Perfil",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "user",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "OaTBX",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Perfil",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "XRBoI",
+      "x": 1310,
+      "y": 120,
+      "name": "02 · Detalle de cancha",
+      "clip": true,
+      "width": 390,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "IrgC8",
+          "name": "Barra de estado",
+          "width": "fill_container",
+          "height": 62,
+          "fill": "$surface",
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "lQ4jk",
+              "name": "Hora",
+              "fill": "$text",
+              "content": "9:41",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "HkeXs",
+              "name": "Indicadores",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "T7QuF",
+                  "name": "Senal",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "signal",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "eOTXD",
+                  "name": "WiFi",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "f71QP",
+                  "name": "Bateria",
+                  "width": 17,
+                  "height": 17,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zstBI",
+          "name": "Foto principal",
+          "metadata": {
+            "type": "unsplash",
+            "username": "lucidistortephoto",
+            "link": "https://unsplash.com/@lucidistortephoto",
+            "author": "Alfonso Scarpa"
+          },
+          "width": "fill_container",
+          "height": 240,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "https://images.unsplash.com/photo-1763775594018-4a84eeadd83d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTAyMDYxMzh8&ixlib=rb-4.1.0&q=80&w=1080",
+            "mode": "fill"
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "suE56",
+              "x": 16,
+              "y": 16,
+              "name": "Volver",
+              "width": 40,
+              "height": 40,
+              "fill": "#FFFFFFF2",
+              "cornerRadius": 20,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "wbxGZ",
+                  "name": "Icono",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "chevron-left",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "mWSIj",
+              "x": 282,
+              "y": 16,
+              "name": "Favorito",
+              "width": 40,
+              "height": 40,
+              "fill": "#FFFFFFF2",
+              "cornerRadius": 20,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "P8FH0G",
+                  "name": "Icono",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "heart",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xEhac",
+              "x": 334,
+              "y": 16,
+              "name": "Compartir",
+              "width": 40,
+              "height": 40,
+              "fill": "#FFFFFFF2",
+              "cornerRadius": 20,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "CbcJV",
+                  "name": "Icono",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "share-2",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "p8WXsA",
+          "name": "Informacion",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            20,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "sxjBe",
+              "name": "Fila superior",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HLztV",
+                  "name": "Premium y rating",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "jFgXu",
+                      "name": "Badge premium",
+                      "fill": "$primary",
+                      "cornerRadius": 16,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "VRcPh",
+                          "name": "Label",
+                          "fill": "#FFFFFF",
+                          "content": "PREMIUM",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "800",
+                          "letterSpacing": 0.8
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ueQBI",
+                      "name": "Rating",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "nFuOo",
+                          "name": "Estrella",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "star",
+                          "library": "lucide",
+                          "fill": "$warning"
+                        },
+                        {
+                          "type": "text",
+                          "id": "XKOnu",
+                          "name": "Nota",
+                          "fill": "$text",
+                          "content": "4.8",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DNrD1",
+                  "name": "Precio",
+                  "layout": "vertical",
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "itGtB",
+                      "name": "Monto",
+                      "fill": "$primary",
+                      "content": "$45",
+                      "fontFamily": "$font",
+                      "fontSize": 24,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qJXXN",
+                      "name": "Unidad",
+                      "fill": "$text-2",
+                      "content": "por hora",
+                      "fontFamily": "$font",
+                      "fontSize": 11
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TqSWd",
+              "name": "Titulo",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Y5R2NE",
+                  "name": "Nombre",
+                  "fill": "$text",
+                  "content": "Elite Arena Central",
+                  "fontFamily": "$font",
+                  "fontSize": 22,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "frame",
+                  "id": "YpNTx",
+                  "name": "Direccion",
+                  "gap": 5,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "irwjJ",
+                      "name": "Pin",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "U1XOjD",
+                      "name": "Texto",
+                      "fill": "$text-2",
+                      "content": "Av. de los Deportes 123, Centro",
+                      "fontFamily": "$font",
+                      "fontSize": 13
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "w0G92",
+              "name": "Comodidades",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "WiNmf",
+                  "name": "Titulo",
+                  "fill": "$text",
+                  "content": "Comodidades",
+                  "fontFamily": "$font",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "s6G69M",
+                  "name": "Fila comodidades",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "r6MDz",
+                      "name": "Comodidad Duchas",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "b6BTcC",
+                          "name": "Circulo",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "$surface",
+                          "cornerRadius": 24,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "yxsha",
+                              "name": "Duchas",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "shower-head",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "Me5HD",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "Duchas",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Sy4pU",
+                      "name": "Comodidad Estac.",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "lzo41",
+                          "name": "Circulo",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "$surface",
+                          "cornerRadius": 24,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Q1Ew4",
+                              "name": "Estac.",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "car",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "oIu2i",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "Estac.",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AFQy8",
+                      "name": "Comodidad Aire a/c",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "toclw",
+                          "name": "Circulo",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "$surface",
+                          "cornerRadius": 24,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "tZtPi",
+                              "name": "Aire a/c",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "snowflake",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "VzZFi",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "Aire a/c",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OJctf",
+                      "name": "Comodidad Agua",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HTPRc",
+                          "name": "Circulo",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "$surface",
+                          "cornerRadius": 24,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "PGTvB",
+                              "name": "Agua",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "droplet",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "EYKal",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "Agua",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "fQi6L",
+                      "name": "Comodidad WiFi",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "QtjIm",
+                          "name": "Circulo",
+                          "width": 48,
+                          "height": 48,
+                          "fill": "$surface",
+                          "cornerRadius": 24,
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "UA6uS",
+                              "name": "WiFi",
+                              "width": 22,
+                              "height": 22,
+                              "icon": "wifi",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "NzVov",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "WiFi",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xmghf",
+              "name": "Descripcion",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Jkh1X",
+                  "name": "Titulo",
+                  "fill": "$text",
+                  "content": "Sobre esta cancha",
+                  "fontFamily": "$font",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "ZYZww",
+                  "name": "Parrafo",
+                  "fill": "$text-2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Césped sintético de grado profesional, iluminación LED de alta intensidad para partidos nocturnos y vestuarios con aire acondicionado. Perfecta para quinta con amigos o torneos competitivos.",
+                  "lineHeight": 1.55,
+                  "fontFamily": "$font",
+                  "fontSize": 13
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "D88WT",
+              "name": "Horarios",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pvSqj",
+                  "name": "Titulo horarios",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "puOrh",
+                      "name": "Titulo",
+                      "fill": "$text",
+                      "content": "Elegí el horario",
+                      "fontFamily": "$font",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "eHd2i",
+                      "name": "Fecha",
+                      "fill": "$text-2",
+                      "content": "Mar, 15 oct",
+                      "fontFamily": "$font",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GCUpm",
+                  "name": "Fila horarios",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "FzOS5",
+                      "name": "Hora 17:00",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 10,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "EMEGO",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "17:00",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cbr6B",
+                      "name": "Hora 18:00",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 10,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rIcxE",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "18:00",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "J20R6z",
+                      "name": "Hora 19:00",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": 10,
+                      "stroke": "$primary",
+                      "strokeWidth": 1,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "W3JliG",
+                          "name": "Label",
+                          "fill": "#FFFFFF",
+                          "content": "19:00",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "onstH",
+                  "name": "Fila horarios",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "I8AYgs",
+                      "name": "Hora 20:00",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 10,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "HhWzn",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "20:00",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R41Lh",
+                      "name": "Hora 21:00",
+                      "width": "fill_container",
+                      "fill": "$muted",
+                      "cornerRadius": 10,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jlJed",
+                          "name": "Label",
+                          "fill": "#94A3B8",
+                          "content": "21:00",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Vhycf",
+                      "name": "Hora 22:00",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 10,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "m6ichZ",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "22:00",
+                          "fontFamily": "$font",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "zQuCe",
+              "name": "Pie",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fkx20",
+                  "name": "Total",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "C6yqm",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "PRECIO TOTAL",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "bH7D9",
+                      "name": "Monto",
+                      "fill": "$text",
+                      "content": "$45.00",
+                      "fontFamily": "$font",
+                      "fontSize": 24,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "I2A7G4",
+                  "name": "Boton confirmar",
+                  "fill": "$primary",
+                  "cornerRadius": 26,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#16A34A4D",
+                    "offset": {
+                      "x": 0,
+                      "y": 6
+                    },
+                    "blur": 16
+                  },
+                  "gap": 8,
+                  "padding": [
+                    16,
+                    24
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "IcYpW",
+                      "name": "Label",
+                      "fill": "#FFFFFF",
+                      "content": "Confirmar reserva",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "F8hXmJ",
+                      "name": "Flecha",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wB3eJ",
+      "x": 1740,
+      "y": 120,
+      "name": "03 · Mis reservas",
+      "clip": true,
+      "width": 390,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "yzpjb",
+          "name": "Barra de estado",
+          "width": "fill_container",
+          "height": 62,
+          "fill": "$surface",
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "y8aAtA",
+              "name": "Hora",
+              "fill": "$text",
+              "content": "9:41",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "o203F",
+              "name": "Indicadores",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Ae3UV",
+                  "name": "Senal",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "signal",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "kENgJ",
+                  "name": "WiFi",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "gc9c5",
+                  "name": "Bateria",
+                  "width": 17,
+                  "height": 17,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "omy5T",
+          "name": "Contenido",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "xMdXr",
+              "name": "Encabezado",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PL4Bt",
+                  "name": "Volver",
+                  "width": 40,
+                  "height": 40,
+                  "fill": "$surface",
+                  "cornerRadius": 20,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "UWuE7",
+                      "name": "Chevron",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "chevron-left",
+                      "library": "lucide",
+                      "fill": "$text"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "PKZ8q",
+                  "name": "Titulo",
+                  "fill": "$text",
+                  "content": "Mis reservas",
+                  "fontFamily": "$font",
+                  "fontSize": 20,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "c0YG85",
+              "name": "Tabs",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eW5xd",
+                  "name": "Tab Próximas",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "V0pLd",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Próximas",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qCd76",
+                      "name": "Linea",
+                      "width": "fill_container",
+                      "height": 3,
+                      "fill": "$primary",
+                      "cornerRadius": 2
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "S2CvwE",
+                  "name": "Tab Completadas",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "YUSax",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Completadas",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wQ4Fr",
+                      "name": "Linea",
+                      "width": "fill_container",
+                      "height": 3,
+                      "fill": "#00000000",
+                      "cornerRadius": 2
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fDQG3",
+                  "name": "Tab Canceladas",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "wYOsI",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Canceladas",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eHvRK",
+                      "name": "Linea",
+                      "width": "fill_container",
+                      "height": 3,
+                      "fill": "#00000000",
+                      "cornerRadius": 2
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HEx7r",
+              "name": "Reserva · Elite Arena Central",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ttbfI",
+                  "name": "Fila superior",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "GdGmv",
+                      "name": "Miniatura",
+                      "metadata": {
+                        "type": "unsplash",
+                        "username": "tontongilles",
+                        "link": "https://unsplash.com/@tontongilles",
+                        "author": "Edouard Gilles"
+                      },
+                      "width": 48,
+                      "height": 48,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1616066472875-59a950a3d70a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTAyMDYxNzJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 10
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Thy7P",
+                      "name": "Nombre y fecha",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "glGr9",
+                          "name": "Nombre",
+                          "fill": "$text",
+                          "content": "Elite Arena Central",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GhKxL",
+                          "name": "Fecha",
+                          "fill": "$text-2",
+                          "content": "Mar, 15 oct 2026",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ChzCc",
+                      "name": "Badge estado",
+                      "fill": "$primary",
+                      "cornerRadius": 6,
+                      "padding": [
+                        4,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "q44QN",
+                          "name": "Estado",
+                          "fill": "#FFFFFF",
+                          "content": "CONFIRMADA",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "800",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "igdtV",
+                  "name": "Datos",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "erfZ9",
+                      "name": "Horario",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "C4Mtq",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "HORARIO",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.8
+                        },
+                        {
+                          "type": "text",
+                          "id": "VpPkD",
+                          "name": "Valor",
+                          "fill": "$text",
+                          "content": "19:00 - 20:00",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "S84Cv7",
+                      "name": "Cancha",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Hnkxd",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "CANCHA",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.8
+                        },
+                        {
+                          "type": "text",
+                          "id": "q45RgO",
+                          "name": "Valor",
+                          "fill": "$text",
+                          "content": "Cancha A (5v5)",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Tsa3x",
+                  "name": "Acciones",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "I0mb2k",
+                      "name": "Boton secundario",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 22,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "j8mxO",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "Cancelar reserva",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "B3d7E",
+                      "name": "Boton principal",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": 22,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jIFDU",
+                          "name": "Label",
+                          "fill": "#FFFFFF",
+                          "content": "Ver QR",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "R44Vz",
+              "name": "Reserva · Skyline Sports Hub",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RSzDN",
+                  "name": "Fila superior",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "uAoKY",
+                      "name": "Miniatura",
+                      "metadata": {
+                        "type": "unsplash",
+                        "username": "flicksbygurdaas",
+                        "link": "https://unsplash.com/@flicksbygurdaas",
+                        "author": "Gurdaas Malik"
+                      },
+                      "width": 48,
+                      "height": 48,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "https://images.unsplash.com/photo-1770237710759-82b2962cd4ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3OTAyMDYxNzJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 10
+                    },
+                    {
+                      "type": "frame",
+                      "id": "w7d4U",
+                      "name": "Nombre y fecha",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "SvO2F",
+                          "name": "Nombre",
+                          "fill": "$text",
+                          "content": "Skyline Sports Hub",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "oXk8t",
+                          "name": "Fecha",
+                          "fill": "$text-2",
+                          "content": "Sáb, 19 oct 2026",
+                          "fontFamily": "$font",
+                          "fontSize": 12
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xyMvY",
+                      "name": "Badge estado",
+                      "fill": "$warning",
+                      "cornerRadius": 6,
+                      "padding": [
+                        4,
+                        8
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XcDbq",
+                          "name": "Estado",
+                          "fill": "#FFFFFF",
+                          "content": "PENDIENTE",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "800",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M8QBVC",
+                  "name": "Datos",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "e0qEmF",
+                      "name": "Horario",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "S4IAyS",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "HORARIO",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.8
+                        },
+                        {
+                          "type": "text",
+                          "id": "d7oDMO",
+                          "name": "Valor",
+                          "fill": "$text",
+                          "content": "10:00 - 11:30",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "p0med",
+                      "name": "Cancha",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hwB9r",
+                          "name": "Label",
+                          "fill": "$text-2",
+                          "content": "CANCHA",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.8
+                        },
+                        {
+                          "type": "text",
+                          "id": "adIi2",
+                          "name": "Valor",
+                          "fill": "$text",
+                          "content": "Cancha principal (7v7)",
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "I2OH79",
+                  "name": "Acciones",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "f8Vrkv",
+                      "name": "Boton secundario",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 22,
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Gw5aR",
+                          "name": "Label",
+                          "fill": "$text",
+                          "content": "Cancelar reserva",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "DWne4",
+                      "name": "Boton principal",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": 22,
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Sb96G",
+                          "name": "Label",
+                          "fill": "#FFFFFF",
+                          "content": "Confirmar",
+                          "fontFamily": "$font",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AF1m9",
+          "name": "Tab bar",
+          "width": "fill_container",
+          "padding": [
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "dOJrO",
+              "name": "Barra",
+              "width": "fill_container",
+              "height": 56,
+              "fill": "#FFFFFFE6",
+              "cornerRadius": 28,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0F172A1A",
+                "offset": {
+                  "x": 0,
+                  "y": 6
+                },
+                "blur": 20
+              },
+              "padding": 6,
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "lT5Cu",
+                  "name": "Item Inicio",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "QZguQ",
+                      "name": "Inicio",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "house",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "njicK",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Inicio",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "l4Kb8u",
+                  "name": "Item Mis reservas",
+                  "fill": "$primary-light",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "miXyC",
+                      "name": "Mis reservas",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "calendar-check",
+                      "library": "lucide",
+                      "fill": "$primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "XpjmD",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Mis reservas",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zOE6K",
+                  "name": "Item Favoritos",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "XNz9T",
+                      "name": "Favoritos",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "heart",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "a65tXD",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Favoritos",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "t71rb5",
+                  "name": "Item Perfil",
+                  "cornerRadius": 18,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "ipE8h",
+                      "name": "Perfil",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "user",
+                      "library": "lucide",
+                      "fill": "$text-2"
+                    },
+                    {
+                      "type": "text",
+                      "id": "PK5Bf",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "Perfil",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Y3eoku",
+      "x": 2170,
+      "y": 120,
+      "name": "04 · Reserva exitosa",
+      "clip": true,
+      "width": 390,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "C4P5M",
+          "name": "Barra de estado",
+          "width": "fill_container",
+          "height": 62,
+          "fill": "$surface",
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "t5Wa7",
+              "name": "Hora",
+              "fill": "$text",
+              "content": "9:41",
+              "fontFamily": "$font",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "d4Syv5",
+              "name": "Indicadores",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "DzJ5Y",
+                  "name": "Senal",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "signal",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "vkR6A",
+                  "name": "WiFi",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "icon",
+                  "id": "C0vSu",
+                  "name": "Bateria",
+                  "width": 17,
+                  "height": 17,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "l3TC2",
+          "name": "Contenido",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            48,
+            24,
+            28,
+            24
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "cn8pX",
+              "name": "Icono exito",
+              "width": 160,
+              "height": 160,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "m4FThJ",
+                  "x": 20,
+                  "y": 20,
+                  "name": "Circulo",
+                  "width": 120,
+                  "height": 120,
+                  "fill": "$primary",
+                  "cornerRadius": 60,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#16A34A59",
+                    "offset": {
+                      "x": 0,
+                      "y": 10
+                    },
+                    "blur": 28
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "m3NgQa",
+                      "name": "Check",
+                      "width": 56,
+                      "height": 56,
+                      "icon": "check",
+                      "library": "lucide",
+                      "weight": 3,
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "ellipse",
+                  "id": "zuMBl",
+                  "x": 134,
+                  "y": 8,
+                  "name": "Punto ambar",
+                  "fill": "$warning",
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "ellipse",
+                  "id": "PrY57",
+                  "x": 12,
+                  "y": 124,
+                  "name": "Punto azul",
+                  "fill": "#3B82F6",
+                  "width": 10,
+                  "height": 10
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "J8KV2",
+              "name": "Titulo",
+              "fill": "$text",
+              "content": "¡Reserva exitosa!",
+              "textAlign": "center",
+              "fontFamily": "$font",
+              "fontSize": 26,
+              "fontWeight": "800"
+            },
+            {
+              "type": "text",
+              "id": "FHf1M",
+              "name": "Parrafo",
+              "fill": "$text-2",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Tu cancha Elite Arena Central quedó reservada para el 15 de octubre a las 19:00.",
+              "lineHeight": 1.5,
+              "textAlign": "center",
+              "fontFamily": "$font",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "M1sMM9",
+              "name": "Resumen de orden",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 16,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VnLK6",
+                  "name": "Fila N° DE ORDEN",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "DnSNf",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "N° DE ORDEN",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "IBoje",
+                      "name": "Valor",
+                      "fill": "$text",
+                      "content": "#GB-882910",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "D7lyX",
+                  "name": "Separador",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "$border"
+                },
+                {
+                  "type": "frame",
+                  "id": "xoHOC",
+                  "name": "Fila ESTADO DE PAGO",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "koJfL",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "ESTADO DE PAGO",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "frame",
+                      "id": "X5UySn",
+                      "name": "Pill pagado",
+                      "fill": "$primary-light",
+                      "cornerRadius": 8,
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "LNiFt",
+                          "name": "Valor",
+                          "fill": "$primary-dark",
+                          "content": "PAGADO",
+                          "fontFamily": "$font",
+                          "fontSize": 11,
+                          "fontWeight": "800",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hV0jc",
+                  "name": "Separador",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "$border"
+                },
+                {
+                  "type": "frame",
+                  "id": "dfqFW",
+                  "name": "Fila PRECIO TOTAL",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "p1upLp",
+                      "name": "Label",
+                      "fill": "$text-2",
+                      "content": "PRECIO TOTAL",
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "n2jEFd",
+                      "name": "Valor",
+                      "fill": "$primary",
+                      "content": "$45.00",
+                      "fontFamily": "$font",
+                      "fontSize": 20,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "lpeym",
+              "name": "Nota",
+              "fill": "$text-2",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Te enviamos la confirmación a tu email registrado.",
+              "textAlign": "center",
+              "fontFamily": "$font",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "BLlqB",
+              "name": "Acciones",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Ww0XU",
+                  "name": "Boton ver reservas",
+                  "width": "fill_container",
+                  "fill": "$primary",
+                  "cornerRadius": 26,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S81Jyc",
+                      "name": "Label",
+                      "fill": "#FFFFFF",
+                      "content": "Ver mis reservas",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Jb51h",
+                  "name": "Boton inicio",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": 26,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yr7lg",
+                      "name": "Label",
+                      "fill": "$text",
+                      "content": "Volver al inicio",
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "primary": {
+      "type": "color",
+      "value": "#16A34A"
+    },
+    "primary-dark": {
+      "type": "color",
+      "value": "#15803D"
+    },
+    "primary-light": {
+      "type": "color",
+      "value": "#DCFCE7"
+    },
+    "bg": {
+      "type": "color",
+      "value": "#F5F7FA"
+    },
+    "surface": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "text": {
+      "type": "color",
+      "value": "#0F172A"
+    },
+    "text-2": {
+      "type": "color",
+      "value": "#64748B"
+    },
+    "border": {
+      "type": "color",
+      "value": "#E2E8F0"
+    },
+    "warning": {
+      "type": "color",
+      "value": "#F59E0B"
+    },
+    "warning-light": {
+      "type": "color",
+      "value": "#FEF3C7"
+    },
+    "danger": {
+      "type": "color",
+      "value": "#EF4444"
+    },
+    "danger-light": {
+      "type": "color",
+      "value": "#FEE2E2"
+    },
+    "muted": {
+      "type": "color",
+      "value": "#F1F5F9"
+    },
+    "font": {
+      "type": "string",
+      "value": "Inter"
+    }
+  },
+  "fileToken": "603f0e8a-a728-4f35-a70d-e52c3947e948"
+}

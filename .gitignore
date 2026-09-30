@@ -1,0 +1,21 @@
+# Entorno local
+.env
+
+# Django
+staticfiles/
+__pycache__/
+*.pyc
+*.pyo
+db.sqlite3
+
+# Flutter / Dart
+src/mobile/.dart_tool/
+src/mobile/build/
+src/mobile/.flutter-plugins
+src/mobile/.flutter-plugins-dependencies
+src/mobile/pubspec.lock
+*.iml
+
+# IDE
+.idea/
+.vscode/
