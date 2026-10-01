@@ -1,6 +1,6 @@
 """Lógica de negocio — TurnosCancha.
 
-Reglas centrales (ver turnos-futbol.md §3):
+Reglas centrales (ver general.md §3):
 - F7 ocupa las 2 canchas físicas (F5-A y F5-B); F5 ocupa solo la mitad elegida.
 - Superposición validada dentro de una transacción sobre las canchas físicas.
 - Ciclo de vida: PENDIENTE → CONFIRMADA | VENCIDA | CANCELADA.
