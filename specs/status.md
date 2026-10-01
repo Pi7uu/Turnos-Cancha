@@ -1,6 +1,6 @@
 # Estado de tareas — TurnosCancha
 
-Actualizado: 2026-09-23. Rama: `master`.
+Actualizado: 2026-10-01. Rama: `main`.
 
 ## Completadas
 
@@ -12,11 +12,12 @@ Actualizado: 2026-09-23. Rama: `master`.
 | 4 | Pantallas Flutter (login, registro, disponibilidad, reservar, mis reservas, agenda admin) | ✅ | `src/mobile/lib/features/` (pendiente `flutter analyze`, Flutter no instalado en la máquina) |
 | 5 | Auth (registro/login/logout con sesión y roles cliente/admin) | ✅ | `/api/auth/*`, `auth.py` (session sin CSRF) |
 | 6 | Seed data y fixtures (canchas F5-A/F5-B, configuración) | ✅ | `fixtures/initial_data.json` |
+| 7 | Documento de requerimientos vivo (BD, scripts de BD, backend) | ✅ | `docs/specs/requerimientos-backend.md`, commit `46838c8`; 18 tests OK; fix de referencia rota en `services.py` (`turnos-futbol.md` → `general.md`) |
 
 ## Pendientes
 
 | # | Tarea | Estado | Nota |
 |---|---|---|---|
-| 7 | Vencimiento automático programado (cron/task) | ⏳ | Existe el comando `python manage.py vencer_reservas` y se aplica al consultar disponibilidad; falta tarea periódica en hosting |
-| 8 | Avisos por WhatsApp (Etapa 2) | ⏳ | — |
-| 9 | Historial y filtros avanzados en panel admin | ⏳ | Básico: agenda por día + historial por cliente |
+| 8 | Vencimiento automático programado (cron/task) | ⏳ | Existe el comando `python manage.py vencer_reservas` y se aplica al consultar disponibilidad; falta tarea periódica en hosting |
+| 9 | Avisos por WhatsApp (Etapa 2) | ⏳ | — |
+| 10 | Historial y filtros avanzados en panel admin | ⏳ | Básico: agenda por día + historial por cliente |
