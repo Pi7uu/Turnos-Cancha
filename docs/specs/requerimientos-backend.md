@@ -1,7 +1,7 @@
 # Requerimientos — Base de datos, scripts y backend
 
-**Actualizado:** 2026-10-01
-**Alcance:** estado actual del backend existente (Django + DRF en `src/backend/`). Documento vivo: cada requerimiento nuevo se agrega acá y se marca cuando se implementa.
+**Actualizado:** 2026-10-06
+**Alcance:** backend Django + DRF en `src/BackEnd/`, en reconstrucción tras el reset (`6c8ef4a`). Documento vivo: cada requerimiento nuevo se agrega acá y se marca cuando se implementa. Estado actual: §1 (esquema) y migraciones ✅; seed, servicios, API y tests ⏳.
 
 ---
 
@@ -21,22 +21,22 @@ Flujo: **definir el requerimiento en la sección 5 → implementarlo → marcarl
 
 ## 1. Base de datos
 
-SQLite (`src/backend/db/db.sqlite3`). Esquema creado por migraciones (ver sección 2.1). Modelos de la app `turnos`: `Usuario`, `Cancha`, `Reserva`, `Configuracion` (más la tabla intermedia `reserva ↔ cancha` que genera el M2M).
+SQLite (`src/BackEnd/db/db.sqlite3`). Esquema creado por migraciones (ver sección 2.1). Modelos de la app `turnos`: `Usuario`, `Cancha`, `Reserva`, `ReservaCancha` (tabla intermedia del M2M `reserva ↔ cancha`) y `Configuracion`.
 
 ### 1.1 Usuario
 
-Extiende `AbstractUser` de Django (`apps/turnos/models.py`).
+Extiende `AbstractUser` de Django **sin campo `username`** (`username = None`, `apps/turnos/models.py`).
 
 | Campo | Tipo | Notas |
 |-------|------|-------|
-| `email` | Email, **único** | Identificador de login |
+| `email` | Email, **único** | Identificador de login (`USERNAME_FIELD = "email"`) |
 | `telefono` | String(30) | Opcional |
 | `rol` | String(10) | `CLIENTE` (por defecto) o `ADMIN` |
-| `username` | String | Se guarda igual al email |
 | `password` | Hash | PBKDF2 de Django |
 
+- No existe `username`: manager propio `UsuarioManager` crea usuarios solo con email (`REQUIRED_FIELDS = []`). El nombre visible se guarda en `first_name`.
 - Propiedad `es_admin`: `True` si `rol == ADMIN` **o** `is_superuser`.
-- Login con email + contraseña (ver `auth.py`); `REQUIRED_FIELDS = ["email"]`.
+- Login con email + contraseña (ver `auth.py`).
 
 ### 1.2 Cancha
 
@@ -58,7 +58,7 @@ Cancha física. La cancha F7 se divide en dos mitades F5.
 | `fecha` | Date | Día del turno |
 | `hora_inicio` / `hora_fin` | Time | Duración fija (configuración) |
 | `estado` | String(12) | `PENDIENTE` (defecto), `CONFIRMADA`, `VENCIDA`, `CANCELADA` |
-| `canchas` | **M2M → Cancha** | Canchas físicas que ocupa (F5 → 1, F7 → 2) |
+| `canchas` | **M2M → Cancha** (through `ReservaCancha`) | Canchas físicas que ocupa (F5 → 1, F7 → 2) |
 | `creada_en` | DateTime | Auto al crear |
 | `confirmada_en` | DateTime, nullable | Se llena al confirmar |
 | `cancelada_en` | DateTime, nullable | Se llena al cancelar o vencer |
@@ -68,7 +68,22 @@ Cancha física. La cancha F7 se divide en dos mitades F5.
 - Orden por defecto: `fecha`, `hora_inicio`.
 - Propiedades calculadas: `plazo_limite` (inicio del turno menos `plazo_cancelacion_h`, 24 h por defecto) y `cliente_puede_cancelar` (estamos antes de ese límite).
 
-### 1.4 Configuracion
+### 1.4 ReservaCancha — ocupación (tabla intermedia)
+
+Tabla intermedia del M2M `Reserva.canchas`: una fila por cancha física ocupada por la reserva.
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `reserva` | FK → Reserva (`CASCADE`) | Reserva dueña |
+| `cancha` | FK → Cancha (`CASCADE`) | Cancha física ocupada |
+| `fecha` | Date | Denormalizado de la reserva |
+| `hora_inicio` | Time | Denormalizado de la reserva |
+| `ocupando` | Boolean (defecto `True`) | `False` al cancelar/vencer: libera el horario y la fila queda para historial |
+
+- **Restricción a nivel BD:** `UniqueConstraint(cancha, fecha, hora_inicio) WHERE ocupando = True` (índice único parcial, `slot_ocupado_unico`). La BD rechaza cualquier doble ocupación aunque fallen las capas de aplicación. Compatible con SQLite y PostgreSQL.
+- `ocupando` se sincroniza con `Reserva.estado` en `services.py` (único escritor de estados).
+
+### 1.5 Configuracion
 
 Singleton (siempre `pk=1`, creado con `get_or_create` en `Configuracion.get_solo()`).
 
@@ -85,7 +100,7 @@ Singleton (siempre `pk=1`, creado con `get_or_create` en `Configuracion.get_solo
 
 ## 2. Scripts de BD
 
-Todos los comandos se corren desde `src/backend/`.
+Todos los comandos se corren desde `src/BackEnd/`.
 
 ### 2.1 Migraciones de esquema
 
@@ -96,32 +111,36 @@ python manage.py migrate          # crea/actualiza las tablas
 
 - Existe `apps/turnos/migrations/0001_initial.py`: crea los modelos de la sección 1.
 
-### 2.2 Seed / datos iniciales
+### 2.2 Seed / datos iniciales — ⏳ pendiente
+
+El fixture `apps/turnos/fixtures/initial_data.json` **aún no existe** (se perdió en el reset). Cuando exista:
 
 ```bash
 python manage.py loaddata apps/turnos/fixtures/initial_data.json
 ```
 
-`apps/turnos/fixtures/initial_data.json` carga:
+Contendrá:
 
 - **Usuario admin:** `admin@turnos.com` (superusuario, rol `ADMIN`, contraseña hasheada).
 - **Canchas:** `F5-A` y `F5-B`, ambas activas.
 - **Configuración:** horarios 09:00–23:00, turno de 60 min, plazos de 24 h, anticipación 30 días.
 
-### 2.3 Comando de mantenimiento
+### 2.3 Comando de mantenimiento — ⏳ pendiente
 
 ```bash
 python manage.py vencer_reservas   # marca VENCIDA toda reserva pendiente vencida
 ```
 
-- Implementado en `apps/turnos/management/commands/vencer_reservas.py`.
-- El mismo proceso (`vencer_reservas_pendientes()` de `services.py`) se ejecuta automáticamente al consultar disponibilidad, crear una reserva y confirmar una reserva.
+- Irá en `apps/turnos/management/commands/vencer_reservas.py`.
+- El mismo proceso (`vencer_reservas_pendientes()` de `services.py`, ⏳) se ejecutará automáticamente al consultar disponibilidad, crear una reserva y confirmar una reserva.
 
 ---
 
-## 3. Backend API
+## 3. Backend API — ⏳ pendiente (definido, a reconstruir)
 
 Django + DRF, prefijo **`/api/`** (`config/urls.py`). Django admin en `/admin/`.
+
+La base de sesión sin CSRF ya existe (`auth.py: SessionSinCSRF` + `settings.py`); los endpoints y reglas de esta sección están definidos acá y falta implementarlos.
 
 ### 3.1 Autenticación y roles
 
@@ -170,7 +189,7 @@ Errores: `{"detalle": "..."}` con 400 (validación), 403 (permiso), 404 (no enco
 - **Slots:** se generan desde `horario_inicio` hasta `horario_fin` con la duración fija; `hora_inicio` debe coincidir con un slot, si no → 400.
 - **Límites de fecha:** el cliente no puede reservar en el pasado ni con más de `anticipacion_max_dias` de anticipación. El admin no tiene esta restricción.
 - **Ciclo de vida (§3.3 del plan):**
-  - Crear → `PENDIENTE` (ya bloquea el horario).
+  - Crear → `PENDIENTE` (ya bloquea el horario); si el plazo de vencimiento ya pasó (reserva con <24 h de anticipación), nace `CONFIRMADA`.
   - Confirmar → `CONFIRMADA` (idempotente si ya estaba; 409 si venció).
   - Cancelar → `CANCELADA` con `cancelada_en` y `cancelada_por`. El cliente puede hasta `plazo_limite` (24 h antes); después solo el admin. Reservas ya `CANCELADA`/`VENCIDA` → 400.
   - Vencer → `VENCIDA` cuando una `PENDIENTE` está a menos de `plazo_vencimiento_h` del inicio.
@@ -182,14 +201,14 @@ Errores: `{"detalle": "..."}` con 400 (validación), 403 (permiso), 404 (no enco
 
 ---
 
-## 4. Verificación
+## 4. Verificación — ⏳ pendiente
 
 ```bash
-cd src/backend
+cd src/BackEnd
 python manage.py test apps.turnos.tests
 ```
 
-**18 tests** en `apps/turnos/tests.py`, organizados en:
+`apps/turnos/tests.py` **aún no existe** (se perdió en el reset; hay que reescribirlo). Plan de cobertura — los 18 tests del backend previo, organizados en:
 
 - `SuperposicionTest` — F7 ocupa ambas mitades, F5 solo su mitad, horarios distintos no chocan, canceladas liberan.
 - Ciclo de vida — creación pendiente, confirmación, cancelación dentro/fuera del plazo, admin cancela después del límite, vencimiento por plazo, no confirmar reservas ajenas.
@@ -205,5 +224,7 @@ Agregar filas acá al definir un requerimiento; marcar ✅ al implementarlo, con
 | Fecha | Requerimiento | Estado | Implementación |
 |-------|---------------|--------|----------------|
 | 2026-10-01 | Documento de requerimientos (BD, scripts, backend) | ✅ | `docs/specs/requerimientos-backend.md` |
+| 2026-10-06 | Reinicio de código: esquema SQLite con usuario sin `username` (login por email) y tabla `ReservaCancha` con índice único parcial anti-doble-reserva | ✅ | `apps/turnos/models.py`, migración `0001_initial` |
+| 2026-10-06 | Reserva con menos de 24 h de anticipación nace `CONFIRMADA` | ⏳ | Definido; se implementa en `services.py` |
 
-*(Próximas filas van acá. El backlog completo de tareas sigue en `specs/status.md`.)*
+*(Próximas filas van acá.)*

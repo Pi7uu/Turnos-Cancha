@@ -9,11 +9,11 @@ __pycache__/
 db.sqlite3
 
 # Flutter / Dart
-src/mobile/.dart_tool/
-src/mobile/build/
-src/mobile/.flutter-plugins
-src/mobile/.flutter-plugins-dependencies
-src/mobile/pubspec.lock
+src/FrontEnd/.dart_tool/
+src/FrontEnd/build/
+src/FrontEnd/.flutter-plugins
+src/FrontEnd/.flutter-plugins-dependencies
+src/FrontEnd/pubspec.lock
 *.iml
 
 # IDE
