@@ -1,6 +1,6 @@
 # AGENTS.md
 
-> Project purpose: see `overview.md`. Plan: `general.md`. Backend vivo: `docs/specs/requerimientos-backend.md`.
+> Project purpose: see `overview.md`. Backend vivo: `docs/specs/requerimientos-backend.md`.
 
 ## Architecture
 

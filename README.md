@@ -1,7 +1,7 @@
 # TurnosCancha — Alquiler de canchas de fútbol por turnos
 
-App móvil para reservar canchas de fútbol. Ver propósito en `overview.md`,
-plan en `general.md` y sistema de diseño en `DESIGN.md`.
+App móvil para reservar canchas de fútbol. Ver propósito en `overview.md`
+y sistema de diseño en `DESIGN.md`.
 
 ## Estado (2026-10-06)
 
