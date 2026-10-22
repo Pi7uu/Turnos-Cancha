@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
+import 'credenciales.dart';
+import 'usuario_validado_screen.dart';
 
 /// Pantalla de login (wireframes 04 y 04b).
 ///
@@ -26,6 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
 
+  /// Estado de error 04b (RF-04): bordes rojos + mensaje inline.
+  bool _error = false;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -37,8 +42,29 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _passwordVisible = !_passwordVisible);
   }
 
+  /// Valida y navega o muestra el estado 04b (RF-03, RF-04).
   void _submit() {
-    widget.onIngresar(_emailController.text, _passwordController.text);
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    // El callback recibe los valores crudos de cada intento (interfaz Tarea 3);
+    // main.dart decide si reacciona (hoy no hace nada — sin backend, CA 7).
+    widget.onIngresar(email, password);
+    if (credencialesValidas(email, password)) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => const UsuarioValidadoScreen(),
+        ),
+      );
+    } else {
+      setState(() => _error = true);
+    }
+  }
+
+  /// Escribir en cualquier campo limpia el estado de error (RF-03).
+  void _onChange(String _) {
+    if (_error) {
+      setState(() => _error = false);
+    }
   }
 
   @override
@@ -116,10 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
+          onChanged: _onChange,
           style: const TextStyle(fontSize: 15, color: AppColors.text),
           decoration: _inputDecoration(
             hint: 'tu@email.com',
             icon: LucideIcons.mail,
+            error: _error,
           ),
         ),
         const SizedBox(height: 16),
@@ -137,11 +165,13 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: !_passwordVisible,
           keyboardType: TextInputType.visiblePassword,
           textInputAction: TextInputAction.done,
+          onChanged: _onChange,
           onSubmitted: (_) => _submit(),
           style: const TextStyle(fontSize: 15, color: AppColors.text),
           decoration: _inputDecoration(
             hint: 'Tu contraseña',
             icon: LucideIcons.lock,
+            error: _error,
           ).copyWith(
             suffixIcon: IconButton(
               icon: Icon(
@@ -152,6 +182,23 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _togglePasswordVisibility,
             ),
           ),
+        ),
+        // Mensaje inline 04b (RF-04): altura reservada para que el layout
+        // no salte entre estados.
+        SizedBox(
+          height: 20,
+          child: _error
+              ? const Text(
+                  'El mail o la contraseña son incorrectos',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.danger,
+                  ),
+                )
+              : null,
         ),
         const SizedBox(height: 8),
         // Link sin funcionalidad (spec §3 fuera de alcance)
@@ -197,10 +244,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
+/// Decoración de los campos de login.
+///
+/// Con `error: true` los bordes pasan a `danger` 1.5px (RF-04).
 InputDecoration _inputDecoration({
   required String hint,
   required IconData icon,
+  required bool error,
 }) {
+  final radio = BorderRadius.circular(12);
+  final bordeNormal = const BorderSide(color: AppColors.border, width: 1);
+  final bordeError = const BorderSide(color: AppColors.danger, width: 1.5);
   return InputDecoration(
     hintText: hint,
     hintStyle: const TextStyle(fontSize: 15, color: AppColors.text2),
@@ -210,12 +264,16 @@ InputDecoration _inputDecoration({
     fillColor: AppColors.surface,
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.border, width: 1),
+      borderRadius: radio,
+      borderSide: error ? bordeError : bordeNormal,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: radio,
+      borderSide: error ? bordeError : bordeNormal,
     ),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.border, width: 1),
+      borderRadius: radio,
+      borderSide: error ? bordeError : bordeNormal,
     ),
   );
 }

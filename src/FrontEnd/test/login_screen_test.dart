@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/main.dart';
+
+/// Ingresa credenciales y toca Ingresar (RF-03).
+Future<void> _ingresar(
+  WidgetTester tester,
+  String email,
+  String password,
+) async {
+  final campos = find.byType(TextField);
+  await tester.enterText(campos.at(0), email);
+  await tester.enterText(campos.at(1), password);
+  await tester.tap(find.text('Ingresar'));
+  await tester.pumpAndSettle();
+}
+
+/// Color del borde normal de un campo (índice 0 = email, 1 = contraseña).
+Color _borde(WidgetTester tester, int index) {
+  final campo = tester.widget<TextField>(find.byType(TextField).at(index));
+  final borde = campo.decoration!.enabledBorder! as OutlineInputBorder;
+  return borde.borderSide.color;
+}
 
 void main() {
   group('Pantalla de login (wireframe 04)', () {
@@ -80,6 +101,106 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Iniciá sesión'), findsOneWidget,
           reason: 'el link de crear cuenta no navega');
+    });
+  });
+
+  group('Flujo de login (RF-03/04/05)', () {
+    testWidgets('login_credenciales_correctas_navega_a_exito', (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, 'igpi7uu@gmail.com', 'igpi7uu');
+
+      expect(find.text('usuario validado'), findsOneWidget);
+      expect(find.text('Iniciá sesión'), findsNothing);
+    });
+
+    testWidgets('login_credenciales_incorrectas_muestra_estado_error',
+        (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, 'otro@gmail.com', 'otra');
+
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsOneWidget);
+      expect(_borde(tester, 0), AppColors.danger,
+          reason: 'email con borde rojo');
+      expect(_borde(tester, 1), AppColors.danger,
+          reason: 'contraseña con borde rojo');
+      expect(find.text('Ingresar'), findsOneWidget,
+          reason: 'el botón sigue visible');
+    });
+
+    testWidgets('login_campos_vacios_muestra_estado_error', (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, '', '');
+
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsOneWidget);
+      expect(_borde(tester, 0), AppColors.danger);
+      expect(_borde(tester, 1), AppColors.danger);
+    });
+
+    testWidgets('login_email_case_insensitive_y_trim_navega_a_exito',
+        (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, '  IgPi7Uu@GmAiL.com ', 'igpi7uu');
+
+      expect(find.text('usuario validado'), findsOneWidget);
+    });
+
+    testWidgets('login_escribir_en_email_limpia_error', (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, 'x', 'x');
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsOneWidget);
+
+      await tester.enterText(find.byType(TextField).at(0), 'nuevo@x.com');
+      await tester.pump();
+
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsNothing);
+      expect(_borde(tester, 0), AppColors.border,
+          reason: 'borde del email vuelve a la normalidad');
+    });
+
+    testWidgets('login_escribir_en_password_limpia_error', (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, 'x', 'x');
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsOneWidget);
+
+      await tester.enterText(find.byType(TextField).at(1), 'abc');
+      await tester.pump();
+
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsNothing);
+      expect(_borde(tester, 1), AppColors.border,
+          reason: 'borde de la contraseña vuelve a la normalidad');
+    });
+
+    testWidgets('login_reintento_incorrecto_vuelve_a_mostrar_error',
+        (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await _ingresar(tester, 'x', 'x');
+      await tester.enterText(find.byType(TextField).at(0), 'a@b.com');
+      await tester.pump();
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsNothing);
+
+      await _ingresar(tester, 'a@b.com', 'mal');
+      expect(find.text('El mail o la contraseña son incorrectos'),
+          findsOneWidget,
+          reason: 'un nuevo intento incorrecto muestra el error otra vez');
+    });
+
+    testWidgets('login_teclado_dispara_validacion', (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.enterText(
+          find.byType(TextField).at(0), 'igpi7uu@gmail.com');
+      await tester.enterText(find.byType(TextField).at(1), 'igpi7uu');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(find.text('usuario validado'), findsOneWidget,
+          reason: 'enviar desde el teclado valida igual que el botón');
     });
   });
 }

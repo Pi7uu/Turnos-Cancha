@@ -19,7 +19,9 @@ class TurnosCanchaApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         scaffoldBackgroundColor: AppColors.bg,
       ),
-      // Placeholder no-op hasta la Tarea 5 (flujo de validación).
+      // Cada intento de login notifica al padre con los valores crudos.
+      // No hay backend ni HTTP en esta etapa (CA 7) ni persistencia de
+      // sesión (spec §3): la validación vive en LoginScreen.
       home: LoginScreen(onIngresar: (_, _) {}),
     );
   }
