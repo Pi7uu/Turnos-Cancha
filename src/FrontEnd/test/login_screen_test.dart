@@ -89,6 +89,21 @@ void main() {
       }
     });
 
+    testWidgets('login_sin_overflow_en_landscape_con_teclado',
+        (tester) async {
+      addTearDown(tester.view.reset);
+      // Viewport landscape del emulador (2400x1080 físicos @1.0) y su versión
+      // con teclado completo: el body efectivo queda en ~142 lógicos de alto.
+      for (final size in const [Size(2400, 1080), Size(2400, 142)]) {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
+        await tester.pumpWidget(const TurnosCanchaApp());
+        expect(tester.takeException(), isNull,
+            reason: 'sin overflow en landscape '
+                '${size.width}x${size.height}');
+      }
+    });
+
     testWidgets('login_links_no_navegan', (tester) async {
       await tester.pumpWidget(const TurnosCanchaApp());
 
