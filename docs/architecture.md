@@ -1,15 +1,18 @@
 # Arquitectura — TurnosCancha
 
-App móvil para alquiler de canchas de fútbol por turnos. Ver propósito en
-`../overview.md` y plan del proyecto en `../general.md`.
+Documento **normativo** para el equipo de desarrollo. Define las reglas de
+arquitectura del proyecto: frameworks, lenguajes, capas, base de datos,
+estructura de carpetas y convenciones. Toda decisión técnica debe respetar
+estas reglas; cambiarlas requiere actualizar este documento.
 
-> **Estado (2026-10-06):** reinicio en curso — el código previo se eliminó
-> (commit `6c8ef4a`). Backend recreado: proyecto `config/`, app `turnos` con
-> modelos + migración inicial (SQLite) y `auth.py` (sesión sin CSRF).
-> Pendientes: `services.py`, API, seed, tests y la app Flutter.
-> Especificación completa en `specs/requerimientos-backend.md`.
+App móvil para alquiler de canchas de fútbol por turnos.
 
-## 1. Visión general
+## 1. Frameworks
+
+- **Backend:** Django + Django REST Framework. Expone **únicamente** `/api/`
+  (REST/JSON) y `/admin/`. No se publica ninguna otra ruta.
+- **Mobile:** Flutter (Android/iOS). Toda la UI vive en la app; el backend no
+  renderiza HTML.
 
 ```
 ┌──────────────┐      /api/*       ┌──────────────────┐
@@ -23,13 +26,37 @@ App móvil para alquiler de canchas de fútbol por turnos. Ver propósito en
                                    └──────────────────┘
 ```
 
-- **Mobile:** Flutter. Toda la UI vive acá.
-- **Backend:** Django + DRF. Expone solo `/api/` y `/admin/`.
-- **DB:** SQLite, puramente local por ahora (archivo `src/BackEnd/db/db.sqlite3`);
-  PostgreSQL cuando se escale (hosting público / varios usuarios concurrentes).
-- **Idioma:** español (`es-AR`) en UI y mensajes de la API.
+## 2. Lenguajes e idioma
 
-## 2. Estructura de carpetas (objetivo)
+- **Backend:** Python. **Mobile:** Dart.
+- Todo texto de UI y todos los mensajes de la API están en español (`es-AR`).
+
+## 3. Capas
+
+- **Mobile → API → Backend → Base de datos.** Cada capa solo habla con la
+  adyacente:
+  - Flutter **nunca** accede a la base de datos: solo consume la API REST.
+  - La API **no** contiene lógica de negocio: views y serializers solo
+    validan y serializan.
+  - La lógica de negocio vive **únicamente** en `services.py` (única fuente
+    de verdad: disponibilidad, superposición, estados, vencimientos).
+  - Los modelos definen estructura e integridad; no implementan reglas de
+    negocio.
+
+## 4. Base de datos
+
+- **SQLite** (`src/BackEnd/db/db.sqlite3`) para desarrollo local.
+  **PostgreSQL** cuando se escale (hosting público / varios usuarios
+  concurrentes). El archivo `db.sqlite3` no se versiona ni se usa en
+  producción.
+- La integridad anti doble reserva se garantiza **a nivel de base de datos**:
+  índice único parcial en `ReservaCancha` + transacciones con
+  `select_for_update()`. Toda escritura sobre reservas pasa por
+  `services.py` dentro de esa transacción.
+- Las migraciones se versionan junto con el código y se aplican con
+  `manage.py migrate`.
+
+## 5. Estructura de carpetas (obligatoria)
 
 ```
 src/
@@ -61,76 +88,14 @@ docs/
   specs/                  especificaciones de features
 ```
 
-## 3. Backend (`src/BackEnd/`)
+## 6. Convenciones
 
-Se corre desde `src/BackEnd/` (`python manage.py runserver`, puerto 8000).
-
-### 3.1. `config/` — puerta de entrada
-
-- `settings.py`: `BASE_DIR = src/BackEnd`.
-- `urls.py`: solo `admin/` (la ruta `api/` se suma con la API).
-- Configuración sensible por entorno (ver `../.env.example`):
-  `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`.
-
-### 3.2. `apps/turnos/` — la aplicación
-
-- **Modelos (✅ implementados, migración `0001_initial`):** `Usuario` (sin
-  `username`, login por email, rol `CLIENTE`/`ADMIN`), `Cancha` (`F5-A`/`F5-B`),
-  `Reserva` (tipo `F5`/`F7`, estados `PENDIENTE`/`CONFIRMADA`/`VENCIDA`/`CANCELADA`),
-  `ReservaCancha` (ocupación, con índice único parcial anti-doble-reserva) y
-  `Configuracion` (singleton). Detalle en `specs/requerimientos-backend.md` §1.
-- **Servicios** (`services.py`, ⏳): única fuente de verdad para la lógica de
-  reserva (disponibilidad, superposición, estados, vencimientos).
-- **API** (`api.py`, rutas en `api_urls.py`, prefijo `/api/`, ⏳): auth,
-  disponibilidad, reservas y endpoints `admin/*`. Detalle en
-  `specs/requerimientos-backend.md` §3.
-
-### 3.3. Reglas de negocio clave
-
-- **Superposición F5/F7:** la cancha F7 ocupa las dos mitades; cada reserva
-  bloquea canchas **físicas** dentro de una transacción con
-  `select_for_update()`, reforzado por el índice único parcial de
-  `ReservaCancha`. Dos F5 opuestos pueden convivir; entonces F7 queda
-  ocupado.
-- **Ciclo de vida:** crear → `PENDIENTE` (ya bloquea), excepto si el plazo de
-  vencimiento ya pasó (reserva con <24 h) que nace `CONFIRMADA`;
-  `VENCIDA` si no confirma 24 h antes; `CANCELADA` libre hasta 24 h
-  antes (después solo admin).
-- **Vencimientos:** comando `manage.py vencer_reservas` + ejecución
-  perezosa al consultar disponibilidad / crear / confirmar.
-
-## 4. FrontEnd (`src/FrontEnd/`)
-
-⏳ Carpeta creada, app Flutter pendiente de generar (`flutter create`).
-Organización prevista por features (`core/`, `features/auth`,
-`features/reservas`, `features/admin`), estado con un solo mecanismo por
-feature y cliente HTTP con manejo de sesión por cookie.
-
-## 5. Flujos principales
-
-1. **Cliente:** login → disponibilidad por día → elegir slot y tipo (F5-A /
-   F5-B / F7) → reserva `PENDIENTE` → confirmar / cancelar.
-2. **Admin:** agenda del día (filtro por cancha) → reserva manual
-   (`cliente_email`, crea usuario si no existe) → cancelar cualquier
-   reserva → clientes e historial → configuración.
-
-## 6. Ambientes
-
-### Desarrollo (dos terminales)
-
-```bash
-cd src/BackEnd && python manage.py runserver   # :8000 API
-cd src/FrontEnd && flutter run                   # app en dispositivo/emulador (pendiente)
-```
-
-## 7. Calidad
-
-- Backend: `python manage.py test apps.turnos.tests` (desde `src/BackEnd/`) — ⏳ `tests.py` pendiente.
-- Mobile: `flutter analyze` y `flutter test` — ⏳ app pendiente.
-
-## 8. Deuda conocida
-
-- Sin CI/CD ni pre-commit hooks.
-- `db.sqlite3` solo para desarrollo.
-- Vencimientos automáticos sin tarea periódica en hosting (solo comando +
-  ejecución perezosa).
+- **Autenticación:** sesión sin CSRF para la API; login por email
+  (`USERNAME_FIELD="email"`, sin `username`).
+- **Configuración sensible:** solo por variables de entorno
+  (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`); nunca
+  hardcodeada en el repositorio.
+- **CORS:** solo orígenes de desarrollo de la app móvil, con credenciales.
+- **Dependencias:** backend en `requirements.txt`, mobile en `pubspec.yaml`.
+- **Flutter:** un solo mecanismo de estado por feature; cliente HTTP con
+  manejo de sesión por cookie.
