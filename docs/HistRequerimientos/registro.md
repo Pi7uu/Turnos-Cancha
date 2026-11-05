@@ -27,7 +27,7 @@ Implementar la pantalla de registro de la app móvil **Flutter** (`src/FrontEnd/
 - El backend Django ya tiene el modelo `Usuario` ( email, contraseña, nombre,
   teléfono opcional ) pero la API REST sigue sin existir y **no** se usa aquí.
 - Los estilos/tokens visuales de referencia ( colores, radios, tipografías )
-  son los del design system usado en el login ( tabla de tokens en `../HistRequerimientos/login.md` §5 ).
+  son los del design system usado en el login ( tabla de tokens en `login.md` §5 ).
   El layout de la pantalla 05 queda definido por el mockup ( spec visual en §4 ).
 
 ## 3. Alcance
@@ -239,13 +239,13 @@ Al intentar crear la cuenta, se validan los campos con **errores por campo**
 
 - **Idioma:** toda la UI en español (`es-AR`), textos exactos según §5.
 - **Tipografía:** Inter ( o la fuente por defecto de Flutter si Inter no está
-  configurada aún — misma decisión que `../HistRequerimientos/login.md` §5 ).
+  configurada aún — misma decisión que `login.md` §5 ).
 - **Plataforma:** móvil, viewport de referencia 375×844; el layout debe
   adaptarse a otros tamaños sin romperse.
 - **Asociación visual:** el estilo de la pantalla se especifica en §4 a partir
   del mockup, con los mismos tokens del design system del login ( `$primary`,
   `$bg`, `$surface`, `$text`, `$text-2`, `$border`, `$danger` ) — tabla en
-  `../HistRequerimientos/login.md` §5.
+  `login.md` §5.
 - **Seguridad (aceptada para esta etapa, igual que login):** las contraseñas
   viven en texto plano en memoria dentro de la app. No apto para usuarios
   reales; debe reemplazarse por `/api/auth/registro/` cuando exista el backend.
