@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
+import 'package:turnos_cancha/features/auth/usuarios_locales.dart';
 import 'package:turnos_cancha/main.dart';
 
 /// Ingresa credenciales y toca Ingresar (RF-03).
@@ -22,6 +23,48 @@ Color _borde(WidgetTester tester, int index) {
   final campo = tester.widget<TextField>(find.byType(TextField).at(index));
   final borde = campo.decoration!.enabledBorder! as OutlineInputBorder;
   return borde.borderSide.color;
+}
+
+/// Abre la 05 desde el footer "Crear cuenta" de la 04 (RF-05).
+Future<void> _abrirRegistroDesdeLogin(WidgetTester tester) async {
+  await tester.pumpWidget(const TurnosCanchaApp());
+  await tester.tap(find.text('Crear cuenta'));
+  await tester.pumpAndSettle();
+}
+
+/// Rellena los 4 campos de la 05 en orden (RF-01): nombre, email,
+/// contraseña y repetir.
+Future<void> _completarRegistro(
+  WidgetTester tester, {
+  String nombre = 'Marta Gómez',
+  String email = 'marta@test.com',
+  String password = 'qwerty1234',
+}) async {
+  final campos = find.byType(TextField);
+  await tester.enterText(campos.at(0), nombre);
+  await tester.enterText(campos.at(1), email);
+  await tester.enterText(campos.at(2), password);
+  await tester.enterText(campos.at(3), password);
+  await tester.pump();
+}
+
+/// Marca el checkbox de términos tocando su texto (RF-07).
+Future<void> _marcarTerminos(WidgetTester tester) async {
+  final texto = find.text(
+    'Acepto los términos y condiciones y la política de privacidad',
+  );
+  await tester.ensureVisible(texto);
+  await tester.pumpAndSettle();
+  await tester.tap(texto);
+  await tester.pump();
+}
+
+/// Toca el botón principal de la 05 (el titular repite el texto).
+Future<void> _tocarCrearCuentaDelRegistro(WidgetTester tester) async {
+  final boton = find.widgetWithText(FilledButton, 'Crear cuenta');
+  await tester.ensureVisible(boton);
+  await tester.pumpAndSettle();
+  await tester.tap(boton);
 }
 
 void main() {
@@ -216,6 +259,102 @@ void main() {
 
       expect(find.text('usuario validado'), findsOneWidget,
           reason: 'enviar desde el teclado valida igual que el botón');
+    });
+  });
+
+  group('Login · integración con la 05 (RF-05/08)', () {
+    setUp(resetUsuarios);
+    tearDown(resetUsuarios);
+
+    testWidgets('login_crear_cuenta_navega_a_la_pantalla_05', (tester) async {
+      await tester.pumpWidget(const TurnosCanchaApp());
+
+      // En la 04 el link del footer es único.
+      expect(find.text('Crear cuenta'), findsOneWidget);
+      await tester.tap(find.text('Crear cuenta'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Nombre y apellido'), findsOneWidget,
+          reason: 'la 05 muestra sus campos');
+      expect(
+        find.text(
+          'Acepto los términos y condiciones y la política de privacidad',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('¿Ya tenés cuenta?'), findsOneWidget,
+          reason: 'footer de la 05');
+    });
+
+    testWidgets('login_volver_desde_la_05_footer_inicia_sesion_retorna',
+        (tester) async {
+      await _abrirRegistroDesdeLogin(tester);
+      expect(find.text('Nombre y apellido'), findsOneWidget,
+          reason: 'estamos en la 05');
+
+      // Escribir en la 05 no debe prefillear el email de la 04.
+      await tester.enterText(find.byType(TextField).at(1), 'algo@test.com');
+
+      final volver = find.text('Iniciá sesión');
+      await tester.ensureVisible(volver);
+      await tester.pumpAndSettle();
+      await tester.tap(volver);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Reservá tu cancha en segundos'), findsOneWidget,
+          reason: 'volvió a la 04');
+      expect(find.text('Iniciá sesión'), findsOneWidget);
+      final email = tester.widget<TextField>(find.byType(TextField).at(0));
+      expect(email.controller!.text, isEmpty,
+          reason: 'la 04 vuelve vacía, sin prefill');
+      expect(find.text('Cuenta creada'), findsNothing,
+          reason: 'volver sin registrar no muestra el aviso');
+    });
+
+    testWidgets('login_registro_exitoso_muestra_cuenta_creada_y_login_vacio',
+        (tester) async {
+      await _abrirRegistroDesdeLogin(tester);
+
+      await _completarRegistro(tester);
+      await _marcarTerminos(tester);
+      await _tocarCrearCuentaDelRegistro(tester);
+
+      // El pop vuelve a la 04 y dispara la SnackBar; se pumpea la entrada en
+      // vez de pumpAndSettle para poder verla antes de que se autodestruya.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(find.text('Cuenta creada'), findsOneWidget,
+          reason: 'aviso de éxito sobre la 04 (RF-05)');
+      expect(
+        tester.widget<SnackBar>(find.byType(SnackBar)).behavior,
+        SnackBarBehavior.floating,
+      );
+      expect(find.text('Reservá tu cancha en segundos'), findsOneWidget,
+          reason: 'la SnackBar vive en la 04');
+      expect(tester.widget<TextField>(find.byType(TextField).at(0))
+          .controller!.text, isEmpty);
+      expect(tester.widget<TextField>(find.byType(TextField).at(1))
+          .controller!.text, isEmpty);
+    });
+
+    testWidgets('login_acepta_usuario_registrado_end_to_end', (tester) async {
+      await _abrirRegistroDesdeLogin(tester);
+
+      await _completarRegistro(tester);
+      await _marcarTerminos(tester);
+      await _tocarCrearCuentaDelRegistro(tester);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(emailRegistrado('marta@test.com'), isTrue,
+          reason: 'el alta quedó en la lista local');
+
+      // Se ingresa con la cuenta recién creada desde la 04.
+      await _ingresar(tester, 'marta@test.com', 'qwerty1234');
+
+      expect(find.text('usuario validado'), findsOneWidget,
+          reason: 'RF-06: los usuarios registrados también pueden entrar');
     });
   });
 }
