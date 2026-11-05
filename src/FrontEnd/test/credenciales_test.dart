@@ -68,6 +68,11 @@ void main() {
     test('credenciales_validas_usuario_registrado_password_distinta_falla', () {
       registrarUsuario('Marta Gómez', 'marta@test.com', 'qwerty1234');
       expect(credencialesValidas('marta@test.com', 'otra1234'), isFalse);
+      expect(
+        credencialesValidas('marta@test.com', 'Qwerty1234'),
+        isFalse,
+        reason: 'la contraseña del registrado también se compara case-sensitive',
+      );
     });
 
     test('credenciales_validas_semilla_sigue_funcionando', () {
