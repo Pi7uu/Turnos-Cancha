@@ -80,24 +80,31 @@ class _RegistroScreenState extends State<RegistroScreen> {
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(
-        child: Padding(
-          // RD §4: 28 arriba / 24 a los lados / 32 abajo.
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
-          child: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Hueco mínimo de 22 entre bloques (RD §4); el
-                    // space-between reparte el resto en pantallas altas.
-                    for (var i = 0; i < bloques.length; i++) ...[
-                      if (i > 0) const SizedBox(height: 22),
-                      bloques[i],
+        // Tap fuera de un campo descarta el teclado sin validar nada
+        // (RF-02): los toques sobre campos/botones siguen ganando en la
+        // arena de gestos, así que no roban foco ni acciones.
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            // RD §4: 28 arriba / 24 a los lados / 32 abajo.
+            padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Hueco mínimo de 22 entre bloques (RD §4); el
+                      // space-between reparte el resto en pantallas altas.
+                      for (var i = 0; i < bloques.length; i++) ...[
+                        if (i > 0) const SizedBox(height: 22),
+                        bloques[i],
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -368,8 +375,10 @@ class _Campo extends StatelessWidget {
   }
 }
 
-/// Decoración de los campos del registro (copiada del LoginScreen).
+/// Decoración de los campos del registro.
 ///
+/// RD §4: fondo `surface`, radio 12, borde `border` 1px, padding vertical 13 /
+/// horizontal 16 e ícono lucide 18px `text2`.
 /// Con `error: true` los bordes pasan a `danger` 1.5px (se usa desde la
 /// Tarea 5); en esta tarea siempre es false.
 InputDecoration _inputDecoration({
@@ -383,11 +392,11 @@ InputDecoration _inputDecoration({
   return InputDecoration(
     hintText: hint,
     hintStyle: const TextStyle(fontSize: 15, color: AppColors.text2),
-    prefixIcon: Icon(icon, size: 20, color: AppColors.text2),
+    prefixIcon: Icon(icon, size: 18, color: AppColors.text2),
     prefixIconColor: AppColors.text2,
     filled: true,
     fillColor: AppColors.surface,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
     enabledBorder: OutlineInputBorder(
       borderRadius: radio,
       borderSide: error ? bordeError : bordeNormal,

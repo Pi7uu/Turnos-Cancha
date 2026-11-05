@@ -96,6 +96,29 @@ void main() {
       final campos = _campos(tester);
       expect(campos, hasLength(4));
 
+      // RD §4: los 4 inputs con padding vertical 13 / horizontal 16.
+      for (final campo in campos) {
+        expect(
+          campo.decoration!.contentPadding,
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+          reason: 'padding del input según RD §4',
+        );
+      }
+
+      // RD §4: íconos lucide 18px `text2`.
+      expect(tester.widget<Icon>(find.byIcon(LucideIcons.user)).size, 18);
+      expect(tester.widget<Icon>(find.byIcon(LucideIcons.user)).color,
+          AppColors.text2);
+      expect(tester.widget<Icon>(find.byIcon(LucideIcons.mail)).size, 18);
+      expect(tester.widget<Icon>(find.byIcon(LucideIcons.mail)).color,
+          AppColors.text2);
+      final candados = tester.widgetList<Icon>(find.byIcon(LucideIcons.lock));
+      expect(candados, hasLength(2));
+      for (final candado in candados) {
+        expect(candado.size, 18, reason: 'ícono lock 18px (RD §4)');
+        expect(candado.color, AppColors.text2);
+      }
+
       expect(campos[0].decoration!.hintText, 'Tu nombre completo');
       expect(campos[0].keyboardType, TextInputType.text);
       expect(campos[0].textInputAction, TextInputAction.next);
@@ -180,6 +203,37 @@ void main() {
           reason: 'tocar de nuevo lo desmarca');
       expect(otraVez.border!.top.color, AppColors.border);
       expect(find.byIcon(LucideIcons.check), findsNothing);
+    });
+
+    testWidgets('registro_tap_fuera_descarta_foco_sin_validar',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(home: RegistroScreen()),
+      );
+
+      final campoEmail = find.byType(TextField).at(1);
+      await tester.tap(campoEmail);
+      await tester.pump();
+      await tester.enterText(campoEmail, 'algo');
+      await tester.pump();
+
+      EditableText editableEmail() =>
+          tester.widget<EditableText>(find.byType(EditableText).at(1));
+
+      expect(editableEmail().focusNode.hasFocus, isTrue,
+          reason: 'escribir deja el foco en el campo');
+
+      // Tap fuera del formulario (subtítulo): descarta el teclado.
+      await tester.tap(find.text('Creá tu cuenta y empezá a reservar'));
+      await tester.pump();
+
+      expect(editableEmail().focusNode.hasFocus, isFalse,
+          reason: 'tocar fuera descarta el foco del campo');
+      expect(find.text('algo'), findsOneWidget,
+          reason: 'lo escrito no se pierde al descartar el teclado');
+      expect(find.text('Ingresá un email válido'), findsNothing,
+          reason: 'tap fuera no dispara la validación');
+      expect(find.text('Ingresá tu nombre'), findsNothing);
     });
 
     testWidgets('registro_volver_y_footer_retornan_sin_datos',
