@@ -1,19 +1,20 @@
-/// Validación local de credenciales (etapa hardcodeada, spec `docs/specs/login.md` RF-03).
+/// Validación local de credenciales (RD registro RF-06).
 ///
-/// La comparación se hace local en la app: no hay llamadas HTTP (CA 7) y no
-/// hay persistencia de sesión. Reemplazar por `/api/auth/login/` cuando exista
-/// la API REST (spec §8).
+/// La comparación se hace local en la app contra la lista de usuarios de
+/// `usuarios_locales.dart`: no hay llamadas HTTP y no hay persistencia de
+/// sesión. Reemplazar por `/api/auth/login/` cuando exista la API REST
+/// (spec §8).
 library;
 
-const String _emailValido = 'igpi7uu@gmail.com';
-const String _passwordValida = 'igpi7uu';
+import 'usuarios_locales.dart';
 
-/// `true` si las credenciales coinciden con el usuario único de esta etapa.
+/// `true` si las credenciales coinciden con algún usuario de la lista local
+/// (incluida la semilla de la etapa login, RD registro §2).
 ///
-/// - Email: se compara **sin distinguir mayúsculas/minúsculas** y con `trim`
-///   de los espacios extremos.
+/// - Email: se busca en la lista **sin distinguir mayúsculas/minúsculas** y con
+///   `trim` de los espacios extremos (RD registro RF-04).
 /// - Contraseña: comparación **exacta** (sin trim, sensible a mayúsculas).
 bool credencialesValidas(String email, String password) {
-  return email.trim().toLowerCase() == _emailValido &&
-      password == _passwordValida;
+  final UsuarioLocal? usuario = usuarioPorEmail(email.trim());
+  return usuario != null && usuario.password == password;
 }
