@@ -147,18 +147,19 @@ void main() {
       }
     });
 
-    testWidgets('login_links_no_navegan', (tester) async {
+    testWidgets('login_link_recuperacion_no_navega', (tester) async {
       await tester.pumpWidget(const TurnosCanchaApp());
 
+      // El único link de la 04 sin funcionalidad (spec §3 fuera de alcance):
+      // sigue en la 04 y no empuja la 05 (el footer "Crear cuenta" sí navega,
+      // cubierto por el grupo de integración RF-05).
       await tester.tap(find.text('¿Olvidaste tu contraseña?'));
       await tester.pumpAndSettle();
-      expect(find.text('Iniciá sesión'), findsOneWidget,
-          reason: 'el link de recuperación no navega');
 
-      await tester.tap(find.text('Crear cuenta'));
-      await tester.pumpAndSettle();
-      expect(find.text('Iniciá sesión'), findsOneWidget,
-          reason: 'el link de crear cuenta no navega');
+      expect(find.text('Reservá tu cancha en segundos'), findsOneWidget,
+          reason: 'el link de recuperación no navega: sigue en la 04');
+      expect(find.text('Nombre y apellido'), findsNothing,
+          reason: 'no se empujó la pantalla 05');
     });
   });
 
