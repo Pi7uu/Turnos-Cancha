@@ -43,7 +43,7 @@
 
 **Interfaces:**
 - Consumes: nada (solo Dart core).
-- Produces (Task 2, 3, 5 dependen de esto): `class UsuarioLocal { final String nombre; final String email; final String password; }`; `bool emailRegistrado(String email)`; `void registrarUsuario(String nombre, String email, String password)`; `void resetUsuarios()` (@visibleForTesting).
+- Produces (Task 2, 3, 5 dependen de esto): `class UsuarioLocal { final String nombre; final String email; final String password; }`; `bool emailRegistrado(String email)`; `UsuarioLocal? usuarioPorEmail(String email)`; `void registrarUsuario(String nombre, String email, String password)`; `void resetUsuarios()` (@visibleForTesting).
 
 - [ ] **Step 1: Write the failing test `src/FrontEnd/test/usuarios_locales_test.dart`**
 
@@ -159,7 +159,7 @@ Expected: FAIL (el usuario registrado no es aceptado).
 
 - [ ] **Step 3: Implementar en `credenciales.dart`**
 
-Mantener la firma `bool credencialesValidas(String email, String password)` pero borrar `_emailValido`/`_passwordValida`: busca en la lista de `usuarios_locales` un usuario cuyo **email normalizado** (trim+minúsculas, comparación idéntica a `login.md` RF-03) coincida y cuya **contraseña sea exacta** (sin trim, case-sensitive). Las pantallas no cambian.
+Mantener la firma `bool credencialesValidas(String email, String password)` pero borrar `_emailValido`/`_passwordValida`: usar `usuarioPorEmail(email.trim())` de `usuarios_locales`; si devuelve usuario, comparar su **contraseña exacta** (sin trim, case-sensitive). Las pantallas no cambian.
 
 - [ ] **Step 4: Run test to verify it passes**
 
@@ -188,13 +188,13 @@ git commit -m "feat(auth): login valida contra la lista local de usuarios (RF-06
 Casos (usar el comportamiento del RF-03; todos los `setUp` llaman `resetUsuarios()`):
 
 ```dart
-test('validar_registro_todo_vacio_muestra_5_errores_a_la_vez', () {
+test('validar_registro_todo_vacio_muestra_4_errores_a_la_vez', () {
   final e = validarRegistro(
       nombre: '   ', email: '', password: '', repetir: '', terminos: false);
   expect(e.nombre, 'Ingresá tu nombre');
   expect(e.email, 'Ingresá un email válido');
   expect(e.password, 'Mínimo 8 caracteres');
-  expect(e.repetir, 'Las contraseñas no coinciden');
+  expect(e.repetir, isNull, reason: '"" == "" coincide: sin error (RF-03)');
   expect(e.terminos, 'Aceptá los términos y condiciones');
   expect(e.hayError, isTrue);
 });
@@ -311,7 +311,7 @@ git commit -m "feat(auth): pantalla 05 registrar — layout del mockup (RD §4)"
 
 - [ ] **Step 1: Agregar los tests de validación al `registro_screen_test.dart`** (casos, con helper `_insertarYEnviar` que rellena los 4 campos y tapa el botón / o `receiveAction(TextInputAction.done)` sobre Repetir):
 
-1. `registro_submit_invalido_muestra_errores_por_campo` — submit con todo vacío: borde `danger` 1.5px en el/los `TextField` ofensivos (usar helper `_borde(tester, index)` igual que el de `login_screen_test.dart`, con 4 campos) + los 5 textos de error visibles a la vez (`Ingresá tu nombre`, `Ingresá un email válido`, `Mínimo 8 caracteres`, `Las contraseñas no coinciden`, `Aceptá los términos y condiciones`).
+1. `registro_submit_vacio_muestra_errores_por_campo` — submit con todo vacío: borde `danger` 1.5px en el/los `TextField` ofensivos (usar helper `_borde(tester, index)` igual que el de `login_screen_test.dart`, con 4 campos) + los 4 mensajes visibles a la vez (`Ingresá tu nombre`, `Ingresá un email válido`, `Mínimo 8 caracteres`, `Aceptá los términos y condiciones`) y **sin** `Las contraseñas no coinciden` (ruling, RD RF-03: `"" == ""` coincide).
 2. `registro_email_duplicado_muestra_error_semilla` — email ` igpi7uu@gmail.com `, el resto válido → error `Ya hay una cuenta con ese email` solo en ese campo (los otros 3 sin borde rojo).
 3. `registro_escribir_limpia_solo_su_error` — con los 5 errores visibles: escribir en email → su borde vuelve a `AppColors.border` Y su texto de error desaparece; nombre/repetir/checkbox conservan los suyos.
 4. `registro_checkbox_error_limpia_solo_marcando` — orden del test: primero validar con todo válido EXCEPTO el checkbox (4 errores de campos ya limpios, solo queda el de checkbox); escribir en los 4 campos no lo borra; tocar el checkbox sí.
