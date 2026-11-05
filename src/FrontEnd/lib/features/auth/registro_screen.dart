@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
+import 'usuarios_locales.dart';
+import 'validacion_registro.dart';
 
 /// Pantalla de registro (mockup 05 · Crear cuenta).
 ///
@@ -9,10 +11,10 @@ import '../../core/theme/app_colors.dart';
 /// contraseña y repetir contraseña), checkbox de términos, botón principal
 /// y footer de ingreso.
 ///
-/// Esta tarea solo cubre el layout y las interacciones de campos: el ojo de
-/// cada contraseña alterna su visibilidad de forma independiente y el
-/// checkbox de términos alterna al tocar la fila. La validación y el alta
-/// se cablean en la Tarea 5 (`_submit` queda vacío por ahora).
+/// RF-02/RF-03: el ojo de cada contraseña alterna su visibilidad de forma
+/// independiente, "siguiente" avanza por los campos y "done" en Repetir
+/// valida igual que el botón. RF-01/04/05: con el formulario válido registra
+/// al usuario en la lista local y vuelve al login con `pop(true)`.
 class RegistroScreen extends StatefulWidget {
   const RegistroScreen({super.key});
 
@@ -26,6 +28,11 @@ class _RegistroScreenState extends State<RegistroScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repetirController = TextEditingController();
 
+  final FocusNode _nombreFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _repetirFocus = FocusNode();
+
   /// Ojos independientes (RD §4): cada contraseña arranca oculta y se
   /// muestra/oculta sin afectar a la otra.
   bool _passwordVisible = false;
@@ -34,12 +41,20 @@ class _RegistroScreenState extends State<RegistroScreen> {
   /// Checkbox de términos: desmarcado por defecto (RD §4).
   bool _aceptaTerminos = false;
 
+  /// Errores inline por campo (RD registro RF-03); `null` antes del primer
+  /// intento de crear la cuenta.
+  ErroresRegistro? _errores;
+
   @override
   void dispose() {
     _nombreController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _repetirController.dispose();
+    _nombreFocus.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _repetirFocus.dispose();
     super.dispose();
   }
 
@@ -53,11 +68,60 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
   void _alternarTerminos() {
     setState(() => _aceptaTerminos = !_aceptaTerminos);
+    // RF-07: el error del checkbox se limpia solamente marcándolo.
+    if (_aceptaTerminos) {
+      _limpiarErrorDe(_CampoRegistro.terminos);
+    }
   }
 
-  /// Validación y alta pendientes (Tarea 5); el botón y el `done` del último
-  /// campo ya llaman acá.
-  void _submit() {}
+  /// Escribir en un campo limpia SOLO su propio error (RF-02/RF-03).
+  void _limpiarErrorDe(_CampoRegistro campo) {
+    final actual = _errores;
+    if (actual == null) return;
+
+    final yaLimpio = switch (campo) {
+      _CampoRegistro.nombre => actual.nombre == null,
+      _CampoRegistro.email => actual.email == null,
+      _CampoRegistro.password => actual.password == null,
+      _CampoRegistro.repetir => actual.repetir == null,
+      _CampoRegistro.terminos => actual.terminos == null,
+    };
+    if (yaLimpio) return;
+
+    setState(() {
+      _errores = ErroresRegistro(
+        nombre: campo == _CampoRegistro.nombre ? null : actual.nombre,
+        email: campo == _CampoRegistro.email ? null : actual.email,
+        password: campo == _CampoRegistro.password ? null : actual.password,
+        repetir: campo == _CampoRegistro.repetir ? null : actual.repetir,
+        terminos: campo == _CampoRegistro.terminos ? null : actual.terminos,
+      );
+    });
+  }
+
+  /// Valida y, si todo está bien, registra al usuario y vuelve al login con
+  /// `true` para el aviso de éxito (RF-01/04/05). Si hay errores quedan
+  /// visibles todos a la vez, sin mensajes globales (RF-03).
+  void _submit() {
+    final errores = validarRegistro(
+      nombre: _nombreController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+      repetir: _repetirController.text,
+      terminos: _aceptaTerminos,
+    );
+    setState(() => _errores = errores);
+    if (errores.hayError) return;
+
+    // RF-04: el alta normaliza el email (trim + minúsculas) y el nombre
+    // (trim); la contraseña se guarda tal cual.
+    registrarUsuario(
+      _nombreController.text,
+      _emailController.text,
+      _passwordController.text,
+    );
+    Navigator.pop(context, true);
+  }
 
   /// Volver / "Iniciá sesión": cierra la pantalla sin datos (el login
   /// conserva lo que tenía y no se registra ninguna cuenta).
@@ -173,28 +237,38 @@ class _RegistroScreenState extends State<RegistroScreen> {
       children: [
         _Campo(
           label: 'Nombre y apellido',
+          error: _errores?.nombre,
           child: TextField(
             controller: _nombreController,
+            focusNode: _nombreFocus,
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
+            onChanged: (_) => _limpiarErrorDe(_CampoRegistro.nombre),
+            onSubmitted: (_) => _emailFocus.requestFocus(),
             style: const TextStyle(fontSize: 15, color: AppColors.text),
             decoration: _inputDecoration(
               hint: 'Tu nombre completo',
               icon: LucideIcons.user,
+              error: _errores?.nombre != null,
             ),
           ),
         ),
         const SizedBox(height: 16),
         _Campo(
           label: 'Email',
+          error: _errores?.email,
           child: TextField(
             controller: _emailController,
+            focusNode: _emailFocus,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
+            onChanged: (_) => _limpiarErrorDe(_CampoRegistro.email),
+            onSubmitted: (_) => _passwordFocus.requestFocus(),
             style: const TextStyle(fontSize: 15, color: AppColors.text),
             decoration: _inputDecoration(
               hint: 'tu@email.com',
               icon: LucideIcons.mail,
+              error: _errores?.email != null,
             ),
           ),
         ),
@@ -202,15 +276,20 @@ class _RegistroScreenState extends State<RegistroScreen> {
         _Campo(
           label: 'Contraseña',
           helper: 'Usá 8 caracteres como mínimo',
+          error: _errores?.password,
           child: TextField(
             controller: _passwordController,
+            focusNode: _passwordFocus,
             obscureText: !_passwordVisible,
             keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.next,
+            onChanged: (_) => _limpiarErrorDe(_CampoRegistro.password),
+            onSubmitted: (_) => _repetirFocus.requestFocus(),
             style: const TextStyle(fontSize: 15, color: AppColors.text),
             decoration: _inputDecoration(
               hint: 'Mínimo 8 caracteres',
               icon: LucideIcons.lock,
+              error: _errores?.password != null,
             ).copyWith(
               suffixIcon: IconButton(
                 icon: Icon(
@@ -228,16 +307,20 @@ class _RegistroScreenState extends State<RegistroScreen> {
         const SizedBox(height: 16),
         _Campo(
           label: 'Repetir contraseña',
+          error: _errores?.repetir,
           child: TextField(
             controller: _repetirController,
+            focusNode: _repetirFocus,
             obscureText: !_repetirVisible,
             keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.done,
+            onChanged: (_) => _limpiarErrorDe(_CampoRegistro.repetir),
             onSubmitted: (_) => _submit(),
             style: const TextStyle(fontSize: 15, color: AppColors.text),
             decoration: _inputDecoration(
               hint: 'Repetí tu contraseña',
               icon: LucideIcons.lock,
+              error: _errores?.repetir != null,
             ).copyWith(
               suffixIcon: IconButton(
                 icon: Icon(
@@ -258,43 +341,63 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
   /// Términos (RD §4): fila centrada, hueco 10, checkbox 20×20 radio 6 y
   /// texto 12 `text2` con lineHeight 1.4. Tocar el check o el texto alterna.
+  /// Debajo se muestra el error inline del checkbox (RF-07).
   Widget _grupoTerminos() {
-    return GestureDetector(
-      onTap: _alternarTerminos,
-      behavior: HitTestBehavior.opaque,
-      child: Row(
-        children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              color: _aceptaTerminos ? AppColors.primary : AppColors.surface,
-              borderRadius: BorderRadius.circular(6),
-              border: _aceptaTerminos
-                  ? null
-                  : Border.all(color: AppColors.border),
-            ),
-            child: _aceptaTerminos
-                ? const Icon(
-                    LucideIcons.check,
-                    size: 13,
-                    color: Colors.white,
-                  )
-                : null,
-          ),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text(
-              'Acepto los términos y condiciones y la política de privacidad',
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.text2,
-                height: 1.4,
+    final errorTerminos = _errores?.terminos;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        GestureDetector(
+          onTap: _alternarTerminos,
+          behavior: HitTestBehavior.opaque,
+          child: Row(
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color:
+                      _aceptaTerminos ? AppColors.primary : AppColors.surface,
+                  borderRadius: BorderRadius.circular(6),
+                  border: _aceptaTerminos
+                      ? null
+                      : Border.all(color: AppColors.border),
+                ),
+                child: _aceptaTerminos
+                    ? const Icon(
+                        LucideIcons.check,
+                        size: 13,
+                        color: Colors.white,
+                      )
+                    : null,
               ),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Acepto los términos y condiciones y la política de privacidad',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.text2,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (errorTerminos != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            errorTerminos,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.danger,
+              height: 1.4,
             ),
           ),
         ],
-      ),
+      ],
     );
   }
 
@@ -324,23 +427,29 @@ class _RegistroScreenState extends State<RegistroScreen> {
 }
 
 /// Campo del formulario: label 13 semibold `text` con hueco 7 al input y,
-/// opcionalmente, el texto de ayuda 12 `text2` debajo (RD §4).
+/// debajo, un slot adaptativo que muestra el error inline (13 semibold
+/// `danger`) o, si no hay error, el texto de ayuda 12 `text2` (RD §4).
 class _Campo extends StatelessWidget {
   const _Campo({
     required this.label,
     required this.child,
     this.helper,
+    this.error,
   });
 
   final String label;
   final Widget child;
 
-  /// Texto de ayuda fijo (campo Contraseña). Su altura queda reservada para
-  /// que el layout no salte cuando la Tarea 5 sume los errores inline.
+  /// Texto de ayuda fijo (campo Contraseña). Se oculta mientras el campo
+  /// tenga error: el slot muestra ayuda O error, nunca los dos.
   final String? helper;
+
+  /// Error inline del campo (RF-03), o `null` si es válido.
+  final String? error;
 
   @override
   Widget build(BuildContext context) {
+    final mensaje = error ?? helper;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -354,20 +463,33 @@ class _Campo extends StatelessWidget {
         ),
         const SizedBox(height: 7),
         child,
-        if (helper != null) ...[
+        if (mensaje != null) ...[
           const SizedBox(height: 4),
-          SizedBox(
-            height: 18,
-            child: Text(
-              helper!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.text2,
-                height: 1.4,
-              ),
-            ),
+          // Altura mínima 18: la ayuda (12×1.4 ≈ 17) y un error de una línea
+          // (13×1.4 ≈ 18) ocupan lo mismo; un error de dos líneas crece en
+          // vez de recortarse (sin overflow en 320×568).
+          ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 18),
+            child: error != null
+                ? Text(
+                    error!,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.danger,
+                      height: 1.4,
+                    ),
+                  )
+                : Text(
+                    helper!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.text2,
+                      height: 1.4,
+                    ),
+                  ),
           ),
         ],
       ],
@@ -379,8 +501,7 @@ class _Campo extends StatelessWidget {
 ///
 /// RD §4: fondo `surface`, radio 12, borde `border` 1px, padding vertical 13 /
 /// horizontal 16 e ícono lucide 18px `text2`.
-/// Con `error: true` los bordes pasan a `danger` 1.5px (se usa desde la
-/// Tarea 5); en esta tarea siempre es false.
+/// Con `error: true` los bordes pasan a `danger` 1.5px (RF-03).
 InputDecoration _inputDecoration({
   required String hint,
   required IconData icon,
@@ -446,3 +567,7 @@ class _Footer extends StatelessWidget {
     );
   }
 }
+
+/// Campos con error propio e independiente (RD registro RF-03/RF-07).
+enum _CampoRegistro { nombre, email, password, repetir, terminos }
+

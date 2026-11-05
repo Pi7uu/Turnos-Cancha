@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/features/auth/registro_screen.dart';
+import 'package:turnos_cancha/features/auth/usuarios_locales.dart';
 
 /// Arma un `MaterialApp` con una pantalla-puerta que empuja la 05 y guarda
 /// el resultado del `Navigator.push<bool>` (null si se vuelve sin registrar).
@@ -51,6 +52,70 @@ BoxDecoration _estadoCheckbox(WidgetTester tester) {
 /// Los 4 campos de la 05, en orden (nombre, email, contraseña, repetir).
 List<TextField> _campos(WidgetTester tester) =>
     tester.widgetList<TextField>(find.byType(TextField)).toList();
+
+/// Borde habilitado del campo [index] (0..3).
+OutlineInputBorder _bordeCampo(WidgetTester tester, int index) {
+  final campo = _campos(tester)[index];
+  return campo.decoration!.enabledBorder! as OutlineInputBorder;
+}
+
+/// `true` si el campo [index] está marcado con el borde de error.
+bool _campoEnError(WidgetTester tester, int index) =>
+    _bordeCampo(tester, index).borderSide.color == AppColors.danger;
+
+/// Busca un mensaje de error inline (13 semibold `danger`), no el hint ni el
+/// texto de ayuda (RD §4: `Mínimo 8 caracteres` también es el placeholder).
+Finder _mensajeError(String texto) => find.byWidgetPredicate(
+      (widget) =>
+          widget is Text &&
+          widget.data == texto &&
+          widget.style?.fontSize == 13 &&
+          widget.style?.fontWeight == FontWeight.w600 &&
+          widget.style?.color == AppColors.danger,
+    );
+
+/// Abre la 05 desde la pantalla-puerta.
+Future<void> _abrirRegistro(WidgetTester tester) async {
+  await _pumpConPuerta(tester, (_) {});
+  await tester.tap(find.text('Abrir 05'));
+  await tester.pumpAndSettle();
+}
+
+/// Toca el botón principal (no el titular, que repite el texto).
+Future<void> _tocarCrearCuenta(WidgetTester tester) async {
+  final boton = find.widgetWithText(FilledButton, 'Crear cuenta');
+  await tester.ensureVisible(boton);
+  await tester.pumpAndSettle();
+  await tester.tap(boton);
+  await tester.pumpAndSettle();
+}
+
+/// Rellena los 4 campos en orden; [repetir] permite forzar la diferencia.
+Future<void> _completarFormulario(
+  WidgetTester tester, {
+  String nombre = 'Marta Gómez',
+  String email = 'marta@test.com',
+  String password = 'qwerty1234',
+  String? repetir,
+}) async {
+  final campos = find.byType(TextField);
+  await tester.enterText(campos.at(0), nombre);
+  await tester.enterText(campos.at(1), email);
+  await tester.enterText(campos.at(2), password);
+  await tester.enterText(campos.at(3), repetir ?? password);
+  await tester.pump();
+}
+
+/// Marca el checkbox tocando el texto de términos (RF-07).
+Future<void> _marcarTerminos(WidgetTester tester) async {
+  final texto = find.text(
+    'Acepto los términos y condiciones y la política de privacidad',
+  );
+  await tester.ensureVisible(texto);
+  await tester.pumpAndSettle();
+  await tester.tap(texto);
+  await tester.pump();
+}
 
 void main() {
   group('Pantalla de registro (mockup 05)', () {
@@ -276,6 +341,186 @@ void main() {
         expect(tester.takeException(), isNull,
             reason: 'sin excepciones de layout en '
                 '${size.width}x${size.height}');
+      }
+    });
+  });
+
+  group('Registro · validación inline y alta (RF-01..08)', () {
+    setUp(resetUsuarios);
+
+    testWidgets('registro_submit_vacio_muestra_errores_por_campo',
+        (tester) async {
+      await _abrirRegistro(tester);
+      await _tocarCrearCuenta(tester);
+
+      expect(_mensajeError('Ingresá tu nombre'), findsOneWidget);
+      expect(_mensajeError('Ingresá un email válido'), findsOneWidget);
+      expect(_mensajeError('Mínimo 8 caracteres'), findsOneWidget,
+          reason: 'error de contraseña, no el placeholder');
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsOneWidget);
+      expect(_mensajeError('Las contraseñas no coinciden'), findsNothing,
+          reason: 'RF-03: dos contraseñas vacías coinciden');
+
+      // Campos ofensivos: nombre, email y contraseña con borde `danger` 1.5px.
+      for (final indice in const [0, 1, 2]) {
+        expect(_campoEnError(tester, indice), isTrue,
+            reason: 'campo $indice con borde de error');
+        expect(_bordeCampo(tester, indice).borderSide.width, 1.5,
+            reason: 'RD §4: borde danger 1.5px');
+      }
+      // Repetir vacío coincide con contraseña vacía: sin error.
+      expect(_campoEnError(tester, 3), isFalse);
+      expect(_bordeCampo(tester, 3).borderSide.color, AppColors.border);
+    });
+
+    testWidgets('registro_email_duplicado_muestra_error_semilla',
+        (tester) async {
+      await _abrirRegistro(tester);
+      await _completarFormulario(tester, email: ' igpi7uu@gmail.com ');
+      await _marcarTerminos(tester);
+      await _tocarCrearCuenta(tester);
+
+      expect(_mensajeError('Ya hay una cuenta con ese email'), findsOneWidget,
+          reason: 'duplicado contra el usuario semilla, con trim');
+      expect(_campoEnError(tester, 1), isTrue);
+      for (final indice in const [0, 2, 3]) {
+        expect(_campoEnError(tester, indice), isFalse,
+            reason: 'el campo $indice es válido');
+      }
+      expect(find.text('Crear cuenta'), findsNWidgets(2),
+          reason: 'sigue en la 05: no registra ni navega');
+      expect(emailRegistrado('igpi7uu@gmail.com'), isTrue);
+    });
+
+    testWidgets('registro_escribir_limpia_solo_su_error', (tester) async {
+      await _abrirRegistro(tester);
+      await _completarFormulario(
+        tester,
+        nombre: '',
+        email: '',
+        password: 'corta',
+        repetir: 'distinta',
+      );
+      await _tocarCrearCuenta(tester);
+
+      // Los 5 errores a la vez (4 campos + checkbox).
+      expect(_mensajeError('Ingresá tu nombre'), findsOneWidget);
+      expect(_mensajeError('Ingresá un email válido'), findsOneWidget);
+      expect(_mensajeError('Mínimo 8 caracteres'), findsOneWidget);
+      expect(_mensajeError('Las contraseñas no coinciden'), findsOneWidget);
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsOneWidget);
+
+      // Escribir en email limpia SOLO el error de email (RF-02/RF-03).
+      await tester.enterText(find.byType(TextField).at(1), 'nueva@test.com');
+      await tester.pump();
+
+      expect(_mensajeError('Ingresá un email válido'), findsNothing);
+      expect(_campoEnError(tester, 1), isFalse);
+      expect(_bordeCampo(tester, 1).borderSide.color, AppColors.border);
+
+      expect(_mensajeError('Ingresá tu nombre'), findsOneWidget,
+          reason: 'el error de nombre sigue');
+      expect(_mensajeError('Las contraseñas no coinciden'), findsOneWidget,
+          reason: 'el error de repetir sigue');
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsOneWidget,
+          reason: 'el error del checkbox sigue');
+    });
+
+    testWidgets('registro_checkbox_error_limpia_solo_marcando',
+        (tester) async {
+      await _abrirRegistro(tester);
+      await _completarFormulario(tester);
+      await _tocarCrearCuenta(tester);
+
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsOneWidget);
+      for (var indice = 0; indice < 4; indice++) {
+        expect(_campoEnError(tester, indice), isFalse,
+            reason: 'los campos son válidos');
+      }
+
+      // Escribir en los 4 campos no limpia el error del checkbox.
+      await _completarFormulario(
+        tester,
+        nombre: 'Marta Gómez ',
+        email: 'otra@test.com',
+      );
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsOneWidget,
+          reason: 'RF-07: solo marcar lo limpia');
+
+      // Marcarlo sí lo limpia.
+      await _marcarTerminos(tester);
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsNothing);
+    });
+
+    testWidgets('registro_submit_valido_registra_y_vuelve_true',
+        (tester) async {
+      bool? resultado;
+      await _pumpConPuerta(tester, (valor) => resultado = valor);
+      await tester.tap(find.text('Abrir 05'));
+      await tester.pumpAndSettle();
+
+      await _completarFormulario(tester, email: 'nueva@test.com');
+      await _marcarTerminos(tester);
+      await _tocarCrearCuenta(tester);
+
+      expect(find.text('Abrir 05'), findsOneWidget,
+          reason: 'volvió a la pantalla anterior');
+      expect(resultado, isTrue, reason: 'pop(true) para el aviso de éxito');
+      expect(emailRegistrado('nueva@test.com'), isTrue,
+          reason: 'el usuario quedó en la lista local');
+
+      final usuario = usuarioPorEmail('nueva@test.com');
+      expect(usuario?.nombre, 'Marta Gómez');
+      expect(usuario?.password, 'qwerty1234');
+    });
+
+    testWidgets('registro_teclado_done_en_repetir_dispara_validacion',
+        (tester) async {
+      await _abrirRegistro(tester);
+      await tester.tap(find.byType(TextField).at(3));
+      await tester.pump();
+
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+
+      expect(_mensajeError('Ingresá tu nombre'), findsOneWidget,
+          reason: 'done en Repetir valida igual que el botón');
+      expect(_mensajeError('Ingresá un email válido'), findsOneWidget);
+      expect(_mensajeError('Aceptá los términos y condiciones'), findsOneWidget);
+    });
+
+    testWidgets('registro_campos_misma_altura_con_y_sin_errores',
+        (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: RegistroScreen()));
+
+      List<double> alturas() => [
+            for (var indice = 0; indice < 4; indice++)
+              tester.getSize(find.byType(TextField).at(indice)).height,
+          ];
+
+      expect(alturas().toSet(), hasLength(1),
+          reason: 'el IconButton del ojo no infla el input');
+
+      await _tocarCrearCuenta(tester);
+      expect(alturas().toSet(), hasLength(1),
+          reason: 'la altura no cambia con errores visibles');
+    });
+
+    testWidgets('registro_sin_overflow_con_errores_375x844_y_chica',
+        (tester) async {
+      addTearDown(tester.view.reset);
+      for (final size in const [Size(375, 844), Size(320, 568)]) {
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
+        await tester.pumpWidget(
+          const MaterialApp(home: RegistroScreen()),
+        );
+        await _tocarCrearCuenta(tester);
+
+        expect(tester.takeException(), isNull,
+            reason: 'sin overflow con errores en '
+                '${size.width}x${size.height}');
+        expect(find.text('Ingresá tu nombre'), findsOneWidget);
       }
     });
   });
