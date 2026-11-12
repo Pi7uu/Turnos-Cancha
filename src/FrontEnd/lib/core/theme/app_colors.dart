@@ -22,4 +22,7 @@ abstract final class AppColors {
 
   /// Borde de error y mensaje de error — `#EF4444`
   static const danger = Color(0xFFEF4444);
+
+  /// Fondo del tab activo — `#DCFCE7`
+  static const primarySoft = Color(0xFFDCFCE7);
 }
