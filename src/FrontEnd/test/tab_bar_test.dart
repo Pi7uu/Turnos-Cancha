@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -97,6 +99,22 @@ void main() {
       expect(_decoTab(tester, TabApp.perfil).color, isNull);
     });
 
+    testWidgets('tab_bar_semantica_button_y_selected', (tester) async {
+      // Accesibilidad: el tab activo se anuncia como seleccionado y todos
+      // como botones (hallazgo de la revisión final).
+      await _pump(tester, activo: TabApp.inicio);
+
+      final activo =
+          tester.getSemantics(find.byKey(const ValueKey('tab-inicio')));
+      expect(activo.flagsCollection.isButton, isTrue);
+      expect(activo.flagsCollection.isSelected, Tristate.isTrue);
+
+      final inactivo =
+          tester.getSemantics(find.byKey(const ValueKey('tab-misReservas')));
+      expect(inactivo.flagsCollection.isButton, isTrue);
+      expect(inactivo.flagsCollection.isSelected, Tristate.isFalse);
+    });
+
     testWidgets('tab_bar_tocar_tab_notifica_cambio', (tester) async {
       await _pump(tester, activo: TabApp.inicio);
 
@@ -175,6 +193,66 @@ void main() {
       expect(sombra.color, const Color(0x1A0F172A));
       expect(sombra.offset, const Offset(0, 6));
       expect(sombra.blurRadius, 20);
+    });
+
+    testWidgets('tab_bar_pantalla_angosta_escala_sin_desbordar', (tester) async {
+      // Ruling 3 (revisión final): en pantallas angostas (320×568) el
+      // FittedBox achica el grupo en vez de desbordar y los taps siguen
+      // activos.
+      tester.view.physicalSize = const Size(640, 1136);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      TabApp? capturado;
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          bottomNavigationBar: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+              child: AppTabBar(
+                activo: TabApp.inicio,
+                onTab: (t) => capturado = t,
+              ),
+            ),
+          ),
+        ),
+      ));
+
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.text('Perfil'));
+      expect(capturado, TabApp.perfil);
+    });
+
+    testWidgets('tab_bar_texto_ampliado_no_desborda', (tester) async {
+      // Ruling 3: con escalado de texto de accesibilidad (2×) el tab bar
+      // se achica sin excepción y sigue siendo operable.
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      TabApp? capturado;
+      await tester.pumpWidget(MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: Scaffold(
+          bottomNavigationBar: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+              child: AppTabBar(
+                activo: TabApp.inicio,
+                onTab: (t) => capturado = t,
+              ),
+            ),
+          ),
+        ),
+      ));
+
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.text('Favoritos'));
+      expect(capturado, TabApp.favoritos);
     });
   });
 }

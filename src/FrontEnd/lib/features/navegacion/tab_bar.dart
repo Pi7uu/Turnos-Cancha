@@ -93,32 +93,38 @@ class _TabItem extends StatelessWidget {
     // Colores según el estado (RD §4): activo primary sobre primarySoft,
     // inactivo text2 sin fondo.
     final color = activo ? AppColors.primary : AppColors.text2;
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-        decoration: BoxDecoration(
-          color: activo ? AppColors.primarySoft : null,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 21, color: color),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 10,
-                height: 1.0,
-                fontWeight: activo ? FontWeight.w600 : FontWeight.w500,
-                color: color,
+    // Semántica de accesibilidad: cada tab se anuncia como botón y el
+    // activo como seleccionado (revisión final).
+    return Semantics(
+      button: true,
+      selected: activo,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
+          decoration: BoxDecoration(
+            color: activo ? AppColors.primarySoft : null,
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 21, color: color),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10,
+                  height: 1.0,
+                  fontWeight: activo ? FontWeight.w600 : FontWeight.w500,
+                  color: color,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
