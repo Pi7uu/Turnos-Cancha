@@ -4,7 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../core/theme/app_colors.dart';
 import 'credenciales.dart';
 import 'registro_screen.dart';
-import 'usuario_validado_screen.dart';
+import '../navegacion/main_shell.dart';
 
 /// Pantalla de login (wireframes 04 y 04b).
 ///
@@ -51,9 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
     // main.dart decide si reacciona (hoy no hace nada — sin backend, CA 7).
     widget.onIngresar(email, password);
     if (credencialesValidas(email, password)) {
-      Navigator.of(context).push(
+      // RF-04 del RD navegacion: el login exitoso entra a la app (shell con
+      // tab Inicio) reemplazando la ruta del login — sin vuelta a la 04.
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
-          builder: (_) => const UsuarioValidadoScreen(),
+          builder: (_) => const MainShell(),
         ),
       );
     } else {
