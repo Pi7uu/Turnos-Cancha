@@ -36,7 +36,7 @@ Implementar la pantalla de login de la app móvil **Flutter** (`src/FrontEnd/`) 
 
 ### Fuera de alcance
 
-- Pantalla **05 · Crear cuenta** y cualquier registro de usuarios (el link "Crear cuenta" **no** navega a ninguna parte por ahora).
+- Pantalla **05 · Crear cuenta** y cualquier registro de usuarios (el link "Crear cuenta" **no** navega a ninguna parte por ahora). *(Actualizado 2026-11-05: hoy sí navega a la pantalla 05 — ver `registro.md` §3/RF-06.)*
 - Recuperación de contraseña (el link "¿Olvidaste tu contraseña?" **no** tiene funcionalidad por ahora; solo se muestra, como en el wireframe).
 - Endpoints de autenticación en Django / llamadas HTTP.
 - Persistencia de sesión (al reiniciar la app se vuelve a la pantalla de login).
@@ -57,7 +57,7 @@ Al iniciar la app se muestra la pantalla de login, compuesta por (de arriba haci
 | Campo Contraseña | Label `Contraseña`; mismo estilo de input, ícono `lock`, placeholder `Tu contraseña`, ícono de ojo (lucide `eye`) a la derecha |
 | Link | `¿Olvidaste tu contraseña?` — 13px, `$primary`, alineado a la derecha. **Sin funcionalidad** (no hace nada al tocarlo) |
 | Botón | `Ingresar` — ancho completo, fondo `$primary`, radio 12, texto blanco 16px semibold |
-| Footer | `¿No tenés cuenta?` (14px, `$text-2`) + `Crear cuenta` (14px, semibold, `$primary`). **Sin funcionalidad** |
+| Footer | `¿No tenés cuenta?` (14px, `$text-2`) + `Crear cuenta` (14px, semibold, `$primary`). **Sin funcionalidad** *(actualizado 2026-11-05: navega a la 05 — ver `registro.md`)* |
 
 ### RF-02 — Comportamiento del campo de contraseña
 
@@ -129,7 +129,7 @@ El estado de error se muestra **en la misma pantalla de login** (no es una panta
 | Usuario válido | `igpi7uu@gmail.com` / `igpi7uu` |
 | Etiqueta del campo | Se mantiene "Email" (el usuario ingresa `igpi7uu@gmail.com`) |
 | Pantalla post-login | En blanco con texto `usuario validado` |
-| Links "Crear cuenta" y "¿Olvidaste tu contraseña?" | Visibles pero sin funcionalidad |
+| Links "Crear cuenta" y "¿Olvidaste tu contraseña?" | Visibles pero sin funcionalidad *(actualizado 2026-11-05: "Crear cuenta" navega a la 05 — ver `registro.md`; "¿Olvidaste tu contraseña?" sigue sin funcionalidad)* |
 | Texto del link en 04b | Unificado con el 04: `¿Olvidaste tu contraseña?` |
 | Entorno Flutter | Instalar toolchain completa en esta etapa: Flutter + Android SDK + emulador (para verificación visual) |
 | Nombre del proyecto | `flutter create --org com.turnoscancha --project-name turnos_cancha` dentro de `src/FrontEnd/` (llamada propia, ajustable si el equipo prefiere otro nombre) |

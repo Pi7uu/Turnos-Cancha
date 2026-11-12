@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 import 'credenciales.dart';
+import 'registro_screen.dart';
 import 'usuario_validado_screen.dart';
 
 /// Pantalla de login (wireframes 04 y 04b).
@@ -64,6 +65,27 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onChange(String _) {
     if (_error) {
       setState(() => _error = false);
+    }
+  }
+
+  /// Abre la 05 desde el footer y, si se creó la cuenta (`pop(true)`),
+  /// confirma con la SnackBar "Cuenta creada" sobre la 04 (RF-05/08).
+  ///
+  /// Los controladores del login no se tocan: la 04 queda como estaba y, por
+  /// venir de un formulario nuevo, vuelve vacía y sin prefill.
+  Future<void> _irACrearCuenta() async {
+    final creado = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => const RegistroScreen(),
+      ),
+    );
+    if (creado == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cuenta creada'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
@@ -234,11 +256,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   /// Footer de registro (abajo).
   Widget _footerGroup() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _Footer(),
-        SizedBox(height: 24),
+        _Footer(onCrearCuenta: _irACrearCuenta),
+        const SizedBox(height: 24),
       ],
     );
   }
@@ -318,7 +340,10 @@ class _Brand extends StatelessWidget {
 }
 
 class _Footer extends StatelessWidget {
-  const _Footer();
+  const _Footer({required this.onCrearCuenta});
+
+  /// Navega a la 05 "Crear cuenta" (RF-05).
+  final VoidCallback onCrearCuenta;
 
   @override
   Widget build(BuildContext context) {
@@ -334,7 +359,7 @@ class _Footer extends StatelessWidget {
           style: TextStyle(fontSize: 14, color: AppColors.text2),
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: onCrearCuenta,
           child: const Text(
             'Crear cuenta',
             style: TextStyle(
