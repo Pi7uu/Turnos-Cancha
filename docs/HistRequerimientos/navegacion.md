@@ -125,6 +125,10 @@ inferior. La status bar del sistema queda arriba, como en el login.
 ## 6. Requerimientos no funcionales
 
 - **Idioma:** labels exactos del §4, español (`es-AR`).
+- **Tipografía:** Inter ( o la fuente por defecto de Flutter si Inter no está
+  configurada aún — decisión del equipo de implementación, misma decisión que
+  `login.md` §5 y `registro.md` §7 ). El mockup muestra Inter; la app usa la
+  fuente por defecto hasta que se configure la fuente del proyecto.
 - **Tokens:** se agrega **`primarySoft` = `#DCFCE7`** a `app_colors.dart`
   ( fondo del tab activo ). Los demás valores ya existen (`$bg #F5F7FA`,
   `$primary #16A34A`, `$text2 #64748B`) y se usan tal cual.
