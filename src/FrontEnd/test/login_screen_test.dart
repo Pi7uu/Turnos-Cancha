@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/features/auth/usuarios_locales.dart';
+import 'package:turnos_cancha/features/navegacion/main_shell.dart';
 import 'package:turnos_cancha/main.dart';
 
 /// Ingresa credenciales y toca Ingresar (RF-03).
@@ -168,7 +169,11 @@ void main() {
       await tester.pumpWidget(const TurnosCanchaApp());
       await _ingresar(tester, 'igpi7uu@gmail.com', 'igpi7uu');
 
-      expect(find.text('usuario validado'), findsOneWidget);
+      expect(find.byType(MainShell), findsOneWidget);
+      expect(find.text('usuario validado'), findsNothing);
+      // Entra con el tab Inicio activo (RD navegacion RF-04).
+      expect(
+          find.byKey(const ValueKey('placeholder-inicio')), findsOneWidget);
       expect(find.text('Iniciá sesión'), findsNothing);
     });
 
@@ -202,7 +207,8 @@ void main() {
       await tester.pumpWidget(const TurnosCanchaApp());
       await _ingresar(tester, '  IgPi7Uu@GmAiL.com ', 'igpi7uu');
 
-      expect(find.text('usuario validado'), findsOneWidget);
+      expect(find.byType(MainShell), findsOneWidget);
+      expect(find.text('usuario validado'), findsNothing);
     });
 
     testWidgets('login_escribir_en_email_limpia_error', (tester) async {
@@ -258,8 +264,9 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      expect(find.text('usuario validado'), findsOneWidget,
+      expect(find.byType(MainShell), findsOneWidget,
           reason: 'enviar desde el teclado valida igual que el botón');
+      expect(find.text('usuario validado'), findsNothing);
     });
   });
 
@@ -354,8 +361,9 @@ void main() {
       // Se ingresa con la cuenta recién creada desde la 04.
       await _ingresar(tester, 'marta@test.com', 'qwerty1234');
 
-      expect(find.text('usuario validado'), findsOneWidget,
+      expect(find.byType(MainShell), findsOneWidget,
           reason: 'RF-06: los usuarios registrados también pueden entrar');
+      expect(find.text('usuario validado'), findsNothing);
     });
   });
 }
