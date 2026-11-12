@@ -46,20 +46,28 @@ class AppTabBar extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          for (final (tab, label, icon) in _tabs)
-            Flexible(
-              child: _TabItem(
+      // FittedBox(scaleDown): si los tabs no caben en el ancho disponible
+      // (fuente de test, dispositivos muy angostos) el grupo se achica en
+      // vez de desbordar o truncar; con espacio de sobra no escala nada.
+      // Los gaps fijos replican el spaceBetween del mockup: en el ancho
+      // real (323) los tabs suman ~283 y sobran ~13px por separación.
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final (i, (tab, label, icon)) in _tabs.indexed) ...[
+              if (i > 0) const SizedBox(width: 13),
+              _TabItem(
                 key: ValueKey('tab-${tab.name}'),
                 label: label,
                 icon: icon,
                 activo: tab == activo,
                 onTap: () => onTab(tab),
               ),
-            ),
-        ],
+            ],
+          ],
+        ),
       ),
     );
   }

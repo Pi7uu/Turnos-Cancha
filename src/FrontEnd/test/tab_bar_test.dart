@@ -107,6 +107,38 @@ void main() {
       expect(_capturado, TabApp.misReservas);
     });
 
+    testWidgets('tab_bar_labels_conservan_ancho_natural_sin_truncar',
+        (tester) async {
+      // Regresión del ruling 3: con Flexible cada tab se capa a 1/4 del
+      // ancho y "Mis reservas" se trunca aunque sobre espacio total.
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          backgroundColor: AppColors.bg,
+          bottomNavigationBar: SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+              child: AppTabBar(
+                activo: TabApp.inicio,
+                onTab: (_) {},
+              ),
+            ),
+          ),
+        ),
+      ));
+
+      final ancho = tester
+          .getSize(find.byKey(const ValueKey('tab-misReservas')))
+          .width;
+      // Con Flexible el capo es 323/4 ≈ 80.75; el ancho natural en la
+      // fuente de test es 12×10 + 28 de padding = 148.
+      expect(ancho, greaterThan(100),
+          reason: 'el label "Mis reservas" conserva su ancho natural');
+    });
+
     testWidgets('tab_bar_medidas_y_estilo_de_la_pildora', (tester) async {
       tester.view.physicalSize = const Size(750, 1688);
       tester.view.devicePixelRatio = 2;
