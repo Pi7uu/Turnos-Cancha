@@ -7,7 +7,7 @@
 Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La app Flutter consume la API REST. Las reservas (turnos) son el dominio central.
 
 - **Backend:** `src/BackEnd/config/` (proyecto Django), `src/BackEnd/apps/turnos/` (main app) — correr Django desde `src/BackEnd/`
-- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`)
+- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + header del Inicio (spec `docs/HistRequerimientos/inicio-header.md`)
 - **Database:** SQLite local (`src/BackEnd/db/db.sqlite3`); seed fixture pendiente (`apps/turnos/fixtures/initial_data.json`)
 - **Locale:** Spanish (`es-AR`), all UI text and API messages in Spanish
 
@@ -20,7 +20,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-05: Flutter 3.47.9 stable en `C:\src\flutter` (⚠️ no está en PATH; invocar `C:\src\flutter\bin\flutter.bat`). `flutter analyze` sin issues y `flutter test`: 54/54 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: login 04, registro 05 (formulario, errores, checkbox marcado, campo con foco) y snackbar `Cuenta creada` renderizan conforme al RD; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\t7\`
 - ✅ Navegación Flutter implementada (RD 2026-11-12): Tab Bar del mockup (4 tabs: Inicio / Mis reservas / Favoritos / Perfil, activo con pill `primarySoft`) + `MainShell` con `IndexedStack` (4 placeholders precargados); el login exitoso entra al shell y se eliminó la pantalla "usuario validado" (`lib/features/navegacion/`). Sin dependencias nuevas
 - ✅ Verificación 2026-11-12: Flutter en `C:\src\flutter`. `flutter analyze` sin issues y `flutter test`: 68/68 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: login → shell con tab Inicio activo, cambio entre los 4 tabs, y flujo de registro con snackbar `Cuenta creada` conforme al RD; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\navegacion\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, contenido de las pantallas principales (Inicio, Detalle de cancha, Mis reservas, Favoritos, Perfil)
+- ✅ Header del Inicio implementado (RD 2026-11-17): marca `TurnosCancha` + campana con badge + perfil sobre la pantalla Inicio (`lib/features/inicio/inicio_screen.dart`); campana y perfil sin funcionalidad (por spec). El tab Inicio deja de ser placeholder
+- ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 73/73 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: header conforme al RD §4 (logo 34×34, badge rojo con borde blanco), taps de campana/perfil sin efecto, otros tabs vacíos; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-header\`
+- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, resto del Inicio (buscador, fecha, canchas, categorías) y las pantallas Detalle de cancha, Mis reservas, Favoritos, Perfil
 
 ## Dev Commands
 

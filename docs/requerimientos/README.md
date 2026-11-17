@@ -2,9 +2,9 @@
 
 Requerimientos activos: los que se usan para implementar, por orden de llegada.
 
-- Sin requerimientos activos. La pantalla 05 "Crear cuenta" y la navegación
-  principal ( Tab Bar + shell ) quedaron implementadas ( RDs en
-  `../HistRequerimientos/registro.md` y `../HistRequerimientos/navegacion.md` ).
+- Sin requerimientos activos. El header del Inicio quedó implementado ( RD en
+  `../HistRequerimientos/inicio-header.md` ). La siguiente parte de la pantalla
+  01 es el **buscador** ( su RD se escribe al iniciar ).
 
 Cuando una feature queda implementada y verificada, su RD se mueve a
 `../HistRequerimientos/`.
