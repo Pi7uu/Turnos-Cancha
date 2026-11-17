@@ -22,6 +22,10 @@ class _InicioScreenState extends State<InicioScreen> {
   /// con la lista de canchas — RD inicio-buscador RF-02 ).
   final TextEditingController _busquedaController = TextEditingController();
 
+  /// Día seleccionado ( índice en `_Fecha._dias` ): por defecto MAR 15,
+  /// como el mockup ( RD inicio-fecha RF-02 ).
+  int _diaActivo = 1;
+
   @override
   void dispose() {
     _busquedaController.dispose();
@@ -46,6 +50,11 @@ class _InicioScreenState extends State<InicioScreen> {
                 const _Header(),
                 const SizedBox(height: 16),
                 _Buscador(controller: _busquedaController),
+                const SizedBox(height: 16),
+                _Fecha(
+                  activo: _diaActivo,
+                  onSelect: (i) => setState(() => _diaActivo = i),
+                ),
               ],
             ),
           ),
@@ -230,4 +239,150 @@ OutlineInputBorder _bordeCampo() {
     borderRadius: BorderRadius.circular(12),
     borderSide: const BorderSide(color: AppColors.border, width: 1),
   );
+}
+
+/// Bloque "Elegí la fecha" del mockup ( RD inicio-fecha §4 ): título + mes
+/// a la derecha y la tira de 5 días con uno activo. Presentacional: la
+/// selección la resuelve `onSelect` ( el shell la conserva porque la
+/// pantalla vive precargada ).
+class _Fecha extends StatelessWidget {
+  const _Fecha({required this.activo, required this.onSelect});
+
+  /// Índice del día activo en [_dias].
+  final int activo;
+
+  /// Se invoca al tocar cualquier chip, activo o no.
+  final ValueChanged<int> onSelect;
+
+  /// Días fijos del mockup ( sin lógica de calendario — RD §8 ).
+  static const List<(String, int)> _dias = [
+    ('LUN', 14),
+    ('MAR', 15),
+    ('MIÉ', 16),
+    ('JUE', 17),
+    ('VIE', 18),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Flexible + ellipsis (patrón de la marca y el título): en la
+            // fuente de test la fila no cabe en 375px; en el dispositivo
+            // real entra holgada.
+            const Flexible(
+              child: Text(
+                'Elegí la fecha',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
+                ),
+              ),
+            ),
+            // Selector de mes: visual, sin funcionalidad (RF-03).
+            GestureDetector(
+              onTap: () {},
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Octubre',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  Icon(
+                    LucideIcons.chevronDown,
+                    size: 15,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.only(right: 1),
+          child: Row(
+            children: [
+              for (final (i, (dia, numero)) in _dias.indexed) ...[
+                if (i > 0) const SizedBox(width: 8),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => onSelect(i),
+                    child: _ChipDia(
+                      dia: dia,
+                      numero: numero,
+                      activo: i == activo,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Chip de un día: día arriba, número abajo ( mockup: vertical, hueco 2,
+/// padding 9/0, radio 12 ).
+class _ChipDia extends StatelessWidget {
+  const _ChipDia({
+    required this.dia,
+    required this.numero,
+    required this.activo,
+  });
+
+  final String dia;
+  final int numero;
+  final bool activo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: ValueKey('dia-$numero'),
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      decoration: BoxDecoration(
+        color: activo ? AppColors.primary : AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            dia,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: activo ? AppColors.primarySoft : AppColors.text2,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            '$numero',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: activo ? Colors.white : AppColors.text,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
