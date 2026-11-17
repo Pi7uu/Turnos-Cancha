@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
+import 'cancha.dart';
 
 /// Pantalla Inicio ( pantallas 01 del prototipo — se construye por partes ):
 /// header ( RD `inicio-header.md` ) + buscador ( RD `inicio-buscador.md` )
@@ -44,18 +45,24 @@ class _InicioScreenState extends State<InicioScreen> {
           child: Padding(
             padding:
                 const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const _Header(),
-                const SizedBox(height: 16),
-                _Buscador(controller: _busquedaController),
-                const SizedBox(height: 16),
-                _Fecha(
-                  activo: _diaActivo,
-                  onSelect: (i) => setState(() => _diaActivo = i),
-                ),
-              ],
+            // Scroll: el contenido ( con la lista de canchas ) supera la
+            // altura de pantallas chicas ( RD inicio-canchas, CA 6 ).
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _Header(),
+                  const SizedBox(height: 16),
+                  _Buscador(controller: _busquedaController),
+                  const SizedBox(height: 16),
+                  _Fecha(
+                    activo: _diaActivo,
+                    onSelect: (i) => setState(() => _diaActivo = i),
+                  ),
+                  const SizedBox(height: 16),
+                  const _Canchas(),
+                ],
+              ),
             ),
           ),
         ),
@@ -382,6 +389,235 @@ class _ChipDia extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Bloque "Canchas disponibles" del mockup ( RD inicio-canchas §4 ): fila
+/// de título + lista de las 3 cards simuladas. Controles inertes ( RF-02 ):
+/// la navegación al Detalle llega con su RD.
+class _Canchas extends StatelessWidget {
+  const _Canchas();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Flexible(
+              child: Text(
+                'Canchas disponibles',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
+                ),
+              ),
+            ),
+            // Link sin funcionalidad ( el prototipo no define la pantalla ).
+            GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: const Text(
+                'Ver todo',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        for (final (i, cancha) in canchasSimuladas.indexed) ...[
+          if (i > 0) const SizedBox(height: 12),
+          _CardCancha(cancha: cancha),
+        ],
+      ],
+    );
+  }
+}
+
+/// Card de cancha ( mockup: card vectorial de Favoritos + tag del PNG ).
+class _CardCancha extends StatelessWidget {
+  const _CardCancha({required this.cancha});
+
+  final Cancha cancha;
+
+  @override
+  Widget build(BuildContext context) {
+    // Inerte ( RF-02 ): solo descarta el teclado, como el resto del fondo.
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Container(
+        key: ValueKey('cancha-${cancha.nombre}'),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    cancha.foto,
+                    width: 92,
+                    height: 92,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              cancha.nombre,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.text,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              cancha.tag,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 7),
+                      Row(
+                        children: [
+                          const Icon(LucideIcons.mapPin,
+                              size: 13, color: AppColors.text2),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              cancha.distancia,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.text2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 7),
+                      Row(
+                        children: [
+                          const Icon(LucideIcons.star,
+                              size: 13, color: Color(0xFFF59E0B)),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              cancha.rating,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.text2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Flexible: en pantallas angostas la fila de precio absorbe
+                // el encogimiento ( '/ hora' elipsa ); en real nunca trunca.
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        cancha.precio,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Flexible(
+                        child: Text(
+                          '/ hora',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.text2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Botón inerte ( RF-02 ): la navegación llega con el Detalle.
+                GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 11, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Reservar',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
