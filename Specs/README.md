@@ -28,12 +28,12 @@ su spec **antes** de mover el RD a Hist.
 | `inicio-buscador.md` | ✅ Implementado | Campo de búsqueda del Inicio, editable pero sin filtrar ( filtrado llega con la lista ) |
 | `inicio-fecha.md` | ✅ Implementado | Selector de fecha del Inicio: 5 días fijos con selección local ( no filtra aún ) |
 | `inicio-canchas.md` | ✅ Implementado | Lista de canchas del Inicio: 3 cards con datos simulados y assets ( sin filtrado ni navegación ) |
+| `inicio-categorias.md` | ✅ Implementado | Bloque Categorías del Inicio: 2 chips inertes ( Fútbol 5 / Fútbol 7 ) |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-Pantalla 01 · Inicio: categorías, estado "sin canchas" ( 06 ), filtrado
-( buscador + fecha + categoría ). Pantalla 02 · Detalle de cancha + variante
-07. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
+Pantalla 01 · Inicio: estado "sin canchas" ( 06 ) y filtrado ( buscador +
+fecha + categoría ). Pantalla 02 · Detalle de cancha + variante 07. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
 03 · Mis reservas + estados 08/09. Pantalla 11 · Perfil. Pantalla 12 ·
 Favoritos. Backend: API `/api/`, servicios, persistencia.
 
