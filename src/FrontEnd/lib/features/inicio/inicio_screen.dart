@@ -3,27 +3,51 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 
-/// Pantalla Inicio ( parte 1 de la pantalla 01 del prototipo, RD
-/// `docs/requerimientos/inicio-header.md` ): por ahora solo el header
-/// ( marca + campana + perfil ) sobre la estructura de contenido del mockup.
+/// Pantalla Inicio ( pantallas 01 del prototipo — se construye por partes ):
+/// header ( RD `inicio-header.md` ) + buscador ( RD `inicio-buscador.md` )
+/// sobre la estructura de contenido del mockup ( padding 8/16/16/16, hueco
+/// 16 entre bloques ).
 ///
-/// Los bloques siguientes ( buscador, fecha, tarjetas, categorías ) se
-/// apilan en esta columna con hueco 16 en sus RDs.
-class InicioScreen extends StatelessWidget {
+/// Los bloques siguientes ( fecha, tarjetas, categorías ) se apilan en esta
+/// columna con hueco 16 en sus RDs.
+class InicioScreen extends StatefulWidget {
   const InicioScreen({super.key});
+
+  @override
+  State<InicioScreen> createState() => _InicioScreenState();
+}
+
+class _InicioScreenState extends State<InicioScreen> {
+  /// Valor del buscador: estado local de la pantalla ( el filtrado llega
+  /// con la lista de canchas — RD inicio-buscador RF-02 ).
+  final TextEditingController _busquedaController = TextEditingController();
+
+  @override
+  void dispose() {
+    _busquedaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
-              _Header(),
-            ],
+      // Tap fuera descarta el teclado sin alterar el valor del campo.
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const _Header(),
+                const SizedBox(height: 16),
+                _Buscador(controller: _busquedaController),
+              ],
+            ),
           ),
         ),
       ),
@@ -156,4 +180,54 @@ class _Campana extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Campo de búsqueda del mockup ( RD inicio-buscador §4 ): lupa a la
+/// izquierda, placeholder `Buscá canchas cerca tuyo...`. Editable pero sin
+/// filtrar ( RF-02 ); la acción "search" del teclado no hace nada.
+class _Buscador extends StatelessWidget {
+  const _Buscador({required this.controller});
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.search,
+      style: const TextStyle(fontSize: 14, color: AppColors.text),
+      decoration: InputDecoration(
+        hintText: 'Buscá canchas cerca tuyo...',
+        hintStyle: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: AppColors.text2,
+        ),
+        filled: true,
+        fillColor: AppColors.surface,
+        // Geometría del mockup ( ícono a 14px del borde, hueco 10 al texto ):
+        // el decorador de Flutter pega el prefixIcon al borde y coloca el
+        // texto a `anchoDelPrefix + 4`, así que el hueco se logra con un
+        // prefix de 38 ( 14 + 18 + 6 ). Medido por los tests de posiciones.
+        contentPadding: const EdgeInsets.symmetric(vertical: 13, horizontal: 14),
+        prefixIcon: const Padding(
+          padding: EdgeInsets.only(left: 14, right: 6),
+          child: Icon(LucideIcons.search, size: 18, color: AppColors.text2),
+        ),
+        prefixIconConstraints:
+            const BoxConstraints(maxWidth: 38, minHeight: 18),
+        enabledBorder: _bordeCampo(),
+        focusedBorder: _bordeCampo(),
+        border: _bordeCampo(),
+      ),
+    );
+  }
+}
+
+OutlineInputBorder _bordeCampo() {
+  return OutlineInputBorder(
+    borderRadius: BorderRadius.circular(12),
+    borderSide: const BorderSide(color: AppColors.border, width: 1),
+  );
 }
