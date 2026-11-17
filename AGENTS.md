@@ -7,7 +7,7 @@
 Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La app Flutter consume la API REST. Las reservas (turnos) son el dominio central.
 
 - **Backend:** `src/BackEnd/config/` (proyecto Django), `src/BackEnd/apps/turnos/` (main app) — correr Django desde `src/BackEnd/`
-- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio: header, buscador y selector de fecha (specs `docs/HistRequerimientos/inicio-*.md`). Specs as-built en `Specs/`
+- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio: header, buscador, fecha y canchas (specs `docs/HistRequerimientos/inicio-*.md`). Specs as-built en `Specs/`
 - **Database:** SQLite local (`src/BackEnd/db/db.sqlite3`); seed fixture pendiente (`apps/turnos/fixtures/initial_data.json`)
 - **Locale:** Spanish (`es-AR`), all UI text and API messages in Spanish
 
@@ -26,7 +26,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 79/79 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: campo con placeholder exacto, texto ingresado reemplaza el hint y se conserva tras tap fuera; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-buscador\`
 - ✅ Selector de fecha del Inicio implementado (RD 2026-11-17): bloque `Elegí la fecha` + `Octubre ▾` + 5 chips fijos (LUN 14…VIE 18) con selección local (MAR 15 por defecto, se conserva al cambiar de tab); mes inerte por spec
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 86/86 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: bloque conforme al RD §4, MAR 15 activo, selección cambia al tocar MIÉ y se conserva al volver de otro tab; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-fecha\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, resto del Inicio (canchas, categorías) y las pantallas Detalle de cancha, Mis reservas, Favoritos, Perfil
+- ✅ Tarjetas de canchas del Inicio implementadas (RD 2026-11-17): bloque `Canchas disponibles` + `Ver todo` y 3 cards (foto, nombre, tag 5v5/7v7, distancia, rating, precio, `Reservar`) con datos simulados (`lib/features/inicio/cancha.dart`) y fotos del mockup como assets; card y botón inertes por spec; pantalla con scroll
+- ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 95/95 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: 3 cards con fotos reales conforme al mockup, scroll completo, taps inertes sin cambios; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-canchas\`
+- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, resto del Inicio (categorías, filtrado) y las pantallas Detalle de cancha, Mis reservas, Favoritos, Perfil
 
 ## Dev Commands
 
