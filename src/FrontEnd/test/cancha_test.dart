@@ -28,5 +28,20 @@ void main() {
         expect(c.foto, startsWith('assets/img/canchas/'));
       }
     });
+
+    test('canchas_simuladas_campos_del_detalle', () {
+      expect(canchasSimuladas[0].direccion, 'Av. de los Deportes 123, Centro');
+      expect(canchasSimuladas[0].puntuacion, 4.8);
+      expect(canchasSimuladas[0].premium, isTrue);
+      expect(
+          canchasSimuladas[0].hero, 'assets/img/canchas/elite_arena_hero.jpg');
+      expect(canchasSimuladas[1].direccion, 'Av. del Parque 789, Oeste');
+      expect(canchasSimuladas[1].puntuacion, 4.6);
+      expect(canchasSimuladas[2].direccion, 'Calle San Martín 45, Centro');
+      expect(canchasSimuladas[2].puntuacion, 4.9);
+      expect(canchasSimuladas[2].premium, isFalse);
+      expect(canchasSimuladas[2].hero, canchasSimuladas[2].foto,
+          reason: 'sin hero propio usa su foto de card');
+    });
   });
 }
