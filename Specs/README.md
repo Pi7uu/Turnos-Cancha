@@ -25,12 +25,12 @@ su spec **antes** de mover el RD a Hist.
 | `registro.md` | ✅ Implementado | Alta local de usuarios ( pantalla 05 ) con validación inline; el login los acepta |
 | `navegacion.md` | ✅ Implementado | Shell con Tab Bar de 4 tabs e IndexedStack; entrada de la app tras el login |
 | `inicio-header.md` | ✅ Implementado | Header del Inicio: marca + campana con badge + perfil ( taps muertos ) |
+| `inicio-buscador.md` | ✅ Implementado | Campo de búsqueda del Inicio, editable pero sin filtrar ( filtrado llega con la lista ) |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-Pantalla 01 · Inicio: buscador ( RD activo ), fecha, tarjetas de canchas,
-categorías, estado "sin canchas" ( 06 ). Pantalla 02 · Detalle de cancha +
-variante 07. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
+Pantalla 01 · Inicio: selector de fecha, tarjetas de canchas, categorías,
+estado "sin canchas" ( 06 ). Pantalla 02 · Detalle de cancha + variante 07. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
 03 · Mis reservas + estados 08/09. Pantalla 11 · Perfil. Pantalla 12 ·
 Favoritos. Backend: API `/api/`, servicios, persistencia.
 
