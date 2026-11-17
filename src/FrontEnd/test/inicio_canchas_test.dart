@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/features/inicio/inicio_screen.dart';
+import 'package:turnos_cancha/features/navegacion/main_shell.dart';
 
 /// Decoración del card de la cancha [nombre] ( key `cancha-<nombre>` ).
 BoxDecoration _decoCard(WidgetTester tester, String nombre) {
@@ -174,7 +175,39 @@ void main() {
       expect(find.byType(Image), findsNWidgets(3));
     });
 
-    testWidgets('canchas_controles_inertes', (tester) async {
+    testWidgets('canchas_card_abre_el_detalle_con_la_cancha', (tester) async {
+      final observer = _Observer();
+      await tester.pumpWidget(MaterialApp(
+        navigatorObservers: [observer],
+        home: const InicioScreen(),
+      ));
+
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+
+      expect(observer.pushes, greaterThan(0),
+          reason: 'la card empuja una ruta ( el Detalle )');
+      expect(find.text('Av. de los Deportes 123, Centro'), findsOneWidget,
+          reason: 'el Detalle muestra la cancha de la card tocada');
+    });
+
+    testWidgets('canchas_reservar_abre_el_detalle', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: InicioScreen()));
+
+      final reservar = find.descendant(
+        of: find.byKey(const ValueKey('cancha-Skyline Sports Hub')),
+        matching: find.text('Reservar'),
+      );
+      await tester.ensureVisible(reservar);
+      await tester.pumpAndSettle();
+      await tester.tap(reservar);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Av. del Parque 789, Oeste'), findsOneWidget,
+          reason: 'Reservar abre el Detalle de esa cancha');
+    });
+
+    testWidgets('canchas_ver_todo_sigue_inerte', (tester) async {
       final observer = _Observer();
       await tester.pumpWidget(MaterialApp(
         navigatorObservers: [observer],
@@ -183,15 +216,38 @@ void main() {
       final pushesIniciales = observer.pushes;
 
       await tester.tap(find.text('Ver todo'));
-      await tester.pump();
-      await tester.tap(find.text('Elite Arena Central'));
-      await tester.pump();
-      await tester.tap(find.text('Reservar').first);
       await tester.pumpAndSettle();
 
       expect(observer.pushes, pushesIniciales,
-          reason: 'card, Reservar y Ver todo no navegan (RF-02)');
+          reason: 'Ver todo sigue sin funcionalidad');
       expect(find.text('Canchas disponibles'), findsOneWidget);
+    });
+
+    testWidgets('detalle_volver_conserva_el_estado_del_inicio', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      await tester.enterText(find.byType(TextField), 'futbol');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('MIÉ'));
+      await tester.pump();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      expect(find.text('Av. de los Deportes 123, Centro'), findsOneWidget,
+          reason: 'el Detalle abrió');
+
+      await tester.tap(find.byKey(const ValueKey('detalle-volver')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('futbol'), findsOneWidget,
+          reason: 'el buscador conserva su texto');
+      final chip = tester.widget<Container>(
+        find.byKey(const ValueKey('dia-16')),
+      );
+      expect((chip.decoration! as BoxDecoration).color, AppColors.primary,
+          reason: 'el día seleccionado se conserva');
     });
 
     testWidgets('canchas_sin_overflow_375x844_y_chica', (tester) async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../detalle/detalle_screen.dart';
 import 'cancha.dart';
 
 /// Pantalla Inicio ( pantallas 01 del prototipo — se construye por partes ):
@@ -455,9 +456,14 @@ class _CardCancha extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inerte ( RF-02 ): solo descarta el teclado, como el resto del fondo.
+    // Navegación ( RD detalle-hero RF-02 ): la card abre el Detalle con esta
+    // cancha ( reemplaza la inercia del RD inicio-canchas RF-02 ).
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => DetalleScreen(cancha: cancha),
+        ),
+      ),
       child: Container(
         key: ValueKey('cancha-${cancha.nombre}'),
         padding: const EdgeInsets.all(14),
@@ -596,9 +602,14 @@ class _CardCancha extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Botón inerte ( RF-02 ): la navegación llega con el Detalle.
+                // Botón con la misma navegación que la card ( RD detalle-hero
+                // RF-02 ).
                 GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => DetalleScreen(cancha: cancha),
+                    ),
+                  ),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 11, horizontal: 20),
