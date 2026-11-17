@@ -80,6 +80,15 @@ void main() {
       expect(find.byType(MainShell), findsOneWidget);
     });
 
+    testWidgets('shell_tab_inicio_muestra_el_header', (tester) async {
+      await _pump(tester);
+
+      expect(find.text('TurnosCancha'), findsOneWidget,
+          reason: 'el tab Inicio muestra el header, no el placeholder vacío');
+      expect(find.byKey(const ValueKey('placeholder-inicio')), findsOneWidget,
+          reason: 'la key se mantiene: los tests de navegación no cambian');
+    });
+
     testWidgets('shell_tab_bar_en_la_zona_del_mockup', (tester) async {
       await _pump(tester);
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../inicio/inicio_screen.dart';
 import 'tab_bar.dart';
 
 /// Shell de navegación de la app (RD `docs/requerimientos/navegacion.md`
@@ -26,11 +27,13 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      // Precargadas y sin rebuild al cambiar de tab (RD RF-02).
+      // Precargadas y sin rebuild al cambiar de tab (RD RF-02). El tab
+      // Inicio muestra su pantalla real (header); los otros 3 siguen como
+      // placeholders hasta sus RDs.
       body: IndexedStack(
         index: _activo.index,
         children: const [
-          _Placeholder(key: ValueKey('placeholder-inicio')),
+          InicioScreen(key: ValueKey('placeholder-inicio')),
           _Placeholder(key: ValueKey('placeholder-mis-reservas')),
           _Placeholder(key: ValueKey('placeholder-favoritos')),
           _Placeholder(key: ValueKey('placeholder-perfil')),
