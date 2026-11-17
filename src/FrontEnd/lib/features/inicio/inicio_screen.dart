@@ -61,6 +61,8 @@ class _InicioScreenState extends State<InicioScreen> {
                   ),
                   const SizedBox(height: 16),
                   const _Canchas(),
+                  const SizedBox(height: 16),
+                  const _Categorias(),
                 ],
               ),
             ),
@@ -615,6 +617,109 @@ class _CardCancha extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bloque "Categorías" del mockup ( RD inicio-categorias §4 ): título + 2
+/// chips con ícono y label. Inerte ( RF-02 ): el filtrado por categoría
+/// llega con su RD.
+class _Categorias extends StatelessWidget {
+  const _Categorias();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Text(
+          'Categorías',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: AppColors.text,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: const [
+            Expanded(
+              child: _ChipCategoria(
+                slug: 'futbol5',
+                icono: LucideIcons.users,
+                label: 'Fútbol 5',
+              ),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: _ChipCategoria(
+                slug: 'futbol7',
+                icono: LucideIcons.layoutGrid,
+                label: 'Fútbol 7',
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Chip de categoría: caja de ícono 44×44 verde claro + label ( mockup:
+/// vertical, hueco 8, padding 18/12, radio 14, borde ).
+class _ChipCategoria extends StatelessWidget {
+  const _ChipCategoria({
+    required this.slug,
+    required this.icono,
+    required this.label,
+  });
+
+  final String slug;
+  final IconData icono;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    // Inerte ( RF-02 ): solo descarta el teclado, como el resto del fondo.
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Container(
+        key: ValueKey('categoria-$slug'),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.border, width: 1),
+        ),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: const BoxDecoration(
+                color: AppColors.primarySoft,
+                borderRadius: BorderRadius.all(Radius.circular(22)),
+              ),
+              child: Center(
+                child: Icon(icono, size: 20, color: AppColors.primary),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+              ),
             ),
           ],
         ),
