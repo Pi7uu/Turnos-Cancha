@@ -43,5 +43,26 @@ void main() {
       expect(canchasSimuladas[2].hero, canchasSimuladas[2].foto,
           reason: 'sin hero propio usa su foto de card');
     });
+
+    test('canchas_simuladas_comodidades_y_descripcion', () {
+      expect(canchasSimuladas[0].comodidadesNoDisponibles, isEmpty);
+      expect(
+          canchasSimuladas[0].descripcion,
+          'Césped sintético de grado profesional, iluminación LED de alta '
+          'intensidad para partidos nocturnos y vestuarios con aire '
+          'acondicionado. Perfecto para quinta con amigos o torneos '
+          'competitivos.');
+      expect(canchasSimuladas[1].comodidadesNoDisponibles, ['Estac.', 'WiFi']);
+      expect(
+          canchasSimuladas[1].descripcion,
+          'Cancha techada de última generación, ideal para partidos nocturnos '
+          'y torneos corporativos. Vestuarios amplios y acceso controlado.');
+      expect(canchasSimuladas[2].comodidadesNoDisponibles, isEmpty);
+      expect(
+          canchasSimuladas[2].descripcion,
+          'Cancha al aire libre en el corazón de la ciudad, con césped '
+          'renovado y fácil acceso en transporte público. Ideal para '
+          'partidos con amigos.');
+    });
   });
 }

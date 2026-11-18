@@ -13,6 +13,8 @@ class Cancha {
     required this.puntuacion,
     required this.premium,
     required this.hero,
+    required this.comodidadesNoDisponibles,
+    required this.descripcion,
   });
 
   final String nombre;
@@ -41,6 +43,13 @@ class Cancha {
 
   /// Foto del hero del Detalle ( si no hay propia, usa [foto] ).
   final String hero;
+
+  /// Labels exactos de las comodidades NO disponibles ( `Estac.`, `WiFi`… );
+  /// vacío = las 5 del mockup disponibles ( RD detalle-comodidades §4 ).
+  final List<String> comodidadesNoDisponibles;
+
+  /// Párrafo del bloque "Sobre esta cancha".
+  final String descripcion;
 }
 
 /// Las 3 canchas del mockup, en orden ( RD §4 ).
@@ -56,6 +65,12 @@ const List<Cancha> canchasSimuladas = [
     puntuacion: 4.8,
     premium: true,
     hero: 'assets/img/canchas/elite_arena_hero.jpg',
+    comodidadesNoDisponibles: [],
+    descripcion:
+        'Césped sintético de grado profesional, iluminación LED de alta '
+        'intensidad para partidos nocturnos y vestuarios con aire '
+        'acondicionado. Perfecto para quinta con amigos o torneos '
+        'competitivos.',
   ),
   Cancha(
     nombre: 'Skyline Sports Hub',
@@ -68,6 +83,10 @@ const List<Cancha> canchasSimuladas = [
     puntuacion: 4.6,
     premium: true,
     hero: 'assets/img/canchas/skyline_sports.jpg',
+    comodidadesNoDisponibles: ['Estac.', 'WiFi'],
+    descripcion:
+        'Cancha techada de última generación, ideal para partidos nocturnos '
+        'y torneos corporativos. Vestuarios amplios y acceso controlado.',
   ),
   Cancha(
     nombre: 'Cancha Municipal',
@@ -80,5 +99,10 @@ const List<Cancha> canchasSimuladas = [
     puntuacion: 4.9,
     premium: false,
     hero: 'assets/img/canchas/cancha_municipal.jpg',
+    comodidadesNoDisponibles: [],
+    descripcion:
+        'Cancha al aire libre en el corazón de la ciudad, con césped '
+        'renovado y fácil acceso en transporte público. Ideal para '
+        'partidos con amigos.',
   ),
 ];
