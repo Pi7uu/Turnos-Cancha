@@ -66,6 +66,7 @@ class _DetalleScreenState extends State<DetalleScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: _BarraReserva(cancha: widget.cancha),
     );
   }
 }
@@ -584,6 +585,99 @@ class _SlotHora extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: ocupado ? Opacity(opacity: 0.5, child: texto) : texto,
+      ),
+    );
+  }
+}
+
+/// Barra de reserva fija del mockup ( RD detalle-horarios §4, "Footer" ):
+/// `PRECIO TOTAL` + monto + botón `Confirmar reserva` ( inerte — RF-03: el
+/// flujo de reserva lo cablea su RD ).
+class _BarraReserva extends StatelessWidget {
+  const _BarraReserva({required this.cancha});
+
+  final Cancha cancha;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const ValueKey('barra-reserva'),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.border, width: 1)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Flexible: en pantallas angostas la fila absorbe el encogimiento
+          // ( textos con ellipsis ); en el dispositivo real entra holgada.
+          Flexible(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'PRECIO TOTAL',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                    color: AppColors.text2,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${cancha.precio}.00',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.text,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Inerte ( RF-03 ): el flujo de reserva lo cablea su RD.
+          Flexible(
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 22),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Confirmar reserva',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(LucideIcons.arrowRight,
+                        size: 16, color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

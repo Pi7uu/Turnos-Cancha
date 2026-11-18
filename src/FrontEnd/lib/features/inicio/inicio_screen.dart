@@ -28,6 +28,13 @@ class _InicioScreenState extends State<InicioScreen> {
   /// como el mockup ( RD inicio-fecha RF-02 ).
   int _diaActivo = 1;
 
+  /// Label de la fecha elegida ( RD detalle-horarios §8 ), ej: `Mié, 16 oct`.
+  String _fechaLabel() {
+    const dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'];
+    const numeros = [14, 15, 16, 17, 18];
+    return '${dias[_diaActivo]}, ${numeros[_diaActivo]} oct';
+  }
+
   @override
   void dispose() {
     _busquedaController.dispose();
@@ -61,7 +68,7 @@ class _InicioScreenState extends State<InicioScreen> {
                     onSelect: (i) => setState(() => _diaActivo = i),
                   ),
                   const SizedBox(height: 16),
-                  const _Canchas(),
+                  _Canchas(fecha: _fechaLabel()),
                   const SizedBox(height: 16),
                   const _Categorias(),
                 ],
@@ -401,7 +408,10 @@ class _ChipDia extends StatelessWidget {
 /// de título + lista de las 3 cards simuladas. Controles inertes ( RF-02 ):
 /// la navegación al Detalle llega con su RD.
 class _Canchas extends StatelessWidget {
-  const _Canchas();
+  const _Canchas({required this.fecha});
+
+  /// Label de la fecha elegida ( pasa al Detalle — RD detalle-horarios §8 ).
+  final String fecha;
 
   @override
   Widget build(BuildContext context) {
@@ -441,7 +451,7 @@ class _Canchas extends StatelessWidget {
         const SizedBox(height: 12),
         for (final (i, cancha) in canchasSimuladas.indexed) ...[
           if (i > 0) const SizedBox(height: 12),
-          _CardCancha(cancha: cancha),
+          _CardCancha(cancha: cancha, fecha: fecha),
         ],
       ],
     );
@@ -450,9 +460,10 @@ class _Canchas extends StatelessWidget {
 
 /// Card de cancha ( mockup: card vectorial de Favoritos + tag del PNG ).
 class _CardCancha extends StatelessWidget {
-  const _CardCancha({required this.cancha});
+  const _CardCancha({required this.cancha, required this.fecha});
 
   final Cancha cancha;
+  final String fecha;
 
   @override
   Widget build(BuildContext context) {
@@ -461,7 +472,7 @@ class _CardCancha extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => DetalleScreen(cancha: cancha),
+          builder: (_) => DetalleScreen(cancha: cancha, fecha: fecha),
         ),
       ),
       child: Container(
@@ -607,7 +618,7 @@ class _CardCancha extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) => DetalleScreen(cancha: cancha),
+                      builder: (_) => DetalleScreen(cancha: cancha, fecha: fecha),
                     ),
                   ),
                   child: Container(

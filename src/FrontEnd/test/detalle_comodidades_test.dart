@@ -79,8 +79,14 @@ void main() {
             tester.widget<Container>(circulo).decoration! as BoxDecoration;
         expect(deco.color, AppColors.surface, reason: '$slug disponible');
       }
-      expect(find.byType(Opacity), findsNothing,
-          reason: 'sin atenuados en Elite');
+      // ( el alcance del check son los 5 ítems de comodidades: el bloque de
+      // horarios tiene su propio atenuado en el slot ocupado ).
+      for (final slug in ['duchas', 'estac', 'aire-ac', 'agua', 'wifi']) {
+        expect(
+            find.descendant(
+                of: _item(slug), matching: find.byType(Opacity)),
+            findsNothing);
+      }
 
       // Skyline: Estac. y WiFi no disponibles.
       await _pumpDetalle(tester, canchasSimuladas[1]);
@@ -127,9 +133,14 @@ void main() {
               .color,
           AppColors.surface);
 
-      // Municipal: los 5 disponibles.
+      // Municipal: los 5 disponibles ( sin atenuados en comodidades ).
       await _pumpDetalle(tester, canchasSimuladas[2]);
-      expect(find.byType(Opacity), findsNothing);
+      for (final slug in ['duchas', 'estac', 'aire-ac', 'agua', 'wifi']) {
+        expect(
+            find.descendant(
+                of: _item(slug), matching: find.byType(Opacity)),
+            findsNothing);
+      }
     });
 
     testWidgets('comodidades_aviso_solo_si_hay_no_disponibles', (tester) async {

@@ -4,7 +4,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/features/detalle/detalle_screen.dart';
 import 'package:turnos_cancha/features/inicio/cancha.dart';
-import 'package:turnos_cancha/features/inicio/inicio_screen.dart';
 import 'package:turnos_cancha/features/navegacion/main_shell.dart';
 
 /// Decoración del slot de hora ( key `hora-<HH:MM>` ).
@@ -117,6 +116,82 @@ void main() {
       await tester.pump();
       expect(_decoHora(tester, '20:00').color, AppColors.primary,
           reason: 'tocar el seleccionado lo mantiene');
+    });
+
+    testWidgets('barra_muestra_precio_total_y_confirmar', (tester) async {
+      await _pumpDetalle(tester, canchasSimuladas[0]);
+
+      final label = tester.widget<Text>(find.text('PRECIO TOTAL'));
+      expect(label.style!.fontSize, 11);
+      expect(label.style!.fontWeight, FontWeight.w600);
+      expect(label.style!.letterSpacing, 1);
+      expect(label.style!.color, AppColors.text2);
+
+      final monto = tester.widget<Text>(find.text(r'$45.00'));
+      expect(monto.style!.fontSize, 24);
+      expect(monto.style!.fontWeight, FontWeight.w700);
+      expect(monto.style!.color, AppColors.text);
+
+      final texto = tester.widget<Text>(find.text('Confirmar reserva'));
+      expect(texto.style!.fontSize, 15);
+      expect(texto.style!.fontWeight, FontWeight.w600);
+      expect(texto.style!.color, Colors.white);
+      final flecha = tester.widget<Icon>(find.byIcon(LucideIcons.arrowRight));
+      expect(flecha.size, 16);
+      expect(flecha.color, Colors.white);
+
+      // Barra: surface, borde superior border 1px, padding 16/20.
+      final barra = tester.widget<Container>(
+        find.byKey(const ValueKey('barra-reserva')),
+      );
+      final deco = barra.decoration! as BoxDecoration;
+      expect(deco.color, AppColors.surface);
+      expect(deco.border!.top.color, AppColors.border);
+      expect(deco.border!.top.width, 1);
+      expect(barra.padding,
+          const EdgeInsets.symmetric(vertical: 16, horizontal: 20));
+
+      // Montos por cancha ( precio + '.00' ).
+      await _pumpDetalle(tester, canchasSimuladas[1]);
+      expect(find.text(r'$60.00'), findsOneWidget);
+      await _pumpDetalle(tester, canchasSimuladas[2]);
+      expect(find.text(r'$40.00'), findsOneWidget);
+    });
+
+    testWidgets('barra_confirmar_es_inerte', (tester) async {
+      final observer = _Observer();
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(MaterialApp(
+        navigatorObservers: [observer],
+        home: DetalleScreen(cancha: canchasSimuladas[0]),
+      ));
+      final pushesIniciales = observer.pushes;
+
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+
+      expect(observer.pushes, pushesIniciales,
+          reason: 'Confirmar reserva es inerte (RF-03)');
+      expect(find.text('Elegí el horario'), findsOneWidget);
+    });
+
+    testWidgets('horarios_fecha_refleja_el_dia_del_inicio', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      await tester.tap(find.text('MIÉ'));
+      await tester.pump();
+      await tester.ensureVisible(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Mié, 16 oct'), findsOneWidget,
+          reason: 'la fecha refleja el día elegido en el Inicio');
     });
 
     testWidgets('horarios_sin_overflow_375x844_y_chica', (tester) async {
