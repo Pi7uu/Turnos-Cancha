@@ -7,7 +7,7 @@
 Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La app Flutter consume la API REST. Las reservas (turnos) son el dominio central.
 
 - **Backend:** `src/BackEnd/config/` (proyecto Django), `src/BackEnd/apps/turnos/` (main app) — correr Django desde `src/BackEnd/`
-- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio completo y Detalle de cancha completo (specs `docs/HistRequerimientos/inicio-*.md`, `detalle-*.md`). Specs as-built en `Specs/`
+- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio completo, Detalle de cancha completo y reserva exitosa (specs `docs/HistRequerimientos/inicio-*.md`, `detalle-*.md`, `reserva-exitosa.md`). Specs as-built en `Specs/`
 - **Database:** SQLite local (`src/BackEnd/db/db.sqlite3`); seed fixture pendiente (`apps/turnos/fixtures/initial_data.json`)
 - **Locale:** Spanish (`es-AR`), all UI text and API messages in Spanish
 
@@ -36,7 +36,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 116/116 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: Elite con las 5 comodidades y párrafo, Skyline con Estac./WiFi atenuadas y aviso, conforme al frame 07 del mockup; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\detalle-comodidades\`
 - ✅ Detalle de cancha · parte 3 implementado (RD 2026-11-17): bloque `Elegí el horario` con 6 slots (disponible/seleccionado/ocupado, selección real default 19:00) y barra fija `PRECIO TOTAL` + `Confirmar reserva` (inerte por spec); fecha del bloque derivada del día elegido en el Inicio; **la pantalla 02 queda completa**. Modelo `Cancha` +horasOcupadas
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 124/124 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: horarios con 19:00/21:00 según mockup, selección cambia al tocar 20:00, fecha `Mié, 16 oct` refleja el día elegido, barra con `Confirmar reserva` completo; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\detalle-horarios\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, flujo de reserva (éxito/error), estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Mis reservas, Favoritos, Perfil
+- ✅ Reserva exitosa implementada (RD 2026-11-18): pantalla `¡Reserva exitosa!` (ilustración, N° de orden generado `#GB-######`, `PAGADO`, precio, aviso) con navegación real — `Ver mis reservas` abre el shell en ese tab (MainShell +tabInicial) y `Volver al inicio` conserva el estado; `Confirmar reserva` del Detalle la abre con cancha/fecha/hora. **Flujo central vivo de punta a punta**
+- ✅ Verificación 2026-11-18: `flutter analyze` sin issues y `flutter test`: 133/133 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: pantalla conforme al mockup `Contenido` con datos de la reserva (Elite, 16 de octubre, 20:00, #GB-882910, $45.00) y `Ver mis reservas` abriendo el tab; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\reserva-exitosa\`
+- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, error de reserva (frame 10), estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Mis reservas, Favoritos, Perfil
 
 ## Dev Commands
 
