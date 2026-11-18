@@ -64,5 +64,11 @@ void main() {
           'renovado y fácil acceso en transporte público. Ideal para '
           'partidos con amigos.');
     });
+
+    test('canchas_simuladas_horas_ocupadas', () {
+      expect(canchasSimuladas[0].horasOcupadas, ['21:00']);
+      expect(canchasSimuladas[1].horasOcupadas, ['17:00', '21:00']);
+      expect(canchasSimuladas[2].horasOcupadas, ['20:00']);
+    });
   });
 }
