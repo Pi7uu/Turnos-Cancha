@@ -5,16 +5,31 @@ import '../../core/theme/app_colors.dart';
 import '../inicio/cancha.dart';
 
 /// Pantalla Detalle de cancha ( pantalla 02 — se construye por partes, RD
-/// `docs/requerimientos/detalle-hero.md` ): por ahora hero + info + nombre +
-/// dirección. Es una pantalla **apilada** ( se empuja desde el Inicio ) con
-/// botón Volver que hace `pop`.
+/// `docs/requerimientos/detalle-hero.md` y siguientes ): hero + info +
+/// comodidades + descripción + horarios, y la barra de reserva fija abajo.
 ///
-/// Las partes siguientes ( comodidades, "Sobre esta cancha", horarios y
-/// barra de reserva ) llegan en sus RDs.
-class DetalleScreen extends StatelessWidget {
-  const DetalleScreen({super.key, required this.cancha});
+/// Es una pantalla **apilada** ( se empuja desde el Inicio ) con botón
+/// Volver que hace `pop`. El horario seleccionado es estado local ( el
+/// flujo de reserva lo usará en su RD ).
+class DetalleScreen extends StatefulWidget {
+  const DetalleScreen({
+    super.key,
+    required this.cancha,
+    this.fecha = 'Mar, 15 oct',
+  });
 
   final Cancha cancha;
+
+  /// Label de la fecha elegida en el Inicio ( ej: `Mié, 16 oct` ).
+  final String fecha;
+
+  @override
+  State<DetalleScreen> createState() => _DetalleScreenState();
+}
+
+class _DetalleScreenState extends State<DetalleScreen> {
+  /// Horario seleccionado: por defecto `19:00`, como el mockup ( RD §8 ).
+  String _seleccionado = '19:00';
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +39,27 @@ class DetalleScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _Hero(cancha: cancha),
+            _Hero(cancha: widget.cancha),
             Padding(
               padding:
                   const EdgeInsets.only(top: 18, left: 16, right: 16, bottom: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _PrecioRating(cancha: cancha),
+                  _PrecioRating(cancha: widget.cancha),
                   const SizedBox(height: 16),
-                  _NombreDireccion(cancha: cancha),
+                  _NombreDireccion(cancha: widget.cancha),
                   const SizedBox(height: 16),
-                  _Comodidades(cancha: cancha),
+                  _Comodidades(cancha: widget.cancha),
                   const SizedBox(height: 16),
-                  _Sobre(cancha: cancha),
+                  _Sobre(cancha: widget.cancha),
+                  const SizedBox(height: 16),
+                  _Horarios(
+                    cancha: widget.cancha,
+                    fecha: widget.fecha,
+                    seleccionado: _seleccionado,
+                    onSelect: (hora) => setState(() => _seleccionado = hora),
+                  ),
                 ],
               ),
             ),
@@ -444,6 +466,125 @@ class _Sobre extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Bloque "Elegí el horario" del mockup ( RD detalle-horarios §4 ): título +
+/// fecha y 6 slots ( 2 filas de 3 ) con estados y selección real.
+class _Horarios extends StatelessWidget {
+  const _Horarios({
+    required this.cancha,
+    required this.fecha,
+    required this.seleccionado,
+    required this.onSelect,
+  });
+
+  final Cancha cancha;
+  final String fecha;
+  final String seleccionado;
+  final ValueChanged<String> onSelect;
+
+  /// Horas fijas del mockup, en orden.
+  static const List<String> _horas = [
+    '17:00', '18:00', '19:00', '20:00', '21:00', '22:00',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Flexible(
+              child: Text(
+                'Elegí el horario',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
+                ),
+              ),
+            ),
+            Text(
+              fecha,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.text2,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        for (var fila = 0; fila < 2; fila++) ...[
+          if (fila > 0) const SizedBox(height: 10),
+          Row(
+            children: [
+              for (final (i, hora) in _horas.skip(fila * 3).take(3).indexed) ...[
+                if (i > 0) const SizedBox(width: 10),
+                Expanded(
+                  child: _SlotHora(
+                    hora: hora,
+                    seleccionado: hora == seleccionado,
+                    ocupado: cancha.horasOcupadas.contains(hora),
+                    onTap: () => onSelect(hora),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// Slot de hora: disponible / seleccionado / ocupado ( mockup §4 ).
+class _SlotHora extends StatelessWidget {
+  const _SlotHora({
+    required this.hora,
+    required this.seleccionado,
+    required this.ocupado,
+    required this.onTap,
+  });
+
+  final String hora;
+  final bool seleccionado;
+  final bool ocupado;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final texto = Text(
+      hora,
+      style: TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        color: seleccionado ? Colors.white : AppColors.text2,
+      ),
+    );
+    return GestureDetector(
+      // Ocupado: sin efecto ( RF-02 ).
+      onTap: ocupado ? () {} : onTap,
+      child: Container(
+        key: ValueKey('hora-$hora'),
+        padding: const EdgeInsets.symmetric(vertical: 13),
+        decoration: BoxDecoration(
+          color: seleccionado
+              ? AppColors.primary
+              : ocupado
+                  ? const Color(0xFFF1F5F9)
+                  : AppColors.surface,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.center,
+        child: ocupado ? Opacity(opacity: 0.5, child: texto) : texto,
+      ),
     );
   }
 }
