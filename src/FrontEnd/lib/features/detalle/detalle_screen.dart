@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../inicio/cancha.dart';
+import '../reserva/reserva_exitosa_screen.dart';
 
 /// Pantalla Detalle de cancha ( pantalla 02 — se construye por partes, RD
 /// `docs/requerimientos/detalle-hero.md` y siguientes ): hero + info +
@@ -30,6 +31,20 @@ class DetalleScreen extends StatefulWidget {
 class _DetalleScreenState extends State<DetalleScreen> {
   /// Horario seleccionado: por defecto `19:00`, como el mockup ( RD §8 ).
   String _seleccionado = '19:00';
+
+  /// Abre la pantalla de éxito con los datos de la reserva ( RD
+  /// reserva-exitosa RF-02: cierra el RF-03 del RD detalle-horarios ).
+  void _confirmarReserva() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ReservaExitosaScreen(
+          cancha: widget.cancha,
+          fecha: widget.fecha,
+          hora: _seleccionado,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +81,10 @@ class _DetalleScreenState extends State<DetalleScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _BarraReserva(cancha: widget.cancha),
+      bottomNavigationBar: _BarraReserva(
+        cancha: widget.cancha,
+        onConfirmar: _confirmarReserva,
+      ),
     );
   }
 }
@@ -591,12 +609,15 @@ class _SlotHora extends StatelessWidget {
 }
 
 /// Barra de reserva fija del mockup ( RD detalle-horarios §4, "Footer" ):
-/// `PRECIO TOTAL` + monto + botón `Confirmar reserva` ( inerte — RF-03: el
-/// flujo de reserva lo cablea su RD ).
+/// `PRECIO TOTAL` + monto + botón `Confirmar reserva` ( que abre la pantalla
+/// de reserva exitosa — RD reserva-exitosa RF-02 ).
 class _BarraReserva extends StatelessWidget {
-  const _BarraReserva({required this.cancha});
+  const _BarraReserva({required this.cancha, required this.onConfirmar});
 
   final Cancha cancha;
+
+  /// Abre la pantalla de reserva exitosa ( RD reserva-exitosa RF-02 ).
+  final VoidCallback onConfirmar;
 
   @override
   Widget build(BuildContext context) {
@@ -643,10 +664,11 @@ class _BarraReserva extends StatelessWidget {
               ),
             ],
           ),
-          // Inerte ( RF-03 ): el flujo de reserva lo cablea su RD.
+          // Abre la reserva exitosa con los datos de la reserva ( RD
+          // reserva-exitosa RF-02 ).
           Flexible(
             child: GestureDetector(
-            onTap: () {},
+            onTap: onConfirmar,
             child: Container(
               padding:
                   const EdgeInsets.symmetric(vertical: 15, horizontal: 22),

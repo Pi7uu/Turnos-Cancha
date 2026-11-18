@@ -25,16 +25,6 @@ Color _colorHora(WidgetTester tester, String hora) {
   return texto.style!.color!;
 }
 
-/// Observador que cuenta los push ( Confirmar reserva no navega — RF-03 ).
-class _Observer extends NavigatorObserver {
-  int pushes = 0;
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    pushes++;
-  }
-}
-
 Future<void> _pumpDetalle(WidgetTester tester, Cancha cancha,
     {String fecha = 'Mar, 15 oct'}) async {
   tester.view.physicalSize = const Size(750, 1688);
@@ -158,23 +148,75 @@ void main() {
       expect(find.text(r'$40.00'), findsOneWidget);
     });
 
-    testWidgets('barra_confirmar_es_inerte', (tester) async {
-      final observer = _Observer();
-      tester.view.physicalSize = const Size(750, 1688);
-      tester.view.devicePixelRatio = 2;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(MaterialApp(
-        navigatorObservers: [observer],
-        home: DetalleScreen(cancha: canchasSimuladas[0]),
-      ));
-      final pushesIniciales = observer.pushes;
+    testWidgets('barra_confirmar_abre_reserva_exitosa', (tester) async {
+      await _pumpDetalle(tester, canchasSimuladas[1],
+          fecha: 'Mié, 16 oct');
 
+      await tester.ensureVisible(find.text('20:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('20:00'));
+      await tester.pump();
       await tester.tap(find.text('Confirmar reserva'));
       await tester.pumpAndSettle();
 
-      expect(observer.pushes, pushesIniciales,
-          reason: 'Confirmar reserva es inerte (RF-03)');
-      expect(find.text('Elegí el horario'), findsOneWidget);
+      expect(
+          find.text(
+              'Tu cancha Skyline Sports Hub quedó reservada para el 16 de octubre a las 20:00.'),
+          findsOneWidget,
+          reason: 'la pantalla muestra los datos de la reserva');
+      expect(find.text(r'$60.00'), findsOneWidget);
+    });
+
+    testWidgets('flujo_completo_volver_conserva_estado', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      await tester.enterText(find.byType(TextField), 'futbol');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('MIÉ'));
+      await tester.pump();
+      await tester.ensureVisible(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+      expect(find.text('¡Reserva exitosa!'), findsOneWidget);
+
+      await tester.tap(find.text('Volver al inicio'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('futbol'), findsOneWidget,
+          reason: 'el buscador conserva su texto');
+      final chip = tester.widget<Container>(
+        find.byKey(const ValueKey('dia-16')),
+      );
+      expect((chip.decoration! as BoxDecoration).color, AppColors.primary,
+          reason: 'el día seleccionado se conserva');
+    });
+
+    testWidgets('flujo_ver_mis_reservas_abre_el_tab', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      await tester.ensureVisible(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Ver mis reservas'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('placeholder-mis-reservas')),
+          findsOneWidget,
+          reason: 'el shell abre en el tab Mis reservas');
     });
 
     testWidgets('horarios_fecha_refleja_el_dia_del_inicio', (tester) async {
