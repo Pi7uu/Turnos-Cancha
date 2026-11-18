@@ -7,7 +7,7 @@
 Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La app Flutter consume la API REST. Las reservas (turnos) son el dominio central.
 
 - **Backend:** `src/BackEnd/config/` (proyecto Django), `src/BackEnd/apps/turnos/` (main app) — correr Django desde `src/BackEnd/`
-- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio: header, buscador, fecha, canchas y categorías (specs `docs/HistRequerimientos/inicio-*.md`). Specs as-built en `Specs/`
+- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio completo y Detalle de cancha parte 1 (specs `docs/HistRequerimientos/inicio-*.md`, `detalle-hero.md`). Specs as-built en `Specs/`
 - **Database:** SQLite local (`src/BackEnd/db/db.sqlite3`); seed fixture pendiente (`apps/turnos/fixtures/initial_data.json`)
 - **Locale:** Spanish (`es-AR`), all UI text and API messages in Spanish
 
@@ -30,7 +30,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 95/95 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: 3 cards con fotos reales conforme al mockup, scroll completo, taps inertes sin cambios; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-canchas\`
 - ✅ Categorías del Inicio implementadas (RD 2026-11-17): bloque `Categorías` con 2 chips (`Fútbol 5`/`Fútbol 7`, glyphs users/layout-grid en caja verde) repartidos por igual; chips inertes por spec. **El layout de la pantalla 01 queda completo**
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 100/100 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: bloque conforme al RD §4, chips con glyphs y labels correctos, taps sin cambios; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-categorias\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Detalle de cancha, Mis reservas, Favoritos, Perfil
+- ✅ Detalle de cancha · parte 1 implementado (RD 2026-11-17): hero (foto + botones volver/compartir/favorito), badge PREMIUM + rating + precio, nombre y dirección (`lib/features/detalle/detalle_screen.dart`); las cards y `Reservar` del Inicio abren el Detalle (cambio de alcance del RD inicio-canchas) y Volver conserva el estado del Inicio; modelo `Cancha` +direccion/puntuacion/premium/hero
+- ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 109/109 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: Detalle de Elite y Municipal (sin badge) conforme al mockup, botones del hero en posición, Volver conserva buscador y día; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\detalle-hero\`
+- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, Detalle partes 2/3 (comodidades, horarios, reserva), flujo de reserva (éxito/error), estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Mis reservas, Favoritos, Perfil
 
 ## Dev Commands
 
