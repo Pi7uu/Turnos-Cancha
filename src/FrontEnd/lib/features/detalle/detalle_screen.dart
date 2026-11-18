@@ -611,71 +611,71 @@ class _BarraReserva extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Flexible: en pantallas angostas la fila absorbe el encogimiento
-          // ( textos con ellipsis ); en el dispositivo real entra holgada.
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'PRECIO TOTAL',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1,
-                    color: AppColors.text2,
-                  ),
+          // El precio va sin Flexible ( en fuente real siempre entra );
+          // el Flexible del botón absorbe el encogimiento en casos extremos
+          // ( su texto elipsa ). Ojo: un hijo NO-flexible de un Row nunca se
+          // encoge — por eso el Flexible va sobre el botón, no sobre el precio.
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'PRECIO TOTAL',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                  color: AppColors.text2,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  '${cancha.precio}.00',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.text,
-                  ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '${cancha.precio}.00',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           // Inerte ( RF-03 ): el flujo de reserva lo cablea su RD.
           Flexible(
             child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 22),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        'Confirmar reserva',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+            onTap: () {},
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 22),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      'Confirmar reserva',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(LucideIcons.arrowRight,
-                        size: 16, color: Colors.white),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(LucideIcons.arrowRight,
+                      size: 16, color: Colors.white),
+                ],
               ),
             ),
+          ),
           ),
         ],
       ),
