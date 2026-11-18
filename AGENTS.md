@@ -7,7 +7,7 @@
 Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La app Flutter consume la API REST. Las reservas (turnos) son el dominio central.
 
 - **Backend:** `src/BackEnd/config/` (proyecto Django), `src/BackEnd/apps/turnos/` (main app) — correr Django desde `src/BackEnd/`
-- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio completo y Detalle de cancha parte 1 (specs `docs/HistRequerimientos/inicio-*.md`, `detalle-hero.md`). Specs as-built en `Specs/`
+- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio completo y Detalle de cancha partes 1-2 (specs `docs/HistRequerimientos/inicio-*.md`, `detalle-*.md`). Specs as-built en `Specs/`
 - **Database:** SQLite local (`src/BackEnd/db/db.sqlite3`); seed fixture pendiente (`apps/turnos/fixtures/initial_data.json`)
 - **Locale:** Spanish (`es-AR`), all UI text and API messages in Spanish
 
@@ -32,7 +32,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 100/100 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: bloque conforme al RD §4, chips con glyphs y labels correctos, taps sin cambios; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-categorias\`
 - ✅ Detalle de cancha · parte 1 implementado (RD 2026-11-17): hero (foto + botones volver/compartir/favorito), badge PREMIUM + rating + precio, nombre y dirección (`lib/features/detalle/detalle_screen.dart`); las cards y `Reservar` del Inicio abren el Detalle (cambio de alcance del RD inicio-canchas) y Volver conserva el estado del Inicio; modelo `Cancha` +direccion/puntuacion/premium/hero
 - ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 109/109 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: Detalle de Elite y Municipal (sin badge) conforme al mockup, botones del hero en posición, Volver conserva buscador y día; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\detalle-hero\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, Detalle partes 2/3 (comodidades, horarios, reserva), flujo de reserva (éxito/error), estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Mis reservas, Favoritos, Perfil
+- ✅ Detalle de cancha · parte 2 implementado (RD 2026-11-17): bloque `Comodidades` con 5 ítems (estados disponible/no disponible según la cancha) + aviso ámbar generado (`Estacionamiento y WiFi no disponibles hoy` en Skyline) y bloque `Sobre esta cancha`; modelo `Cancha` +comodidadesNoDisponibles/descripcion
+- ✅ Verificación 2026-11-17: `flutter analyze` sin issues y `flutter test`: 116/116 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: Elite con las 5 comodidades y párrafo, Skyline con Estac./WiFi atenuadas y aviso, conforme al frame 07 del mockup; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\detalle-comodidades\`
+- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, Detalle parte 3 (horarios, reserva) y flujo de reserva (éxito/error), estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Mis reservas, Favoritos, Perfil
 
 ## Dev Commands
 

@@ -30,13 +30,14 @@ su spec **antes** de mover el RD a Hist.
 | `inicio-canchas.md` | ✅ Implementado | Lista de canchas del Inicio: 3 cards con datos simulados y assets ( sin filtrado ni navegación ) |
 | `inicio-categorias.md` | ✅ Implementado | Bloque Categorías del Inicio: 2 chips inertes ( Fútbol 5 / Fútbol 7 ) |
 | `detalle-hero.md` | ✅ Implementado | Detalle de cancha parte 1: hero + info + navegación desde las cards del Inicio |
+| `detalle-comodidades.md` | ✅ Implementado | Detalle de cancha parte 2: comodidades con estados + aviso y "Sobre esta cancha" |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-Detalle de cancha: comodidades + "Sobre esta cancha" ( parte 2 ), horarios +
-barra de reserva ( parte 3 ), y luego el flujo de reserva ( éxito / error ).
-Pantalla 01 · Inicio: estado "sin canchas" ( 06 ) y filtrado.
-Pantallas 03/11/12: Mis reservas, Perfil, Favoritos. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
+Detalle de cancha: horarios + barra de reserva ( parte 3 ), y luego el
+flujo de reserva ( éxito / error ). Pantalla 01 · Inicio: estado "sin
+canchas" ( 06 ) y filtrado. Pantallas 03/11/12: Mis reservas, Perfil,
+Favoritos. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
 03 · Mis reservas + estados 08/09. Pantalla 11 · Perfil. Pantalla 12 ·
 Favoritos. Backend: API `/api/`, servicios, persistencia.
 
