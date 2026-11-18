@@ -89,6 +89,30 @@ void main() {
           reason: 'la key se mantiene: los tests de navegación no cambian');
     });
 
+    testWidgets('shell_tab_inicial_personalizable', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(
+          home: MainShell(tabInicial: TabApp.misReservas)));
+
+      expect(find.byKey(const ValueKey('placeholder-mis-reservas')),
+          findsOneWidget,
+          reason: 'el tab Mis reservas muestra su pantalla');
+      final deco = tester
+          .widget<Container>(
+            find
+                .descendant(
+                  of: find.byKey(const ValueKey('tab-misReservas')),
+                  matching: find.byType(Container),
+                )
+                .first,
+          )
+          .decoration! as BoxDecoration;
+      expect(deco.color, AppColors.primarySoft,
+          reason: 'el tab Mis reservas está activo');
+    });
+
     testWidgets('shell_tab_bar_en_la_zona_del_mockup', (tester) async {
       await _pump(tester);
 

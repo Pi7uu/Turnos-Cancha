@@ -12,7 +12,11 @@ import 'tab_bar.dart';
 /// Por esta etapa las 4 pantallas son placeholders vacíos ( RF-03 ); su
 /// contenido llega en RDs propios ( inicio-*.md, mis-reservas-*.md, etc. ).
 class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+  const MainShell({super.key, this.tabInicial = TabApp.inicio});
+
+  /// Tab activo al entrar ( RD reserva-exitosa §8: `Ver mis reservas` abre
+  /// el shell con este tab activo ).
+  final TabApp tabInicial;
 
   @override
   State<MainShell> createState() => _MainShellState();
@@ -20,6 +24,12 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   TabApp _activo = TabApp.inicio;
+
+  @override
+  void initState() {
+    super.initState();
+    _activo = widget.tabInicial;
+  }
 
   void _seleccionar(TabApp tab) => setState(() => _activo = tab);
 
