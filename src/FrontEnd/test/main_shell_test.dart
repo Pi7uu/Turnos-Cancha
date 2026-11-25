@@ -50,7 +50,7 @@ void main() {
       await tester.pump();
       expect(_indice(tester), 2);
       expect(
-          find.byKey(const ValueKey('placeholder-favoritos')), findsOneWidget);
+          find.byKey(const ValueKey('favoritos-screen')), findsOneWidget);
       expect(_decoTab(tester, TabApp.favoritos).color, AppColors.primarySoft);
       expect(_decoTab(tester, TabApp.inicio).color, isNull);
 
@@ -68,7 +68,7 @@ void main() {
       for (final nombre in [
         'placeholder-inicio',
         'placeholder-mis-reservas',
-        'placeholder-favoritos',
+        'favoritos-screen',
         'perfil-screen',
       ]) {
         expect(

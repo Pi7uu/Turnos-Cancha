@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../favoritos/favoritos_screen.dart';
 import '../inicio/inicio_screen.dart';
 import '../mis_reservas/mis_reservas_screen.dart';
 import '../perfil/perfil_screen.dart';
@@ -39,9 +40,8 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      // Precargadas y sin rebuild al cambiar de tab (RD RF-02). Inicio, Mis
-      // reservas y Perfil muestran su pantalla real; Favoritos sigue como
-      // placeholder hasta su RD.
+      // Precargadas y sin rebuild al cambiar de tab (RD RF-02). Las 4
+      // pantallas muestran su contenido real (sin placeholders).
       body: IndexedStack(
         index: _activo.index,
         children: [
@@ -50,7 +50,10 @@ class _MainShellState extends State<MainShell> {
             key: const ValueKey('placeholder-mis-reservas'),
             onVolver: () => setState(() => _activo = TabApp.inicio),
           ),
-          _Placeholder(key: ValueKey('placeholder-favoritos')),
+          FavoritosScreen(
+            key: const ValueKey('favoritos-screen'),
+            onExplorar: () => setState(() => _activo = TabApp.inicio),
+          ),
           PerfilScreen(
             key: const ValueKey('perfil-screen'),
             onIrAMisReservas: () => setState(() => _activo = TabApp.misReservas),
@@ -66,20 +69,6 @@ class _MainShellState extends State<MainShell> {
           child: AppTabBar(activo: _activo, onTab: _seleccionar),
         ),
       ),
-    );
-  }
-}
-
-/// Pantalla placeholder: fondo `$bg`, sin contenido (RF-03). El `key`
-/// identifica cada tab en los tests hasta que llegue la pantalla real.
-class _Placeholder extends StatelessWidget {
-  const _Placeholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.bg,
-      body: SafeArea(child: SizedBox.expand()),
     );
   }
 }

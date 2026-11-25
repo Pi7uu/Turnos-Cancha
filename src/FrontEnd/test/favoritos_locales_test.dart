@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:turnos_cancha/features/favoritos/favoritos_locales.dart';
-import 'package:turnos_cancha/features/inicio/cancha.dart';
 
 void main() {
   setUp(resetFavoritos);
