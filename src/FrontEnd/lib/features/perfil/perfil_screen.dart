@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../auth/login_screen.dart';
 
 class PerfilScreen extends StatelessWidget {
   const PerfilScreen({super.key, this.onIrAMisReservas});
@@ -170,6 +171,9 @@ class _TarjetaMenu extends StatelessWidget {
             if (i > 0)
               Container(height: 1, color: AppColors.border),
             _FilaMenu(
+              key: filas[i].$2 == 'Mis reservas'
+                  ? const ValueKey('fila-mis-reservas')
+                  : null,
               icono: filas[i].$1,
               label: filas[i].$2,
               onTap: filas[i].$3,
@@ -183,7 +187,7 @@ class _TarjetaMenu extends StatelessWidget {
 
 /// Fila del menú: caja de ícono 36×36, label 15px w500 y chevron.
 class _FilaMenu extends StatelessWidget {
-  const _FilaMenu({required this.icono, required this.label, this.onTap});
+  const _FilaMenu({super.key, required this.icono, required this.label, this.onTap});
 
   final IconData icono;
   final String label;
@@ -237,32 +241,49 @@ class _FilaMenu extends StatelessWidget {
 }
 
 /// Botón `Cerrar sesión` ( fondo rojo claro, texto/ícono `$danger` ).
+///
+/// RF-02: vuelve al login con `pushAndRemoveUntil` — la pila se limpia y el
+/// botón atrás no regresa al shell.
 class _BotonCerrarSesion extends StatelessWidget {
   const _BotonCerrarSesion();
 
+  void _cerrarSesion(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(
+        // El login exitoso hace pushReplacement al MainShell por su cuenta
+        // ( login_screen.dart ); `onIngresar` es solo un hook de notificación.
+        builder: (_) => LoginScreen(onIngresar: (_, _) {}),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
       key: const ValueKey('cerrar-sesion'),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFEE2E2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(LucideIcons.logOut, size: 17, color: AppColors.danger),
-          SizedBox(width: 8),
-          Text(
-            'Cerrar sesión',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColors.danger,
+      onTap: () => _cerrarSesion(context),
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFEE2E2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(LucideIcons.logOut, size: 17, color: AppColors.danger),
+            SizedBox(width: 8),
+            Text(
+              'Cerrar sesión',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.danger,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
