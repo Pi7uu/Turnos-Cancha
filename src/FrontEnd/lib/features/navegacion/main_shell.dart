@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../inicio/inicio_screen.dart';
+import '../mis_reservas/mis_reservas_screen.dart';
 import 'tab_bar.dart';
 
 /// Shell de navegación de la app (RD `docs/HistRequerimientos/navegacion.md`
@@ -42,9 +43,12 @@ class _MainShellState extends State<MainShell> {
       // placeholders hasta sus RDs.
       body: IndexedStack(
         index: _activo.index,
-        children: const [
+        children: [
           InicioScreen(key: ValueKey('placeholder-inicio')),
-          _Placeholder(key: ValueKey('placeholder-mis-reservas')),
+          MisReservasScreen(
+            key: const ValueKey('placeholder-mis-reservas'),
+            onVolver: () => setState(() => _activo = TabApp.inicio),
+          ),
           _Placeholder(key: ValueKey('placeholder-favoritos')),
           _Placeholder(key: ValueKey('placeholder-perfil')),
         ],
