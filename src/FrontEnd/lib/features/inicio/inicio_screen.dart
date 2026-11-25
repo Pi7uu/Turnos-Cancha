@@ -28,6 +28,28 @@ class _InicioScreenState extends State<InicioScreen> {
   /// como el mockup ( RD inicio-fecha RF-02 ).
   int _diaActivo = 1;
 
+  /// Texto del buscador ( RF-01 ): filtra las canchas por nombre.
+  String _query = '';
+
+  /// Categoría activa ( RF-02 ): slug del chip (`'futbol5'` | `'futbol7'`)
+  /// o null ( todas ).
+  String? _categoria;
+
+  /// Slug del chip → `tag` de la cancha ( RD inicio-filtrado §8 ).
+  static const Map<String, String> _tagDeCategoria = {
+    'futbol5': '5v5',
+    'futbol7': '7v7',
+  };
+
+  /// Canchas que pasan los filtros activos ( Y lógico ).
+  List<Cancha> _canchasFiltradas() {
+    return canchasSimuladas
+        .where((c) =>
+            c.nombre.toLowerCase().contains(_query.toLowerCase()) &&
+            (_categoria == null || c.tag == _tagDeCategoria[_categoria]))
+        .toList();
+  }
+
   /// Label de la fecha elegida ( RD detalle-horarios §8 ), ej: `Mié, 16 oct`.
   String _fechaLabel() {
     const dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'];
@@ -61,16 +83,24 @@ class _InicioScreenState extends State<InicioScreen> {
                 children: [
                   const _Header(),
                   const SizedBox(height: 16),
-                  _Buscador(controller: _busquedaController),
+                  _Buscador(
+                    controller: _busquedaController,
+                    onChanged: (v) => setState(() => _query = v),
+                  ),
                   const SizedBox(height: 16),
                   _Fecha(
                     activo: _diaActivo,
                     onSelect: (i) => setState(() => _diaActivo = i),
                   ),
                   const SizedBox(height: 16),
-                  _Canchas(fecha: _fechaLabel()),
+                  _Canchas(fecha: _fechaLabel(), canchas: _canchasFiltradas()),
                   const SizedBox(height: 16),
-                  const _Categorias(),
+                  _Categorias(
+                    activa: _categoria,
+                    onTap: (slug) => setState(
+                      () => _categoria = (_categoria == slug) ? null : slug,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -218,17 +248,19 @@ class _Campana extends StatelessWidget {
 }
 
 /// Campo de búsqueda del mockup ( RD inicio-buscador §4 ): lupa a la
-/// izquierda, placeholder `Buscá canchas cerca tuyo...`. Editable pero sin
-/// filtrar ( RF-02 ); la acción "search" del teclado no hace nada.
+/// izquierda, placeholder `Buscá canchas cerca tuyo...`. Filtra por nombre
+/// en vivo ( RD inicio-filtrado RF-01 ) vía [onChanged].
 class _Buscador extends StatelessWidget {
-  const _Buscador({required this.controller});
+  const _Buscador({required this.controller, required this.onChanged});
 
   final TextEditingController controller;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      onChanged: onChanged,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.search,
       style: const TextStyle(fontSize: 14, color: AppColors.text),
@@ -417,10 +449,13 @@ class _ChipDia extends StatelessWidget {
 /// de título + lista de las 3 cards simuladas. Controles inertes ( RF-02 ):
 /// la navegación al Detalle llega con su RD.
 class _Canchas extends StatelessWidget {
-  const _Canchas({required this.fecha});
+  const _Canchas({required this.fecha, required this.canchas});
 
   /// Label de la fecha elegida ( pasa al Detalle — RD detalle-horarios §8 ).
   final String fecha;
+
+  /// Canchas a mostrar ( ya filtradas — RD inicio-filtrado RF-01/02 ).
+  final List<Cancha> canchas;
 
   @override
   Widget build(BuildContext context) {
@@ -458,7 +493,7 @@ class _Canchas extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        for (final (i, cancha) in canchasSimuladas.indexed) ...[
+        for (final (i, cancha) in canchas.indexed) ...[
           if (i > 0) const SizedBox(height: 12),
           _CardCancha(cancha: cancha, fecha: fecha),
         ],
@@ -660,7 +695,13 @@ class _CardCancha extends StatelessWidget {
 /// chips con ícono y label. Inerte ( RF-02 ): el filtrado por categoría
 /// llega con su RD.
 class _Categorias extends StatelessWidget {
-  const _Categorias();
+  const _Categorias({required this.activa, required this.onTap});
+
+  /// Slug del chip activo ( `'futbol5'` | `'futbol7'` ) o null.
+  final String? activa;
+
+  /// Se invoca al tocar cualquier chip, activo o no ( el estado decide ).
+  final ValueChanged<String> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -677,20 +718,24 @@ class _Categorias extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Row(
-          children: const [
+          children: [
             Expanded(
               child: _ChipCategoria(
                 slug: 'futbol5',
                 icono: LucideIcons.users,
                 label: 'Fútbol 5',
+                activo: activa == 'futbol5',
+                onTap: () => onTap('futbol5'),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _ChipCategoria(
                 slug: 'futbol7',
                 icono: LucideIcons.layoutGrid,
                 label: 'Fútbol 7',
+                activo: activa == 'futbol7',
+                onTap: () => onTap('futbol7'),
               ),
             ),
           ],
@@ -701,30 +746,38 @@ class _Categorias extends StatelessWidget {
 }
 
 /// Chip de categoría: caja de ícono 44×44 verde claro + label ( mockup:
-/// vertical, hueco 8, padding 18/12, radio 14, borde ).
+/// vertical, hueco 8, padding 18/12, radio 14, borde ). El chip activo usa
+/// el estilo de pill `$primarySoft`/`$primary` ( extensión del RD
+/// inicio-filtrado §8 ).
 class _ChipCategoria extends StatelessWidget {
   const _ChipCategoria({
     required this.slug,
     required this.icono,
     required this.label,
+    required this.activo,
+    required this.onTap,
   });
 
   final String slug;
   final IconData icono;
   final String label;
+  final bool activo;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    // Inerte ( RF-02 ): solo descarta el teclado, como el resto del fondo.
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: onTap,
       child: Container(
         key: ValueKey('categoria-$slug'),
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: activo ? AppColors.primarySoft : AppColors.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.border, width: 1),
+          border: Border.all(
+            color: activo ? AppColors.primary : AppColors.border,
+            width: 1,
+          ),
         ),
         alignment: Alignment.center,
         child: Column(

@@ -173,7 +173,7 @@ void main() {
       addTearDown(tester.view.reset);
       await tester.pumpWidget(const MaterialApp(home: MainShell()));
 
-      await tester.enterText(find.byType(TextField), 'futbol');
+      await tester.enterText(find.byType(TextField), 'elite');
       await tester.pumpAndSettle();
       await tester.tap(find.text('MIÉ'));
       await tester.pump();
@@ -189,7 +189,7 @@ void main() {
       await tester.tap(find.text('Volver al inicio'));
       await tester.pumpAndSettle();
 
-      expect(find.text('futbol'), findsOneWidget,
+      expect(find.text('elite'), findsOneWidget,
           reason: 'el buscador conserva su texto');
       final chip = tester.widget<Container>(
         find.byKey(const ValueKey('dia-16')),
@@ -286,7 +286,7 @@ void main() {
       addTearDown(tester.view.reset);
       await tester.pumpWidget(const MaterialApp(home: MainShell()));
 
-      await tester.enterText(find.byType(TextField), 'futbol');
+      await tester.enterText(find.byType(TextField), 'elite');
       await tester.pumpAndSettle();
       await tester.tap(find.text('MIÉ'));
       await tester.pump();
@@ -306,7 +306,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('error-volver')));
       await tester.pumpAndSettle();
 
-      expect(find.text('futbol'), findsOneWidget,
+      expect(find.text('elite'), findsOneWidget,
           reason: 'el buscador conserva su texto');
       final chip = tester.widget<Container>(
         find.byKey(const ValueKey('dia-16')),
