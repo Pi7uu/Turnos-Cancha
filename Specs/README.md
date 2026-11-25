@@ -33,12 +33,13 @@ su spec **antes** de mover el RD a Hist.
 | `detalle-comodidades.md` | ✅ Implementado | Detalle de cancha parte 2: comodidades con estados + aviso y "Sobre esta cancha" |
 | `detalle-horarios.md` | ✅ Implementado | Detalle de cancha parte 3: horarios con selección + barra de reserva fija (Confirmar inerte) |
 | `reserva-exitosa.md` | ✅ Implementado | Reserva exitosa: pantalla de confirmación con N° de orden + navegación a Mis reservas/Inicio |
+| `reserva-error.md` | ✅ Implementado | Error de reserva: pantalla de carrera por el horario + regla de éxito/error del Confirmar |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-**Flujo de reserva**: error de reserva ( frame 10 del `.pen` — define la
-condición de éxito/error ). Pantalla 01 · Inicio: estado "sin canchas"
-( 06 ) y filtrado. Pantallas 03/11/12: Mis reservas, Perfil, Favoritos. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
+**Flujo de reserva: completo** ( éxito + error + regla ). Pantalla 01 ·
+Inicio: estado "sin canchas" ( 06 ) y filtrado. Pantallas 03/11/12: Mis
+reservas ( muestra las reservas creadas ), Perfil, Favoritos. Flujo de reserva: éxito ( Contenido ) + error ( 10 ). Pantalla
 03 · Mis reservas + estados 08/09. Pantalla 11 · Perfil. Pantalla 12 ·
 Favoritos. Backend: API `/api/`, servicios, persistencia.
 
