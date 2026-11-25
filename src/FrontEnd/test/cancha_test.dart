@@ -70,5 +70,11 @@ void main() {
       expect(canchasSimuladas[1].horasOcupadas, ['17:00', '21:00']);
       expect(canchasSimuladas[2].horasOcupadas, ['20:00']);
     });
+
+    test('canchas_simuladas_horas_en_conflicto', () {
+      expect(canchasSimuladas[0].horasEnConflicto, ['18:00']);
+      expect(canchasSimuladas[1].horasEnConflicto, isEmpty);
+      expect(canchasSimuladas[2].horasEnConflicto, isEmpty);
+    });
   });
 }

@@ -16,6 +16,7 @@ class Cancha {
     required this.comodidadesNoDisponibles,
     required this.descripcion,
     required this.horasOcupadas,
+    required this.horasEnConflicto,
   });
 
   final String nombre;
@@ -55,6 +56,11 @@ class Cancha {
   /// Horas ocupadas ( formato `HH:00`, ej: `21:00` ) — data simulada
   /// ( RD detalle-horarios §4 ).
   final List<String> horasOcupadas;
+
+  /// Horas en conflicto ( formato `HH:00` ): al confirmar la reserva se
+  /// simula la carrera por el horario y se muestra el error ( RD
+  /// reserva-error §8 ).
+  final List<String> horasEnConflicto;
 }
 
 /// Las 3 canchas del mockup, en orden ( RD §4 ).
@@ -77,6 +83,7 @@ const List<Cancha> canchasSimuladas = [
         'acondicionado. Perfecto para quinta con amigos o torneos '
         'competitivos.',
     horasOcupadas: ['21:00'],
+    horasEnConflicto: ['18:00'],
   ),
   Cancha(
     nombre: 'Skyline Sports Hub',
@@ -94,6 +101,7 @@ const List<Cancha> canchasSimuladas = [
         'Cancha techada de última generación, ideal para partidos nocturnos '
         'y torneos corporativos. Vestuarios amplios y acceso controlado.',
     horasOcupadas: ['17:00', '21:00'],
+    horasEnConflicto: [],
   ),
   Cancha(
     nombre: 'Cancha Municipal',
@@ -112,5 +120,6 @@ const List<Cancha> canchasSimuladas = [
         'renovado y fácil acceso en transporte público. Ideal para '
         'partidos con amigos.',
     horasOcupadas: ['20:00'],
+    horasEnConflicto: [],
   ),
 ];
