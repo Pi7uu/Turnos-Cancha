@@ -37,12 +37,12 @@ su spec **antes** de mover el RD a Hist.
 | `mis-reservas-lista.md` | ✅ Implementado | Mis reservas parte 1: header + pestañas + cards con estados (acciones inertes) |
 | `mis-reservas-acciones.md` | ✅ Implementado | Mis reservas parte 2: acciones reales + store compartido con el flujo, estados vacíos y variante "Sin QR" |
 | `perfil.md` | ✅ Implementado | Pantalla 11 · Perfil: cuenta con stats, menú de opciones y cerrar sesión |
+| `favoritos.md` | ✅ Implementado | Pantalla 12 · Favoritos: cards con datos, quitar favorito, estado vacío y Reservar → Detalle |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-Pantalla 12 · **Favoritos**. Pantalla 01 ·
-Inicio: estado "sin canchas" ( 06 ) y filtrado. Backend: API `/api/`,
-servicios, persistencia, fixtures.
+Pantalla 01 · Inicio: estado "sin canchas" ( 06 ) y filtrado — lo último del
+prototipo. Backend: API `/api/`, servicios, persistencia, fixtures.
 
 ## Convenciones de un spec
 
