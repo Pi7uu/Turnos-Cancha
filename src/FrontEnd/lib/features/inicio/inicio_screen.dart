@@ -50,6 +50,15 @@ class _InicioScreenState extends State<InicioScreen> {
         .toList();
   }
 
+  /// RF-03/RF-04: `Elegir otra fecha` y `Ver todo` limpian los filtros.
+  void _limpiarFiltros() {
+    setState(() {
+      _query = '';
+      _categoria = null;
+      _busquedaController.clear();
+    });
+  }
+
   /// Label de la fecha elegida ( RD detalle-horarios §8 ), ej: `Mié, 16 oct`.
   String _fechaLabel() {
     const dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'];
@@ -93,7 +102,12 @@ class _InicioScreenState extends State<InicioScreen> {
                     onSelect: (i) => setState(() => _diaActivo = i),
                   ),
                   const SizedBox(height: 16),
-                  _Canchas(fecha: _fechaLabel(), canchas: _canchasFiltradas()),
+                  _Canchas(
+                    fecha: _fechaLabel(),
+                    canchas: _canchasFiltradas(),
+                    onVerTodo: _limpiarFiltros,
+                    onElegirOtraFecha: _limpiarFiltros,
+                  ),
                   const SizedBox(height: 16),
                   _Categorias(
                     activa: _categoria,
@@ -449,13 +463,24 @@ class _ChipDia extends StatelessWidget {
 /// de título + lista de las 3 cards simuladas. Controles inertes ( RF-02 ):
 /// la navegación al Detalle llega con su RD.
 class _Canchas extends StatelessWidget {
-  const _Canchas({required this.fecha, required this.canchas});
+  const _Canchas({
+    required this.fecha,
+    required this.canchas,
+    required this.onVerTodo,
+    required this.onElegirOtraFecha,
+  });
 
   /// Label de la fecha elegida ( pasa al Detalle — RD detalle-horarios §8 ).
   final String fecha;
 
   /// Canchas a mostrar ( ya filtradas — RD inicio-filtrado RF-01/02 ).
   final List<Cancha> canchas;
+
+  /// RF-04: `Ver todo` limpia los filtros.
+  final VoidCallback onVerTodo;
+
+  /// RF-03: `Elegir otra fecha` ( estado sin canchas ) limpia los filtros.
+  final VoidCallback onElegirOtraFecha;
 
   @override
   Widget build(BuildContext context) {
@@ -478,9 +503,13 @@ class _Canchas extends StatelessWidget {
                 ),
               ),
             ),
-            // Link sin funcionalidad ( el prototipo no define la pantalla ).
+            // RF-04: limpia los filtros y muestra todas las canchas.
             GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
+              key: const ValueKey('ver-todo'),
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                onVerTodo();
+              },
               child: const Text(
                 'Ver todo',
                 style: TextStyle(
@@ -493,11 +522,97 @@ class _Canchas extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        for (final (i, cancha) in canchas.indexed) ...[
-          if (i > 0) const SizedBox(height: 12),
-          _CardCancha(cancha: cancha, fecha: fecha),
-        ],
+        if (canchas.isEmpty)
+          _SinCanchas(onElegirOtraFecha: onElegirOtraFecha)
+        else
+          for (final (i, cancha) in canchas.indexed) ...[
+            if (i > 0) const SizedBox(height: 12),
+            _CardCancha(cancha: cancha, fecha: fecha),
+          ],
       ],
+    );
+  }
+}
+
+/// Card "Sin canchas" del mockup ( RD inicio-filtrado §4, frame 06 ): ícono
+/// `calendar-x`, título, descripción y botón `Elegir otra fecha`.
+class _SinCanchas extends StatelessWidget {
+  const _SinCanchas({required this.onElegirOtraFecha});
+
+  /// Limpia los filtros y muestra todas las canchas ( RF-03 ).
+  final VoidCallback onElegirOtraFecha;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const ValueKey('sin-canchas'),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 24),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border, width: 1),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 76,
+            height: 76,
+            decoration: const BoxDecoration(
+              color: AppColors.primarySoft,
+              borderRadius: BorderRadius.all(Radius.circular(38)),
+            ),
+            child: const Center(
+              child: Icon(
+                LucideIcons.calendarX,
+                size: 36,
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            'No hay canchas disponibles',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: AppColors.text,
+            ),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            'No quedan canchas libres para esta fecha en tu zona. '
+            'Probá con otro día.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: AppColors.text2,
+            ),
+          ),
+          const SizedBox(height: 14),
+          GestureDetector(
+            key: const ValueKey('elegir-otra-fecha'),
+            onTap: onElegirOtraFecha,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 13, horizontal: 26),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Text(
+                'Elegir otra fecha',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
