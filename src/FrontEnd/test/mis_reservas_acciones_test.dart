@@ -129,5 +129,73 @@ void main() {
           reason: 'Explorar canchas cambia al tab Inicio');
       expect(find.byKey(const ValueKey('placeholder-inicio')), findsOneWidget);
     });
+    testWidgets('flujo_exitoso_registra_en_próximas', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      // Inicio → Elite → elegir 20:00 → Confirmar → éxito → Ver mis reservas.
+      await tester.ensureVisible(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('20:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('20:00'));
+      await tester.pump();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+      expect(find.text('¡Reserva exitosa!'), findsOneWidget);
+      expect(
+          find.text(
+              'Tu cancha Elite Arena Central quedó reservada para el 15 de octubre a las 20:00.'),
+          findsOneWidget,
+          reason: 'la hora seleccionada llegó a la reserva');
+
+      await tester.tap(find.text('Ver mis reservas'));
+      await tester.pumpAndSettle();
+      expect(find.text('Próximas'), findsOneWidget,
+          reason: 'Ver mis reservas abrió el tab');
+
+      expect(find.text('20:00 - 21:00'), findsOneWidget,
+          reason: 'la reserva creada aparece en Próximas');
+      expect(find.text('Cancha A (5v5)'), findsNWidgets(2),
+          reason: 'la semilla Mar 15 + la creada');
+      expect(find.text('CONFIRMADA'), findsNWidgets(2));
+      expect(find.text('Ver QR'), findsOneWidget,
+          reason: 'las reservas del flujo tienen QR');
+    });
+
+    testWidgets('flujo_error_no_registra', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      // Elite 18:00 ( conflicto ) → error → Ver mis reservas.
+      await tester.ensureVisible(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('18:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('18:00'));
+      await tester.pump();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+      expect(find.text('No se pudo completar la reserva'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('error-volver')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Mis reservas'));
+      await tester.pumpAndSettle();
+
+      // Solo las 2 semillas ( sin nueva ).
+      expect(find.text('19:00 - 20:00'), findsOneWidget);
+      expect(find.text('10:00 - 11:30'), findsOneWidget);
+      expect(find.text('20:00 - 21:00'), findsNothing,
+          reason: 'el camino de error no registra');
+    });
   });
 }

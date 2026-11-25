@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/features/mis_reservas/mis_reservas_screen.dart';
+import 'package:turnos_cancha/features/mis_reservas/reservas_locales.dart';
 import 'package:turnos_cancha/features/navegacion/main_shell.dart';
 
 /// Decoración del card de reserva con `key: ValueKey('reserva-<i>')`.
@@ -31,6 +32,10 @@ Future<void> _pumpReservas(WidgetTester tester) async {
 }
 
 void main() {
+  // Las acciones de las cards mutan el store ( parte 2 ): se re-sembrá antes
+  // de cada test para no contaminar los demás.
+  setUp(resetReservas);
+
   group('MisReservasScreen (RD mis-reservas-lista §4)', () {
     testWidgets('mis_reservas_muestra_header_y_3_pestanas', (tester) async {
       await _pumpReservas(tester);
@@ -74,12 +79,11 @@ void main() {
     testWidgets('proximas_muestra_las_cards_del_mockup', (tester) async {
       await _pumpReservas(tester);
 
-      // Card 0: Elite CONFIRMADA con Ver QR.
+      // Card 0: Elite CONFIRMADA ( sin QR: variante 08 — solo Cancelar ).
       expect(find.text('Mar, 15 oct 2026'), findsOneWidget);
       expect(find.text('CONFIRMADA'), findsOneWidget);
       expect(find.text('19:00 - 20:00'), findsOneWidget);
       expect(find.text('Cancha A (5v5)'), findsOneWidget);
-      expect(find.text('Ver QR'), findsOneWidget);
 
       // Card 1: Skyline PENDIENTE con Confirmar.
       expect(find.text('Sáb, 19 oct 2026'), findsOneWidget);
@@ -91,6 +95,8 @@ void main() {
       expect(find.text('Cancelar reserva'), findsNWidgets(2));
       expect(find.text('HORARIO'), findsNWidgets(2));
       expect(find.text('CANCHA'), findsNWidgets(2));
+      expect(find.text('Ver QR'), findsNothing,
+          reason: 'Elite Mar 15 es tieneQr:false ( variante 08 ): sin Ver QR');
     });
 
     testWidgets('cambiar_pestana_muestra_su_lista', (tester) async {
@@ -181,7 +187,8 @@ void main() {
       expect(valor.style!.fontWeight, FontWeight.w700);
       expect(valor.style!.color, AppColors.text);
 
-      // Botones.
+      // Botones: Cancelar ( outline ) y Confirmar ( verde — mismo estilo que
+      // Ver QR; en Próximas el verde es 'Confirmar' porque Elite no tiene QR ).
       final cancelar = find
           .ancestor(
             of: find.text('Cancelar reserva'),
@@ -194,19 +201,20 @@ void main() {
       expect(decoCancelar.borderRadius, BorderRadius.circular(10));
       expect(tester.widget<Container>(cancelar).padding,
           const EdgeInsets.all(12));
-      final verQr = find
+      final verde = find
           .ancestor(
-            of: find.text('Ver QR'),
+            of: find.text('Confirmar'),
             matching: find.byType(Container),
           )
           .first;
-      final decoQr =
-          tester.widget<Container>(verQr).decoration! as BoxDecoration;
-      expect(decoQr.color, AppColors.primary);
-      expect(decoQr.borderRadius, BorderRadius.circular(10));
+      final decoVerde =
+          tester.widget<Container>(verde).decoration! as BoxDecoration;
+      expect(decoVerde.color, AppColors.primary);
+      expect(decoVerde.borderRadius, BorderRadius.circular(10));
     });
 
-    testWidgets('botones_de_las_cards_son_inertes', (tester) async {
+    testWidgets('botones_de_las_cards_no_navegan', (tester) async {
+      // Las acciones mutan el store ( parte 2 ) pero no empujan rutas.
       final observer = _Observer();
       tester.view.physicalSize = const Size(750, 1688);
       tester.view.devicePixelRatio = 2;
@@ -219,11 +227,11 @@ void main() {
 
       await tester.tap(find.text('Cancelar reserva').first);
       await tester.pump();
-      await tester.tap(find.text('Ver QR'));
+      await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
 
       expect(observer.pushes, pushesIniciales,
-          reason: 'los botones de las cards son inertes (RF-03)');
+          reason: 'las acciones de las cards no navegan (solo mutan el store)');
       expect(find.text('Mis reservas'), findsOneWidget);
     });
 

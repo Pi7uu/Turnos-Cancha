@@ -3,6 +3,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../inicio/cancha.dart';
+import '../mis_reservas/reserva.dart';
+import '../mis_reservas/reservas_locales.dart';
 import '../reserva/reserva_error_screen.dart';
 import '../reserva/reserva_exitosa_screen.dart';
 
@@ -35,9 +37,21 @@ class _DetalleScreenState extends State<DetalleScreen> {
 
   /// Confirma la reserva ( RD reserva-error RF-01 ): si la hora está en
   /// `horasEnConflicto` se simula la carrera por el horario y se abre la
-  /// pantalla de error; si no, la de éxito.
+  /// pantalla de error; si no, la de éxito **y se registra en el store**
+  /// ( RD mis-reservas-acciones RF-02: aparece en Próximas ).
   void _confirmarReserva() {
     final enConflicto = widget.cancha.horasEnConflicto.contains(_seleccionado);
+    if (!enConflicto) {
+      registrarReserva(Reserva(
+        nombre: widget.cancha.nombre,
+        foto: widget.cancha.foto,
+        fecha: '${widget.fecha} 2026',
+        horario: '$_seleccionado - ${_horaFin()}',
+        sector: widget.cancha.sector,
+        estado: EstadoReserva.confirmada,
+        tieneQr: true,
+      ));
+    }
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => enConflicto
@@ -53,6 +67,12 @@ class _DetalleScreenState extends State<DetalleScreen> {
               ),
       ),
     );
+  }
+
+  /// Hora de fin del rango ( `<hora> - <hora+1>`, ej: `20:00` → `21:00` ).
+  String _horaFin() {
+    final h = int.parse(_seleccionado.split(':').first);
+    return '${(h + 1).toString().padLeft(2, '0')}:00';
   }
 
   @override
