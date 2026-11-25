@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/theme/app_colors.dart';
-import 'usuarios_locales.dart';
 import 'validacion_registro.dart';
 
 /// Pantalla de registro (mockup 05 · Crear cuenta).
@@ -16,7 +16,10 @@ import 'validacion_registro.dart';
 /// valida igual que el botón. RF-01/04/05: con el formulario válido registra
 /// al usuario en la lista local y vuelve al login con `pop(true)`.
 class RegistroScreen extends StatefulWidget {
-  const RegistroScreen({super.key});
+  const RegistroScreen({super.key, this.apiClient});
+
+  /// Cliente de la API ( inyectable para tests — RD api-auth RF-02 ).
+  final ApiClient? apiClient;
 
   @override
   State<RegistroScreen> createState() => _RegistroScreenState();
@@ -44,6 +47,14 @@ class _RegistroScreenState extends State<RegistroScreen> {
   /// Errores inline por campo (RD registro RF-03); `null` antes del primer
   /// intento de crear la cuenta.
   ErroresRegistro? _errores;
+
+  late final ApiClient _api = widget.apiClient ?? ApiClient();
+
+  /// Request en curso: el botón muestra spinner y queda deshabilitado.
+  bool _cargando = false;
+
+  /// Error global ( red / API ) bajo el botón, en español.
+  String? _errorGlobal;
 
   @override
   void dispose() {
@@ -99,10 +110,12 @@ class _RegistroScreenState extends State<RegistroScreen> {
     });
   }
 
-  /// Valida y, si todo está bien, registra al usuario y vuelve al login con
-  /// `true` para el aviso de éxito (RF-01/04/05). Si hay errores quedan
-  /// visibles todos a la vez, sin mensajes globales (RF-03).
-  void _submit() {
+  /// Valida y, si todo está bien, crea la cuenta contra la API y vuelve al
+  /// login con `true` para el aviso de éxito (RF-01/04/05). Si hay errores
+  /// quedan visibles todos a la vez, sin mensajes globales (RF-03) salvo
+  /// los de red/API bajo el botón ( RD api-auth RF-02 ).
+  Future<void> _submit() async {
+    if (_cargando) return;
     final errores = validarRegistro(
       nombre: _nombreController.text,
       email: _emailController.text,
@@ -113,14 +126,32 @@ class _RegistroScreenState extends State<RegistroScreen> {
     setState(() => _errores = errores);
     if (errores.hayError) return;
 
-    // RF-04: el alta normaliza el email (trim + minúsculas) y el nombre
-    // (trim); la contraseña se guarda tal cual.
-    registrarUsuario(
-      _nombreController.text,
-      _emailController.text,
-      _passwordController.text,
-    );
-    Navigator.pop(context, true);
+    setState(() {
+      _cargando = true;
+      _errorGlobal = null;
+    });
+    try {
+      // El alta normaliza el email ( el backend lo hace: trim + minúsculas )
+      // y el nombre; la contraseña viaja tal cual.
+      await _api.registro(
+        _emailController.text,
+        _passwordController.text,
+        nombre: _nombreController.text,
+      );
+      if (!mounted) return;
+      Navigator.pop(context, true);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        if (e.mensaje == 'Ya existe una cuenta con ese email.') {
+          _errores = ErroresRegistro(email: e.mensaje);
+        } else {
+          _errorGlobal = e.mensaje;
+        }
+      });
+    } finally {
+      if (mounted) setState(() => _cargando = false);
+    }
   }
 
   /// Volver / "Iniciá sesión": cierra la pantalla sin datos (el login
@@ -402,21 +433,48 @@ class _RegistroScreenState extends State<RegistroScreen> {
   }
 
   /// Botón principal (RD §4): ancho completo, radio 12, padding vertical 15.
+  /// Con request en curso muestra spinner; debajo, el error global de red/API.
   Widget _botonCrear() {
-    return FilledButton(
-      onPressed: _submit,
-      style: FilledButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        FilledButton(
+          onPressed: _cargando ? null : _submit,
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 15),
+          ),
+          child: _cargando
+              ? const SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Colors.white,
+                  ),
+                )
+              : const Text(
+                  'Crear cuenta',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 15),
-      ),
-      child: const Text(
-        'Crear cuenta',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-      ),
+        if (_errorGlobal != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            _errorGlobal!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.danger,
+            ),
+          ),
+        ],
+      ],
     );
   }
 

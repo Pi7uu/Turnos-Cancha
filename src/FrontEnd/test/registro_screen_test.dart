@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
 import 'package:turnos_cancha/features/auth/registro_screen.dart';
-import 'package:turnos_cancha/features/auth/usuarios_locales.dart';
+import 'api_mock.dart';
 
 /// Arma un `MaterialApp` con una pantalla-puerta que empuja la 05 y guarda
 /// el resultado del `Navigator.push<bool>` (null si se vuelve sin registrar).
@@ -21,7 +21,7 @@ Future<void> _pumpConPuerta(
                 final resultado = await Navigator.push<bool>(
                   context,
                   MaterialPageRoute<bool>(
-                    builder: (_) => const RegistroScreen(),
+                    builder: (_) => RegistroScreen(apiClient: _mock.client()),
                   ),
                 );
                 guardaResultado(resultado);
@@ -117,7 +117,11 @@ Future<void> _marcarTerminos(WidgetTester tester) async {
   await tester.pump();
 }
 
+final _mock = ApiMock();
+
 void main() {
+  setUp(_mock.reiniciar);
+
   group('Pantalla de registro (mockup 05)', () {
     testWidgets('registro_muestra_todos_los_textos_del_mockup', (tester) async {
       await tester.pumpWidget(
@@ -346,7 +350,6 @@ void main() {
   });
 
   group('Registro · validación inline y alta (RF-01..08)', () {
-    setUp(resetUsuarios);
 
     testWidgets('registro_submit_vacio_muestra_errores_por_campo',
         (tester) async {
@@ -380,7 +383,7 @@ void main() {
       await _marcarTerminos(tester);
       await _tocarCrearCuenta(tester);
 
-      expect(_mensajeError('Ya hay una cuenta con ese email'), findsOneWidget,
+      expect(_mensajeError('Ya existe una cuenta con ese email.'), findsOneWidget,
           reason: 'duplicado contra el usuario semilla, con trim');
       expect(_campoEnError(tester, 1), isTrue);
       for (final indice in const [0, 2, 3]) {
@@ -389,7 +392,7 @@ void main() {
       }
       expect(find.text('Crear cuenta'), findsNWidgets(2),
           reason: 'sigue en la 05: no registra ni navega');
-      expect(emailRegistrado('igpi7uu@gmail.com'), isTrue);
+      expect(_mock.usuarios.containsKey('igpi7uu@gmail.com'), isTrue);
     });
 
     testWidgets('registro_escribir_limpia_solo_su_error', (tester) async {
@@ -466,10 +469,10 @@ void main() {
       expect(find.text('Abrir 05'), findsOneWidget,
           reason: 'volvió a la pantalla anterior');
       expect(resultado, isTrue, reason: 'pop(true) para el aviso de éxito');
-      expect(emailRegistrado('nueva@test.com'), isTrue,
+      expect(_mock.usuarios.containsKey('nueva@test.com'), isTrue,
           reason: 'el usuario quedó en la lista local');
 
-      final usuario = usuarioPorEmail('nueva@test.com');
+      final usuario = _mock.usuarios['nueva@test.com'];
       expect(usuario?.nombre, 'Marta Gómez');
       expect(usuario?.password, 'qwerty1234');
     });

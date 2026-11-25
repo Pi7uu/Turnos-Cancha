@@ -34,6 +34,15 @@ class AuthApiTests(APITestCase):
         self.assertEqual(r.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(r.data["error"], "Email o contraseña incorrectos.")
 
+    def test_login_normaliza_email(self):
+        """Mayúsculas y espacios no impiden entrar ( mismo criterio que el
+        login local — RD api-auth §8 )."""
+        r = self.client.post(
+            "/api/auth/login/", {"email": "  IGPI7UU@GMAIL.COM ", "password": "igpi7uu"}
+        )
+        self.assertEqual(r.status_code, status.HTTP_200_OK)
+        self.assertEqual(r.data["email"], "igpi7uu@gmail.com")
+
     # --- registro ------------------------------------------------------
     def test_registro_ok_crea_hash_y_sesion(self):
         r = self.client.post(

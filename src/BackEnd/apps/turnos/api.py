@@ -25,7 +25,7 @@ Usuario = get_user_model()
 @permission_classes([AllowAny])
 def registro(request):
     """Crea el usuario ( hash de contraseña ) y deja la sesión iniciada."""
-    email = (request.data.get("email") or "").strip()
+    email = (request.data.get("email") or "").strip().lower()
     password = request.data.get("password") or ""
     if not email or not password:
         return Response(
@@ -50,7 +50,7 @@ def registro(request):
 @permission_classes([AllowAny])
 def login_api(request):
     """Valida credenciales e inicia la sesión. No revela si el email existe."""
-    email = (request.data.get("email") or "").strip()
+    email = (request.data.get("email") or "").strip().lower()
     password = request.data.get("password") or ""
     user = authenticate(request, email=email, password=password)
     if user is None:

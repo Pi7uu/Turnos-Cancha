@@ -5,8 +5,6 @@
 /// válido. La pantalla (Task 5) es la encargada de mostrarlos.
 library;
 
-import 'usuarios_locales.dart';
-
 /// Formato de email del RD registro RF-03, aplicado sobre el valor con `trim`.
 final RegExp _formatoEmail = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
@@ -55,8 +53,8 @@ final class ErroresRegistro {
 /// Orden por campo:
 /// - [nombre]: inválido si queda vacío tras `trim`.
 /// - [email]: formato sobre el valor con `trim` (las mayúsculas son formato
-///   válido); si el formato es correcto, busca duplicados con
-///   [emailRegistrado] (que normaliza `trim` + minúsculas).
+///   válido). El duplicado lo valida la API ( RD api-auth RF-02 ) con su
+///   mensaje inline.
 /// - [password]: mínimo 8 caracteres sobre el valor crudo, sin `trim`.
 /// - [repetir]: comparación exacta contra [password], sin `trim`; dos valores
 ///   vacíos coinciden y no generan error.
@@ -70,16 +68,11 @@ ErroresRegistro validarRegistro({
 }) {
   final String emailTrimado = email.trim();
 
-  String? errorEmail;
-  if (!_formatoEmail.hasMatch(emailTrimado)) {
-    errorEmail = 'Ingresá un email válido';
-  } else if (emailRegistrado(emailTrimado)) {
-    errorEmail = 'Ya hay una cuenta con ese email';
-  }
-
   return ErroresRegistro(
     nombre: nombre.trim().isEmpty ? 'Ingresá tu nombre' : null,
-    email: errorEmail,
+    email: _formatoEmail.hasMatch(emailTrimado)
+        ? null
+        : 'Ingresá un email válido',
     password: password.length < 8 ? 'Mínimo 8 caracteres' : null,
     repetir: repetir != password ? 'Las contraseñas no coinciden' : null,
     terminos: terminos ? null : 'Aceptá los términos y condiciones',

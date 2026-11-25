@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'core/api/api_client.dart';
 import 'core/theme/app_colors.dart';
 import 'features/auth/login_screen.dart';
 
@@ -7,7 +8,10 @@ void main() => runApp(const TurnosCanchaApp());
 
 /// Raíz de la app TurnosCancha.
 class TurnosCanchaApp extends StatelessWidget {
-  const TurnosCanchaApp({super.key});
+  const TurnosCanchaApp({super.key, this.apiClient});
+
+  /// Cliente de la API ( inyectable para tests — RD api-auth RF-02 ).
+  final ApiClient? apiClient;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +23,9 @@ class TurnosCanchaApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         scaffoldBackgroundColor: AppColors.bg,
       ),
-      // Cada intento de login notifica al padre con los valores crudos.
-      // No hay backend ni HTTP en esta etapa (CA 7) ni persistencia de
-      // sesión (spec §3): la validación vive en LoginScreen.
-      home: LoginScreen(onIngresar: (_, _) {}),
+      // El login real consume /api/auth/login/ ( RD api-auth ); la sesión
+      // ( cookie ) vive en el ApiClient de la app.
+      home: LoginScreen(onIngresar: (_, _) {}, apiClient: apiClient),
     );
   }
 }

@@ -1,10 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:turnos_cancha/features/auth/usuarios_locales.dart';
 import 'package:turnos_cancha/features/auth/validacion_registro.dart';
 
 void main() {
-  setUp(() => resetUsuarios());
-
   group('validacion_registro (RD registro RF-03)', () {
     test('validar_registro_todo_vacio_muestra_4_errores_a_la_vez', () {
       final ErroresRegistro e = validarRegistro(
@@ -71,29 +68,8 @@ void main() {
       expect(valido.email, isNull);
     });
 
-    test('validar_registro_email_duplicado_con_usuario_semilla', () {
-      final ErroresRegistro e = validarRegistro(
-        nombre: 'Marta Gómez',
-        email: 'IGPI7UU@gmail.com',
-        password: 'qwerty1234',
-        repetir: 'qwerty1234',
-        terminos: true,
-      );
-      expect(e.email, 'Ya hay una cuenta con ese email');
-    });
-
-    test('validar_registro_email_duplicado_con_usuario_registrado', () {
-      registrarUsuario('Marta Gómez', 'marta@test.com', 'qwerty1234');
-
-      final ErroresRegistro e = validarRegistro(
-        nombre: 'Otra Persona',
-        email: ' Marta@Test.com ',
-        password: 'qwerty1234',
-        repetir: 'qwerty1234',
-        terminos: true,
-      );
-      expect(e.email, 'Ya hay una cuenta con ese email');
-    });
+    // Los duplicados de email ya no se validan en cliente: la API responde
+    // 400 `Ya existe una cuenta con ese email.` ( RD api-auth RF-02 ).
 
     test('validar_registro_repetir_exacto_sin_trim', () {
       final ErroresRegistro conEspacio = validarRegistro(

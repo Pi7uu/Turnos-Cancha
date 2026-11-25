@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/theme/app_colors.dart';
-import 'credenciales.dart';
 import 'registro_screen.dart';
 import '../navegacion/main_shell.dart';
 
@@ -15,10 +15,13 @@ import '../navegacion/main_shell.dart';
 /// La validación de credenciales (RF-03/04/05) se conecta en la Tarea 5;
 /// `onIngresar` recibe los valores crudos de los campos.
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key, required this.onIngresar});
+  const LoginScreen({super.key, required this.onIngresar, this.apiClient});
 
   /// Se invoca al tocar Ingresar o al enviar desde el teclado (RF-02).
   final void Function(String email, String password) onIngresar;
+
+  /// Cliente de la API ( inyectable para tests — RD api-auth RF-02 ).
+  final ApiClient? apiClient;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -28,9 +31,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
+  late final ApiClient _api = widget.apiClient ?? ApiClient();
 
   /// Estado de error 04b (RF-04): bordes rojos + mensaje inline.
   bool _error = false;
+
+  /// Mensaje a mostrar en el estado de error ( 04b o error de red/API ).
+  String _errorMensaje = 'El mail o la contraseña son incorrectos';
+
+  /// Request en curso: el botón muestra spinner y queda deshabilitado.
+  bool _cargando = false;
 
   @override
   void dispose() {
@@ -43,14 +53,17 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _passwordVisible = !_passwordVisible);
   }
 
-  /// Valida y navega o muestra el estado 04b (RF-03, RF-04).
-  void _submit() {
+  /// Login real contra la API ( RD api-auth RF-02 ): éxito entra al shell;
+  /// error muestra el estado 04b ( credenciales ) o el mensaje del servidor.
+  Future<void> _submit() async {
+    if (_cargando) return;
     final email = _emailController.text;
     final password = _passwordController.text;
-    // El callback recibe los valores crudos de cada intento (interfaz Tarea 3);
-    // main.dart decide si reacciona (hoy no hace nada — sin backend, CA 7).
-    widget.onIngresar(email, password);
-    if (credencialesValidas(email, password)) {
+    setState(() => _cargando = true);
+    try {
+      await _api.login(email, password);
+      if (!mounted) return;
+      widget.onIngresar(email, password);
       // RF-04 del RD navegacion: el login exitoso entra a la app (shell con
       // tab Inicio) reemplazando la ruta del login — sin vuelta a la 04.
       Navigator.of(context).pushReplacement(
@@ -58,8 +71,18 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (_) => const MainShell(),
         ),
       );
-    } else {
-      setState(() => _error = true);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = true;
+        // El wireframe 04b define el texto para credenciales inválidas; para
+        // el resto ( red, etc. ) se muestra el mensaje del cliente ( spec ).
+        _errorMensaje = e.mensaje == 'Email o contraseña incorrectos.'
+            ? 'El mail o la contraseña son incorrectos'
+            : e.mensaje;
+      });
+    } finally {
+      if (mounted) setState(() => _cargando = false);
     }
   }
 
@@ -78,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _irACrearCuenta() async {
     final creado = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => const RegistroScreen(),
+        builder: (_) => RegistroScreen(apiClient: widget.apiClient),
       ),
     );
     if (creado == true && mounted) {
@@ -212,11 +235,11 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 20,
           child: _error
-              ? const Text(
-                  'El mail o la contraseña son incorrectos',
+              ? Text(
+                  _errorMensaje,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.danger,
@@ -238,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 16),
         FilledButton(
-          onPressed: _submit,
+          onPressed: _cargando ? null : _submit,
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
@@ -247,10 +270,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             padding: const EdgeInsets.symmetric(vertical: 14),
           ),
-          child: const Text(
-            'Ingresar',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
+          child: _cargando
+              ? const SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Colors.white,
+                  ),
+                )
+              : const Text(
+                  'Ingresar',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
         ),
       ],
     );

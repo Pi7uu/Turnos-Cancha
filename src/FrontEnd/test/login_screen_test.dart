@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:turnos_cancha/core/theme/app_colors.dart';
-import 'package:turnos_cancha/features/auth/usuarios_locales.dart';
+import 'api_mock.dart';
 import 'package:turnos_cancha/features/navegacion/main_shell.dart';
 import 'package:turnos_cancha/main.dart';
 
@@ -28,7 +28,7 @@ Color _borde(WidgetTester tester, int index) {
 
 /// Abre la 05 desde el footer "Crear cuenta" de la 04 (RF-05).
 Future<void> _abrirRegistroDesdeLogin(WidgetTester tester) async {
-  await tester.pumpWidget(const TurnosCanchaApp());
+  await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
   await tester.tap(find.text('Crear cuenta'));
   await tester.pumpAndSettle();
 }
@@ -68,10 +68,14 @@ Future<void> _tocarCrearCuentaDelRegistro(WidgetTester tester) async {
   await tester.tap(boton);
 }
 
+final _mock = ApiMock();
+
 void main() {
+  setUp(_mock.reiniciar);
+
   group('Pantalla de login (wireframe 04)', () {
     testWidgets('muestra todos los textos del wireframe', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
 
       expect(find.text('TurnosCancha'), findsOneWidget);
       expect(find.text('Iniciá sesión'), findsOneWidget);
@@ -92,7 +96,7 @@ void main() {
     });
 
     testWidgets('login_ojo_alterna_visibilidad', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
 
       final campos = tester
           .widgetList<TextField>(find.byType(TextField))
@@ -126,7 +130,7 @@ void main() {
       for (final size in const [Size(375, 844), Size(320, 568)]) {
         tester.view.physicalSize = size;
         tester.view.devicePixelRatio = 1.0;
-        await tester.pumpWidget(const TurnosCanchaApp());
+        await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
         expect(tester.takeException(), isNull,
             reason: 'sin excepciones de layout en '
                 '${size.width}x${size.height}');
@@ -141,7 +145,7 @@ void main() {
       for (final size in const [Size(2400, 1080), Size(2400, 142)]) {
         tester.view.physicalSize = size;
         tester.view.devicePixelRatio = 1.0;
-        await tester.pumpWidget(const TurnosCanchaApp());
+        await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
         expect(tester.takeException(), isNull,
             reason: 'sin overflow en landscape '
                 '${size.width}x${size.height}');
@@ -149,7 +153,7 @@ void main() {
     });
 
     testWidgets('login_link_recuperacion_no_navega', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
 
       // El único link de la 04 sin funcionalidad (spec §3 fuera de alcance):
       // sigue en la 04 y no empuja la 05 (el footer "Crear cuenta" sí navega,
@@ -166,7 +170,7 @@ void main() {
 
   group('Flujo de login (RF-03/04/05)', () {
     testWidgets('login_credenciales_correctas_navega_a_exito', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, 'igpi7uu@gmail.com', 'igpi7uu');
 
       expect(find.byType(MainShell), findsOneWidget);
@@ -179,7 +183,7 @@ void main() {
 
     testWidgets('login_credenciales_incorrectas_muestra_estado_error',
         (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, 'otro@gmail.com', 'otra');
 
       expect(find.text('El mail o la contraseña son incorrectos'),
@@ -193,7 +197,7 @@ void main() {
     });
 
     testWidgets('login_campos_vacios_muestra_estado_error', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, '', '');
 
       expect(find.text('El mail o la contraseña son incorrectos'),
@@ -204,7 +208,7 @@ void main() {
 
     testWidgets('login_email_case_insensitive_y_trim_navega_a_exito',
         (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, '  IgPi7Uu@GmAiL.com ', 'igpi7uu');
 
       expect(find.byType(MainShell), findsOneWidget);
@@ -212,7 +216,7 @@ void main() {
     });
 
     testWidgets('login_escribir_en_email_limpia_error', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, 'x', 'x');
       expect(find.text('El mail o la contraseña son incorrectos'),
           findsOneWidget);
@@ -227,7 +231,7 @@ void main() {
     });
 
     testWidgets('login_escribir_en_password_limpia_error', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, 'x', 'x');
       expect(find.text('El mail o la contraseña son incorrectos'),
           findsOneWidget);
@@ -243,7 +247,7 @@ void main() {
 
     testWidgets('login_reintento_incorrecto_vuelve_a_mostrar_error',
         (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await _ingresar(tester, 'x', 'x');
       await tester.enterText(find.byType(TextField).at(0), 'a@b.com');
       await tester.pump();
@@ -257,7 +261,7 @@ void main() {
     });
 
     testWidgets('login_teclado_dispara_validacion', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
       await tester.enterText(
           find.byType(TextField).at(0), 'igpi7uu@gmail.com');
       await tester.enterText(find.byType(TextField).at(1), 'igpi7uu');
@@ -271,11 +275,9 @@ void main() {
   });
 
   group('Login · integración con la 05 (RF-05/08)', () {
-    setUp(resetUsuarios);
-    tearDown(resetUsuarios);
 
     testWidgets('login_crear_cuenta_navega_a_la_pantalla_05', (tester) async {
-      await tester.pumpWidget(const TurnosCanchaApp());
+      await tester.pumpWidget(TurnosCanchaApp(apiClient: _mock.client()));
 
       // En la 04 el link del footer es único.
       expect(find.text('Crear cuenta'), findsOneWidget);
@@ -355,7 +357,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 
-      expect(emailRegistrado('marta@test.com'), isTrue,
+      expect(_mock.usuarios.containsKey('marta@test.com'), isTrue,
           reason: 'el alta quedó en la lista local');
 
       // Se ingresa con la cuenta recién creada desde la 04.
