@@ -39,13 +39,14 @@ su spec **antes** de mover el RD a Hist.
 | `perfil.md` | ✅ Implementado | Pantalla 11 · Perfil: cuenta con stats, menú de opciones y cerrar sesión |
 | `favoritos.md` | ✅ Implementado | Pantalla 12 · Favoritos: cards con datos, quitar favorito, estado vacío y Reservar → Detalle |
 | `inicio-filtrado.md` | ✅ Implementado | Inicio · filtrado ( buscador + categorías ) y estado "sin canchas" ( 06 ) — **prototipo completo** |
+| `api-auth.md` | ✅ Implementado | API de autenticación ( `/api/auth/` ) + login/registro reales en Flutter |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-**Prototipo completo** ( las 12 pantallas/estados del mockup ). Queda la
-**fase backend**: API `/api/`, servicios ( `services.py` ), persistencia,
-fixtures/seed, comando `vencer_reservas`, login real contra
-`/api/auth/login/`.
+**Fase backend** ( el prototipo está completo ): API de canchas +
+fixtures/seed; API de reservas + `services.py` ( anti doble reserva ) +
+`vencer_reservas`; integración de Inicio/Detalle/Mis reservas/Favoritos/
+Perfil con la API; persistencia de sesión.
 
 ## Convenciones de un spec
 

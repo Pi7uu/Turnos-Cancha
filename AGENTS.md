@@ -50,7 +50,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 184/184 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: cards conforme al frame 12, quita con contador `2 canchas`, Detalle de Skyline y estado vacío; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\favoritos\`
 - ✅ Inicio · filtrado + estado "sin canchas" implementado (RD 2026-11-25): buscador filtra por nombre en vivo, chips `Fútbol 5`/`Fútbol 7` filtran por tag (chip activo se deselecciona), estado 06 con `Elegir otra fecha` y `Ver todo` limpian los filtros. **El prototipo queda completo (12 pantallas/estados)**
 - ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 190/190 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: filtrado por texto, estado 06 idéntico al frame, filtros limpios y chip `Fútbol 7` activo; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-filtrado\`
-- ⏳ Pendiente (fase backend): `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter
+- ✅ API REST · autenticación + login real implementado (RD 2026-11-25): endpoints `/api/auth/` (registro/login/logout/perfil) con sesión Django sin CSRF (DRF) + `tests.py` (10/10); Flutter consume la API con `ApiClient` (paquete `http`, cookie `sessionid`) — las pantallas 04/05 hacen login/registro reales con spinner y errores en español; se eliminan `credenciales.dart` y `usuarios_locales.dart`
+- ✅ Verificación 2026-11-25: backend `python manage.py test` 10/10, `flutter analyze` sin issues y `flutter test` 179/179. Integración real Django + Flutter web por CDP: contraseña incorrecta → estado 04b desde el `401` real y credenciales válidas → entra al shell; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\api-auth\`
+- ⏳ Pendiente (fase backend): `services.py`, API de canchas y reservas, fixtures/seed, comando `vencer_reservas`, integración de Inicio/Detalle/Mis reservas/Favoritos/Perfil con la API, persistencia de sesión
 
 ## Dev Commands
 
