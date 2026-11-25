@@ -10,14 +10,34 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../detalle/detalle_screen.dart';
 import '../inicio/cancha.dart';
 import 'favoritos_locales.dart';
 
-class FavoritosScreen extends StatelessWidget {
+class FavoritosScreen extends StatefulWidget {
   const FavoritosScreen({super.key, this.onExplorar});
 
   /// Cambia al tab Inicio ( estado vacío — RF-02 ).
   final VoidCallback? onExplorar;
+
+  @override
+  State<FavoritosScreen> createState() => _FavoritosScreenState();
+}
+
+class _FavoritosScreenState extends State<FavoritosScreen> {
+  void _quitar(Cancha cancha) {
+    setState(() => quitarFavorito(cancha));
+  }
+
+  /// RF-03: abre el Detalle de la cancha con la fecha por defecto del
+  /// selector del Inicio ( `Mar, 15 oct` — RD §8 ).
+  void _reservar(BuildContext context, Cancha cancha) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => DetalleScreen(cancha: cancha, fecha: 'Mar, 15 oct'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +74,15 @@ class FavoritosScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Expanded(
                 child: favoritos.isEmpty
-                    ? _EstadoVacio(onExplorar: onExplorar)
+                    ? _EstadoVacio(onExplorar: widget.onExplorar)
                     : ListView.separated(
                         itemCount: favoritos.length,
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
-                        itemBuilder: (context, i) =>
-                            _CardFavorito(cancha: favoritos[i]),
+                        itemBuilder: (context, i) => _CardFavorito(
+                          cancha: favoritos[i],
+                          onQuitar: () => _quitar(favoritos[i]),
+                          onReservar: () => _reservar(context, favoritos[i]),
+                        ),
                       ),
               ),
             ],
@@ -72,9 +95,15 @@ class FavoritosScreen extends StatelessWidget {
 
 /// Card de favorito ( frame 12 ): foto 92×92 + info + precio y `Reservar`.
 class _CardFavorito extends StatelessWidget {
-  const _CardFavorito({required this.cancha});
+  const _CardFavorito({
+    required this.cancha,
+    required this.onQuitar,
+    required this.onReservar,
+  });
 
   final Cancha cancha;
+  final VoidCallback onQuitar;
+  final VoidCallback onReservar;
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +149,14 @@ class _CardFavorito extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Icon(
-                          LucideIcons.heart,
-                          size: 18,
-                          color: AppColors.danger,
+                        GestureDetector(
+                          key: ValueKey('quitar-${cancha.nombre}'),
+                          onTap: onQuitar,
+                          child: const Icon(
+                            LucideIcons.heart,
+                            size: 18,
+                            color: AppColors.danger,
+                          ),
                         ),
                       ],
                     ),
@@ -200,19 +233,23 @@ class _CardFavorito extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 11, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  'Reservar',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+              GestureDetector(
+                key: ValueKey('reservar-${cancha.nombre}'),
+                onTap: onReservar,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 11, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'Reservar',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

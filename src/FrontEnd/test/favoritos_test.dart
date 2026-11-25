@@ -73,4 +73,60 @@ void main() {
       );
     });
   });
+
+  group('Acciones de Favoritos (RD favoritos RF-02/03)', () {
+    testWidgets('corazon_quita_favorito_y_actualiza_contador',
+        (tester) async {
+      await _pumpFavoritos(tester);
+
+      await tester.tap(find.byKey(const ValueKey('quitar-Elite Arena Central')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Elite Arena Central'), findsNothing);
+      expect(find.text('2 canchas'), findsOneWidget);
+      expect(find.text('Skyline Sports Hub'), findsOneWidget);
+      expect(find.text('Cancha Municipal'), findsOneWidget);
+    });
+
+    testWidgets('lista_vacia_muestra_estado_vacio', (tester) async {
+      await _pumpFavoritos(tester);
+
+      for (final nombre in [
+        'Elite Arena Central',
+        'Skyline Sports Hub',
+        'Cancha Municipal',
+      ]) {
+        await tester.tap(find.byKey(ValueKey('quitar-$nombre')));
+        await tester.pumpAndSettle();
+      }
+
+      expect(find.text('0 canchas'), findsOneWidget);
+      expect(find.text('Todavía no tenés favoritos'), findsOneWidget);
+      expect(
+          find.text(
+              'Cuando marques una cancha como favorita va a aparecer acá.'),
+          findsOneWidget);
+      expect(find.byIcon(LucideIcons.heart), findsOneWidget);
+      expect(find.text('Explorar canchas'), findsOneWidget);
+    });
+
+    testWidgets('reservar_abre_el_detalle', (tester) async {
+      await _pumpFavoritos(tester);
+
+      await tester.tap(find.byKey(const ValueKey('reservar-Skyline Sports Hub')));
+      await tester.pumpAndSettle();
+
+      // Detalle de Skyline con la fecha por defecto ( RD §8 ).
+      expect(find.text('Elegí el horario'), findsOneWidget);
+      expect(find.text('Mié, 16 oct'), findsNothing);
+      expect(find.text('Mar, 15 oct'), findsOneWidget);
+      expect(find.text('Skyline Sports Hub'), findsWidgets);
+
+      // Volver regresa a Favoritos ( la lista sigue viva ).
+      await tester.tap(find.byKey(const ValueKey('detalle-volver')));
+      await tester.pumpAndSettle();
+      expect(find.text('Favoritos'), findsOneWidget);
+      expect(find.text('3 canchas'), findsOneWidget);
+    });
+  });
 }
