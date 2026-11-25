@@ -153,20 +153,22 @@ class _MisReservasScreenState extends State<MisReservasScreen> {
               ),
               const SizedBox(height: 18),
               Expanded(
-                child: ListView.separated(
-                  itemCount: _reservasDeLaPestana().length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, i) {
-                    final reserva = _reservasDeLaPestana()[i];
-                    return _CardReserva(
-                      reserva: reserva,
-                      indice: i,
-                      onCancelar: () => _cancelar(reserva),
-                      onConfirmar: () => _confirmar(reserva),
-                      onVerQr: () => _mostrarQr(context),
-                    );
-                  },
-                ),
+                child: _reservasDeLaPestana().isEmpty
+                    ? _EstadoVacio(onExplorar: widget.onVolver)
+                    : ListView.separated(
+                        itemCount: _reservasDeLaPestana().length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                        itemBuilder: (context, i) {
+                          final reserva = _reservasDeLaPestana()[i];
+                          return _CardReserva(
+                            reserva: reserva,
+                            indice: i,
+                            onCancelar: () => _cancelar(reserva),
+                            onConfirmar: () => _confirmar(reserva),
+                            onVerQr: () => _mostrarQr(context),
+                          );
+                        },
+                      ),
               ),
             ],
           ),
@@ -456,6 +458,82 @@ class _CampoDetalle extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Estado vacío de una pestaña ( mockup frame 09 — RD RF-03 ).
+class _EstadoVacio extends StatelessWidget {
+  const _EstadoVacio({required this.onExplorar});
+
+  /// Cambia al tab Inicio ( mismo `onVolver` del header ).
+  final VoidCallback? onExplorar;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 88,
+          height: 88,
+          decoration: const BoxDecoration(
+            color: AppColors.primarySoft,
+            borderRadius: BorderRadius.all(Radius.circular(44)),
+          ),
+          child: const Center(
+            child: Icon(
+              LucideIcons.calendarDays,
+              size: 40,
+              color: AppColors.primary,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        const Text(
+          'No tenés reservas',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 19,
+            fontWeight: FontWeight.w700,
+            color: AppColors.text,
+          ),
+        ),
+        const SizedBox(height: 14),
+        const SizedBox(
+          width: 270,
+          child: Text(
+            'Cuando reserves una cancha va a aparecer acá. '
+            '¡Buscá la tuya y empezá a jugar!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: AppColors.text2,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        GestureDetector(
+          key: const ValueKey('explorar-canchas'),
+          onTap: () => onExplorar?.call(),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 30),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Text(
+              'Explorar canchas',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
