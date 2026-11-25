@@ -17,6 +17,7 @@ class Cancha {
     required this.descripcion,
     required this.horasOcupadas,
     required this.horasEnConflicto,
+    required this.sector,
   });
 
   final String nombre;
@@ -45,6 +46,10 @@ class Cancha {
 
   /// Foto del hero del Detalle ( si no hay propia, usa [foto] ).
   final String hero;
+
+  /// Sector/cancha de las reservas, ej: `Cancha A (5v5)` ( RD
+  /// mis-reservas-acciones §8 ).
+  final String sector;
 
   /// Labels exactos de las comodidades NO disponibles ( `Estac.`, `WiFi`… );
   /// vacío = las 5 del mockup disponibles ( RD detalle-comodidades §4 ).
@@ -84,6 +89,7 @@ const List<Cancha> canchasSimuladas = [
         'competitivos.',
     horasOcupadas: ['21:00'],
     horasEnConflicto: ['18:00'],
+    sector: 'Cancha A (5v5)',
   ),
   Cancha(
     nombre: 'Skyline Sports Hub',
@@ -102,6 +108,7 @@ const List<Cancha> canchasSimuladas = [
         'y torneos corporativos. Vestuarios amplios y acceso controlado.',
     horasOcupadas: ['17:00', '21:00'],
     horasEnConflicto: [],
+    sector: 'Cancha principal (7v7)',
   ),
   Cancha(
     nombre: 'Cancha Municipal',
@@ -121,5 +128,6 @@ const List<Cancha> canchasSimuladas = [
         'partidos con amigos.',
     horasOcupadas: ['20:00'],
     horasEnConflicto: [],
+    sector: 'Cancha B (5v5)',
   ),
 ];

@@ -76,5 +76,11 @@ void main() {
       expect(canchasSimuladas[1].horasEnConflicto, isEmpty);
       expect(canchasSimuladas[2].horasEnConflicto, isEmpty);
     });
+
+    test('canchas_simuladas_sector', () {
+      expect(canchasSimuladas[0].sector, 'Cancha A (5v5)');
+      expect(canchasSimuladas[1].sector, 'Cancha principal (7v7)');
+      expect(canchasSimuladas[2].sector, 'Cancha B (5v5)');
+    });
   });
 }

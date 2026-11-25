@@ -16,6 +16,7 @@ class Reserva {
     required this.horario,
     required this.sector,
     required this.estado,
+    required this.tieneQr,
   });
 
   /// Nombre de la cancha reservada.
@@ -34,6 +35,23 @@ class Reserva {
   final String sector;
 
   final EstadoReserva estado;
+
+  /// Con QR disponible ( `Ver QR` en confirmadas — variante "Sin QR" del
+  /// mockup cuando es `false` ).
+  final bool tieneQr;
+
+  /// Copia con campos cambiados ( usado por el store al mutar estados ).
+  Reserva copyWith({EstadoReserva? estado, bool? tieneQr}) {
+    return Reserva(
+      nombre: nombre,
+      foto: foto,
+      fecha: fecha,
+      horario: horario,
+      sector: sector,
+      estado: estado ?? this.estado,
+      tieneQr: tieneQr ?? this.tieneQr,
+    );
+  }
 }
 
 /// Reservas simuladas, en orden ( RD §4 ): las 2 Próximas del mockup y una
@@ -46,6 +64,7 @@ const List<Reserva> reservasSimuladas = [
     horario: '19:00 - 20:00',
     sector: 'Cancha A (5v5)',
     estado: EstadoReserva.confirmada,
+    tieneQr: false,
   ),
   Reserva(
     nombre: 'Skyline Sports Hub',
@@ -54,6 +73,7 @@ const List<Reserva> reservasSimuladas = [
     horario: '10:00 - 11:30',
     sector: 'Cancha principal (7v7)',
     estado: EstadoReserva.pendiente,
+    tieneQr: true,
   ),
   Reserva(
     nombre: 'Cancha Municipal',
@@ -62,6 +82,7 @@ const List<Reserva> reservasSimuladas = [
     horario: '18:00 - 19:00',
     sector: 'Cancha B (5v5)',
     estado: EstadoReserva.completada,
+    tieneQr: true,
   ),
   Reserva(
     nombre: 'Elite Arena Central',
@@ -70,5 +91,6 @@ const List<Reserva> reservasSimuladas = [
     horario: '20:00 - 21:00',
     sector: 'Cancha A (5v5)',
     estado: EstadoReserva.cancelada,
+    tieneQr: true,
   ),
 ];
