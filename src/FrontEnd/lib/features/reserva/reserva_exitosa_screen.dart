@@ -7,7 +7,7 @@ import '../navegacion/main_shell.dart';
 import '../navegacion/tab_bar.dart';
 
 /// Pantalla "¡Reserva exitosa!" ( mockup `Contenido`, RD
-/// `docs/requerimientos/reserva-exitosa.md` ): confirmación de la reserva con
+/// `docs/HistRequerimientos/reserva-exitosa.md` ): confirmación de la reserva con
 /// N° de orden, estado de pago y precio. Se abre desde `Confirmar reserva`
 /// del Detalle.
 ///

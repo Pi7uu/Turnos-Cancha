@@ -154,14 +154,23 @@ class _Acciones extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () {},
-          child: const _Campana(),
+        Semantics(
+          button: true,
+          label: 'Notificaciones',
+          child: GestureDetector(
+            onTap: () {},
+            child: const _Campana(),
+          ),
         ),
         const SizedBox(width: 16),
-        GestureDetector(
-          onTap: () {},
-          child: const Icon(LucideIcons.user, size: 23, color: AppColors.text),
+        Semantics(
+          button: true,
+          label: 'Perfil',
+          child: GestureDetector(
+            onTap: () {},
+            child:
+                const Icon(LucideIcons.user, size: 23, color: AppColors.text),
+          ),
         ),
       ],
     );

@@ -1,4 +1,4 @@
-/// Modelo de cancha y datos simulados ( RD `docs/requerimientos/inicio-canchas.md`
+/// Modelo de cancha y datos simulados ( RD `docs/HistRequerimientos/inicio-canchas.md`
 /// RF-01 ): las 3 canchas fijas del mockup, hasta que llegue el filtrado y la
 /// API REST.
 class Cancha {

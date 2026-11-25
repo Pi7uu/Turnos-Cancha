@@ -3,7 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 
-/// Tabs del Tab Bar (RD `docs/requerimientos/navegacion.md` §4).
+/// Tabs del Tab Bar (RD `docs/HistRequerimientos/navegacion.md` §4).
 ///
 /// El orden es el del mockup: Inicio, Mis reservas, Favoritos, Perfil.
 enum TabApp { inicio, misReservas, favoritos, perfil }

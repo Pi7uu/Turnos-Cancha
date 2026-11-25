@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../inicio/inicio_screen.dart';
 import 'tab_bar.dart';
 
-/// Shell de navegación de la app (RD `docs/requerimientos/navegacion.md`
+/// Shell de navegación de la app (RD `docs/HistRequerimientos/navegacion.md`
 /// RF-02/03): muestra la pantalla del tab activo en un [IndexedStack] con
 /// las 4 pantallas precargadas y el [AppTabBar] en la zona inferior del
 /// mockup.

@@ -7,7 +7,7 @@ import '../reserva/reserva_error_screen.dart';
 import '../reserva/reserva_exitosa_screen.dart';
 
 /// Pantalla Detalle de cancha ( pantalla 02 — se construye por partes, RD
-/// `docs/requerimientos/detalle-hero.md` y siguientes ): hero + info +
+/// `docs/HistRequerimientos/detalle-hero.md` y siguientes ): hero + info +
 /// comodidades + descripción + horarios, y la barra de reserva fija abajo.
 ///
 /// Es una pantalla **apilada** ( se empuja desde el Inicio ) con botón
@@ -125,6 +125,7 @@ class _Hero extends StatelessWidget {
                   child: _BotonHero(
                     clave: 'detalle-volver',
                     icono: LucideIcons.chevronLeft,
+                    semLabel: 'Volver',
                     onTap: () => Navigator.of(context).pop(),
                   ),
                 ),
@@ -134,6 +135,7 @@ class _Hero extends StatelessWidget {
                   child: _BotonHero(
                     clave: 'detalle-compartir',
                     icono: LucideIcons.share2,
+                    semLabel: 'Compartir',
                   ),
                 ),
                 Positioned(
@@ -142,6 +144,7 @@ class _Hero extends StatelessWidget {
                   child: _BotonHero(
                     clave: 'detalle-favorito',
                     icono: LucideIcons.heart,
+                    semLabel: 'Favorito',
                   ),
                 ),
               ],
@@ -158,34 +161,42 @@ class _BotonHero extends StatelessWidget {
   const _BotonHero({
     required this.clave,
     required this.icono,
+    required this.semLabel,
     this.onTap,
   });
 
   final String clave;
   final IconData icono;
+
+  /// Etiqueta accesible ( se anuncia como botón ).
+  final String semLabel;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap ?? () {},
-      child: Container(
-        key: ValueKey(clave),
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x260F172A),
-              offset: Offset(0, 2),
-              blurRadius: 8,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Icon(icono, size: 19, color: AppColors.text),
+    return Semantics(
+      button: true,
+      label: semLabel,
+        child: GestureDetector(
+        onTap: onTap ?? () {},
+        child: Container(
+          key: ValueKey(clave),
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x260F172A),
+                offset: Offset(0, 2),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Icon(icono, size: 19, color: AppColors.text),
+          ),
         ),
       ),
     );

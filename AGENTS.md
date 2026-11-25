@@ -77,5 +77,6 @@ cd src/FrontEnd && flutter test
 - **CSRF is disabled** for the API (session auth without CSRF for mobile clients).
 - **Tests:** backend `src/BackEnd/apps/turnos/tests.py` todavía no existe (reconstruir); frontend tiene tests de widgets (`login_screen_test.dart`, `credenciales_test.dart`).
 - **No CI/CD** or pre-commit hooks configured.
+- **Verificación visual (CDP/Edge):** el engine web debug puede congelar el árbol de semántica de CDP (assert `_computeOnScreenKeyboardInsets`) al enfocar campos con viewport emulado — verificar con coordenadas + capturas; y Edge nuevo puede renderizar dígitos espaciados por fallback de fuente (solo en web; en dispositivo es correcto). Relacionado con Inter pendiente de configurar.
 - CORS allows mobile dev origins/emulators with credentials.
 - `requirements.txt` has no lockfile — install directly.

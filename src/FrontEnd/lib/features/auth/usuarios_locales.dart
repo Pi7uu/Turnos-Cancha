@@ -29,7 +29,7 @@ class UsuarioLocal {
   final String password;
 }
 
-/// Usuario de la etapa login (`docs/requerimientos/login.md`), semilla de la
+/// Usuario de la etapa login (`docs/HistRequerimientos/login.md`), semilla de la
 /// lista (RD registro §2).
 const UsuarioLocal _usuarioSemilla = UsuarioLocal(
   nombre: 'Usuario inicial',

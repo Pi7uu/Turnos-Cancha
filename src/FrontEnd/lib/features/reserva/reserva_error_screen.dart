@@ -5,7 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../inicio/cancha.dart';
 
 /// Pantalla "No se pudo completar la reserva" ( mockup frame 10, RD
-/// `docs/requerimientos/reserva-error.md` ): el intento de reserva falló
+/// `docs/HistRequerimientos/reserva-error.md` ): el intento de reserva falló
 /// porque otro usuario tomó el horario ( simulado vía
 /// `cancha.horasEnConflicto` ).
 ///
