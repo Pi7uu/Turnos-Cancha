@@ -36,10 +36,11 @@ su spec **antes** de mover el RD a Hist.
 | `reserva-error.md` | ✅ Implementado | Error de reserva: pantalla de carrera por el horario + regla de éxito/error del Confirmar |
 | `mis-reservas-lista.md` | ✅ Implementado | Mis reservas parte 1: header + pestañas + cards con estados (acciones inertes) |
 | `mis-reservas-acciones.md` | ✅ Implementado | Mis reservas parte 2: acciones reales + store compartido con el flujo, estados vacíos y variante "Sin QR" |
+| `perfil.md` | ✅ Implementado | Pantalla 11 · Perfil: cuenta con stats, menú de opciones y cerrar sesión |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-Pantalla 11 · **Perfil** y Pantalla 12 · **Favoritos**. Pantalla 01 ·
+Pantalla 12 · **Favoritos**. Pantalla 01 ·
 Inicio: estado "sin canchas" ( 06 ) y filtrado. Backend: API `/api/`,
 servicios, persistencia, fixtures.
 
