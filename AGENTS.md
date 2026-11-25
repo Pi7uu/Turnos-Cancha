@@ -7,7 +7,7 @@
 Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La app Flutter consume la API REST. Las reservas (turnos) son el dominio central.
 
 - **Backend:** `src/BackEnd/config/` (proyecto Django), `src/BackEnd/apps/turnos/` (main app) — correr Django desde `src/BackEnd/`
-- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales (specs `docs/HistRequerimientos/login.md` y `docs/HistRequerimientos/registro.md`) + navegación principal (spec `docs/HistRequerimientos/navegacion.md`) + Inicio completo, Detalle completo y flujo de reserva completo (specs `docs/HistRequerimientos/inicio-*.md`, `detalle-*.md`, `reserva-*.md`). Specs as-built en `Specs/`
+- **Mobile:** `src/FrontEnd/` (Flutter, Dart) — proyecto `turnos_cancha` creado funciona; login y registro locales + navegación principal + Inicio completo + Detalle completo + flujo de reserva completo + Mis reservas parte 1 (specs `docs/HistRequerimientos/`). Specs as-built en `Specs/`
 - **Database:** SQLite local (`src/BackEnd/db/db.sqlite3`); seed fixture pendiente (`apps/turnos/fixtures/initial_data.json`)
 - **Locale:** Spanish (`es-AR`), all UI text and API messages in Spanish
 
@@ -40,7 +40,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-18: `flutter analyze` sin issues y `flutter test`: 133/133 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: pantalla conforme al mockup `Contenido` con datos de la reserva (Elite, 16 de octubre, 20:00, #GB-882910, $45.00) y `Ver mis reservas` abriendo el tab; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\reserva-exitosa\`
 - ✅ Error de reserva implementado (RD 2026-11-25): pantalla `No se pudo completar la reserva` (frame 10 del mockup: círculo X, card MOTIVO/SIN COBRO/ALTERNATIVAS derivado, nota) + regla de éxito/error del `Confirmar reserva` (`horasEnConflicto`: Elite 18:00) + `Elegir otro horario` vuelve al Detalle con la selección viva. **Flujo de reserva completo (éxito + error)**
 - ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 142/142 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: error idéntico al frame 10 (Elite 18:00, `2 canchas libres`), `Elegir otro horario` conserva la selección, cambiar a 20:00 abre el éxito; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\reserva-error\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Mis reservas, Favoritos, Perfil
+- ✅ Mis reservas · parte 1 implementado (RD 2026-11-25): pantalla con header (Volver→tab Inicio), pestañas Próximas/Completadas/Canceladas con subrayado activo y cards de reserva (foto, fecha, badge CONFIRMADA/PENDIENTE/COMPLETADA/CANCELADA, HORARIO/CANCHA, botones inertes); modelo `Reserva` +data simulada. El tab Mis reservas deja de ser placeholder
+- ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 155/155 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: Próximas conforme al PNG 03 (2 cards con badges y botones), Canceladas con badge rosa y sin botones, Volver al Inicio; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\mis-reservas\`
+- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, Mis reservas parte 2 (acciones + store, estados vacíos, variante Sin QR), estado "sin canchas" (06) y filtrado del Inicio, y las pantallas Perfil, Favoritos
 
 ## Dev Commands
 
