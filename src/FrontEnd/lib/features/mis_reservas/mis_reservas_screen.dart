@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 import 'reserva.dart';
+import 'reservas_locales.dart';
 
 /// Pantalla Mis reservas ( pantalla 03, parte 1 — RD
 /// `docs/HistRequerimientos/mis-reservas-lista.md` ): header + pestañas
@@ -32,7 +33,7 @@ class _MisReservasScreenState extends State<MisReservasScreen> {
   ];
 
   List<Reserva> _reservasDeLaPestana() {
-    return reservasSimuladas
+    return reservasLocales
         .where((r) => switch (r.estado) {
               EstadoReserva.confirmada || EstadoReserva.pendiente =>
                 _pestana == 0,
@@ -40,6 +41,88 @@ class _MisReservasScreenState extends State<MisReservasScreen> {
               EstadoReserva.cancelada => _pestana == 2,
             })
         .toList();
+  }
+
+  void _cancelar(Reserva reserva) {
+    setState(() => cancelarReserva(reserva));
+  }
+
+  void _confirmar(Reserva reserva) {
+    setState(() => confirmarReserva(reserva));
+  }
+
+  /// Diálogo simulado con el QR ( extensión — el mockup no define pantalla
+  /// de QR; RD §4 ).
+  Future<void> _mostrarQr(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Tu QR',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.text,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border, width: 1),
+                ),
+                child: const Center(
+                  child: Icon(
+                    LucideIcons.qrCode,
+                    size: 96,
+                    color: AppColors.text2,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Mostrá este código en la entrada.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13, color: AppColors.text2),
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                key: const ValueKey('qr-cerrar'),
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Cerrar',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -73,10 +156,16 @@ class _MisReservasScreenState extends State<MisReservasScreen> {
                 child: ListView.separated(
                   itemCount: _reservasDeLaPestana().length,
                   separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, i) => _CardReserva(
-                    reserva: _reservasDeLaPestana()[i],
-                    indice: i,
-                  ),
+                  itemBuilder: (context, i) {
+                    final reserva = _reservasDeLaPestana()[i];
+                    return _CardReserva(
+                      reserva: reserva,
+                      indice: i,
+                      onCancelar: () => _cancelar(reserva),
+                      onConfirmar: () => _confirmar(reserva),
+                      onVerQr: () => _mostrarQr(context),
+                    );
+                  },
                 ),
               ),
             ],
@@ -190,13 +279,65 @@ class _Pestana extends StatelessWidget {
 
 /// Card de reserva ( mockup §4 ): superior + detalle + acciones según estado.
 class _CardReserva extends StatelessWidget {
-  const _CardReserva({required this.reserva, required this.indice});
+  const _CardReserva({
+    required this.reserva,
+    required this.indice,
+    required this.onCancelar,
+    required this.onConfirmar,
+    required this.onVerQr,
+  });
 
   final Reserva reserva;
   final int indice;
+  final VoidCallback onCancelar;
+  final VoidCallback onConfirmar;
+  final VoidCallback onVerQr;
 
   @override
   Widget build(BuildContext context) {
+    // Acciones según el estado ( RD RF-01/RF-04 ): Próximas con Cancelar +
+    // ( Ver QR si confirmada con QR | Confirmar si pendiente ); una
+    // confirmada sin QR muestra solo Cancelar ( variante "Sin QR" ).
+    final acciones = <Widget>[
+      Expanded(
+        child: GestureDetector(
+          onTap: onCancelar,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.border, width: 1),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'Cancelar reserva',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
+    if (reserva.estado == EstadoReserva.pendiente) {
+      acciones
+        ..add(const SizedBox(width: 10))
+        ..add(_BotonAccion(
+          texto: 'Confirmar',
+          onTap: onConfirmar,
+        ));
+    } else if (reserva.estado == EstadoReserva.confirmada &&
+        reserva.tieneQr) {
+      acciones
+        ..add(const SizedBox(width: 10))
+        ..add(_BotonAccion(
+          texto: 'Ver QR',
+          onTap: onVerQr,
+        ));
+    }
     return Container(
       key: ValueKey('reserva-$indice'),
       padding: const EdgeInsets.all(16),
@@ -265,57 +406,7 @@ class _CardReserva extends StatelessWidget {
           if (reserva.estado == EstadoReserva.confirmada ||
               reserva.estado == EstadoReserva.pendiente) ...[
             const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  // Inerte ( RF-03 ): las acciones llegan en la parte 2.
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.border, width: 1),
-                      ),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'Cancelar reserva',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.text,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        reserva.estado == EstadoReserva.confirmada
-                            ? 'Ver QR'
-                            : 'Confirmar',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            Row(children: acciones),
           ],
         ],
       ),
@@ -364,6 +455,39 @@ class _CampoDetalle extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Botón de acción de la card ( Confirmar / Ver QR — `$primary` ).
+class _BotonAccion extends StatelessWidget {
+  const _BotonAccion({required this.texto, required this.onTap});
+
+  final String texto;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            texto,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
