@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../inicio/inicio_screen.dart';
 import '../mis_reservas/mis_reservas_screen.dart';
+import '../perfil/perfil_screen.dart';
 import 'tab_bar.dart';
 
 /// Shell de navegación de la app (RD `docs/HistRequerimientos/navegacion.md`
@@ -38,9 +39,9 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      // Precargadas y sin rebuild al cambiar de tab (RD RF-02). El tab
-      // Inicio muestra su pantalla real (header); los otros 3 siguen como
-      // placeholders hasta sus RDs.
+      // Precargadas y sin rebuild al cambiar de tab (RD RF-02). Inicio, Mis
+      // reservas y Perfil muestran su pantalla real; Favoritos sigue como
+      // placeholder hasta su RD.
       body: IndexedStack(
         index: _activo.index,
         children: [
@@ -50,7 +51,10 @@ class _MainShellState extends State<MainShell> {
             onVolver: () => setState(() => _activo = TabApp.inicio),
           ),
           _Placeholder(key: ValueKey('placeholder-favoritos')),
-          _Placeholder(key: ValueKey('placeholder-perfil')),
+          PerfilScreen(
+            key: const ValueKey('perfil-screen'),
+            onIrAMisReservas: () => setState(() => _activo = TabApp.misReservas),
+          ),
         ],
       ),
       // Zona del mockup (§4): fondo transparente sobre $bg, bordes a 16px

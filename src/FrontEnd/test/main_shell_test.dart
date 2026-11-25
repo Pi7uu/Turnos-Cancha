@@ -57,7 +57,7 @@ void main() {
       await tester.tap(find.text('Perfil'));
       await tester.pump();
       expect(_indice(tester), 3);
-      expect(find.byKey(const ValueKey('placeholder-perfil')), findsOneWidget);
+      expect(find.byKey(const ValueKey('perfil-screen')), findsOneWidget);
     });
 
     testWidgets('shell_las_4_pantallas_estan_precargadas', (tester) async {
@@ -69,7 +69,7 @@ void main() {
         'placeholder-inicio',
         'placeholder-mis-reservas',
         'placeholder-favoritos',
-        'placeholder-perfil',
+        'perfil-screen',
       ]) {
         expect(
           find.byKey(ValueKey(nombre), skipOffstage: false),
