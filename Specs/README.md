@@ -38,11 +38,14 @@ su spec **antes** de mover el RD a Hist.
 | `mis-reservas-acciones.md` | ✅ Implementado | Mis reservas parte 2: acciones reales + store compartido con el flujo, estados vacíos y variante "Sin QR" |
 | `perfil.md` | ✅ Implementado | Pantalla 11 · Perfil: cuenta con stats, menú de opciones y cerrar sesión |
 | `favoritos.md` | ✅ Implementado | Pantalla 12 · Favoritos: cards con datos, quitar favorito, estado vacío y Reservar → Detalle |
+| `inicio-filtrado.md` | ✅ Implementado | Inicio · filtrado ( buscador + categorías ) y estado "sin canchas" ( 06 ) — **prototipo completo** |
 
 ## Mapa de pendientes ( para próximos RDs )
 
-Pantalla 01 · Inicio: estado "sin canchas" ( 06 ) y filtrado — lo último del
-prototipo. Backend: API `/api/`, servicios, persistencia, fixtures.
+**Prototipo completo** ( las 12 pantallas/estados del mockup ). Queda la
+**fase backend**: API `/api/`, servicios ( `services.py` ), persistencia,
+fixtures/seed, comando `vencer_reservas`, login real contra
+`/api/auth/login/`.
 
 ## Convenciones de un spec
 

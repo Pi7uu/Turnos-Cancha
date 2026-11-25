@@ -48,7 +48,9 @@ Django backend + Flutter mobile app: Django expone solo `/api/` y `/admin/`. La 
 - ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 175/175 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: pantalla conforme al frame 11, fila `Mis reservas` abriendo el tab y `Cerrar sesión` en el login; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\perfil\`
 - ✅ Favoritos implementado (RD 2026-11-25): pantalla 12 completa — cards con foto/nombre/corazón/distancia/rating/precio/`Reservar`, corazón quita favorito con contador, estado vacío (`Explorar canchas` → Inicio) y `Reservar` → Detalle con fecha `Mar, 15 oct`; store `favoritos_locales`. **Las 4 pantallas del shell son reales (sin placeholders)**
 - ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 184/184 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: cards conforme al frame 12, quita con contador `2 canchas`, Detalle de Skyline y estado vacío; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\favoritos\`
-- ⏳ Pendiente: `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter, estado "sin canchas" (06) y filtrado del Inicio
+- ✅ Inicio · filtrado + estado "sin canchas" implementado (RD 2026-11-25): buscador filtra por nombre en vivo, chips `Fútbol 5`/`Fútbol 7` filtran por tag (chip activo se deselecciona), estado 06 con `Elegir otra fecha` y `Ver todo` limpian los filtros. **El prototipo queda completo (12 pantallas/estados)**
+- ✅ Verificación 2026-11-25: `flutter analyze` sin issues y `flutter test`: 190/190 tests pasan. Verificación visual por CDP (Edge headless) a 375×844 @2x: filtrado por texto, estado 06 idéntico al frame, filtros limpios y chip `Fútbol 7` activo; capturas en `%LOCALAPPDATA%\Temp\opencode\shots\inicio-filtrado\`
+- ⏳ Pendiente (fase backend): `services.py`, API `/api/`, fixtures/seed, comando `vencer_reservas`, `tests.py` (backend), persistencia de sesión y login contra `/api/auth/login/` en Flutter
 
 ## Dev Commands
 
