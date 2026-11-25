@@ -2,10 +2,10 @@
 
 Requerimientos activos: los que se usan para implementar, por orden de llegada.
 
-- Sin requerimientos activos. Mis reservas · lista y pestañas quedó
-  implementado ( RD en `../HistRequerimientos/mis-reservas-lista.md` ). Lo
-  siguiente es la **parte 2 de Mis reservas** ( acciones + store, estados
-  vacíos, variante "Sin QR" ) — su RD se escribe al iniciar.
+- Sin requerimientos activos. Mis reservas ( pantalla 03 ) quedó **completa**
+  ( parte 1: `../HistRequerimientos/mis-reservas-lista.md`; parte 2:
+  `../HistRequerimientos/mis-reservas-acciones.md` ). Lo siguiente en el orden
+  aprobado: **Perfil** ( 11 ) — su RD se escribe al iniciar.
 
 Cuando una feature queda implementada y verificada, su RD se mueve a
 `../HistRequerimientos/`.
