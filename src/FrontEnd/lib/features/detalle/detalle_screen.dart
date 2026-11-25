@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../inicio/cancha.dart';
+import '../reserva/reserva_error_screen.dart';
 import '../reserva/reserva_exitosa_screen.dart';
 
 /// Pantalla Detalle de cancha ( pantalla 02 — se construye por partes, RD
@@ -32,16 +33,24 @@ class _DetalleScreenState extends State<DetalleScreen> {
   /// Horario seleccionado: por defecto `19:00`, como el mockup ( RD §8 ).
   String _seleccionado = '19:00';
 
-  /// Abre la pantalla de éxito con los datos de la reserva ( RD
-  /// reserva-exitosa RF-02: cierra el RF-03 del RD detalle-horarios ).
+  /// Confirma la reserva ( RD reserva-error RF-01 ): si la hora está en
+  /// `horasEnConflicto` se simula la carrera por el horario y se abre la
+  /// pantalla de error; si no, la de éxito.
   void _confirmarReserva() {
+    final enConflicto = widget.cancha.horasEnConflicto.contains(_seleccionado);
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => ReservaExitosaScreen(
-          cancha: widget.cancha,
-          fecha: widget.fecha,
-          hora: _seleccionado,
-        ),
+        builder: (_) => enConflicto
+            ? ReservaErrorScreen(
+                cancha: widget.cancha,
+                fecha: widget.fecha,
+                hora: _seleccionado,
+              )
+            : ReservaExitosaScreen(
+                cancha: widget.cancha,
+                fecha: widget.fecha,
+                hora: _seleccionado,
+              ),
       ),
     );
   }

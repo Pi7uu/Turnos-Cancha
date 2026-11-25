@@ -236,6 +236,85 @@ void main() {
           reason: 'la fecha refleja el día elegido en el Inicio');
     });
 
+    testWidgets('barra_confirmar_hora_en_conflicto_abre_error', (tester) async {
+      await _pumpDetalle(tester, canchasSimuladas[0], fecha: 'Mar, 15 oct');
+
+      await tester.ensureVisible(find.text('18:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('18:00'));
+      await tester.pump();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No se pudo completar la reserva'), findsOneWidget,
+          reason: 'la hora en conflicto abre la pantalla de error');
+      expect(find.text('¡Reserva exitosa!'), findsNothing);
+    });
+
+    testWidgets('flujo_error_elegir_otro_horario_vuelve_al_detalle',
+        (tester) async {
+      await _pumpDetalle(tester, canchasSimuladas[0], fecha: 'Mar, 15 oct');
+
+      await tester.ensureVisible(find.text('18:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('18:00'));
+      await tester.pump();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey('error-elegir-otro')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Elegí el horario'), findsOneWidget,
+          reason: 'vuelve al Detalle');
+      expect(_decoHora(tester, '18:00').color, AppColors.primary,
+          reason: 'la selección anterior sigue viva');
+
+      // Cambiar a 20:00 y confirmar → éxito.
+      await tester.ensureVisible(find.text('20:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('20:00'));
+      await tester.pump();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+      expect(find.text('¡Reserva exitosa!'), findsOneWidget);
+    });
+
+    testWidgets('flujo_error_volver_conserva_estado_inicio', (tester) async {
+      tester.view.physicalSize = const Size(750, 1688);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(const MaterialApp(home: MainShell()));
+
+      await tester.enterText(find.byType(TextField), 'futbol');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('MIÉ'));
+      await tester.pump();
+      await tester.ensureVisible(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Elite Arena Central'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.text('18:00'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('18:00'));
+      await tester.pump();
+      await tester.tap(find.text('Confirmar reserva'));
+      await tester.pumpAndSettle();
+      expect(find.text('No se pudo completar la reserva'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('error-volver')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('futbol'), findsOneWidget,
+          reason: 'el buscador conserva su texto');
+      final chip = tester.widget<Container>(
+        find.byKey(const ValueKey('dia-16')),
+      );
+      expect((chip.decoration! as BoxDecoration).color, AppColors.primary,
+          reason: 'el día seleccionado se conserva');
+    });
+
     testWidgets('horarios_sin_overflow_375x844_y_chica', (tester) async {
       await _pumpDetalle(tester, canchasSimuladas[0]);
       expect(tester.takeException(), isNull);
